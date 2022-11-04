@@ -44,7 +44,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\GoogleDriveFiles\" />
-    <Folder Include="wwwroot\Upload\" />
   </ItemGroup>
 
   <ItemGroup>
