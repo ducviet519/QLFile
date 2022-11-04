@@ -63,8 +63,8 @@ namespace WebTools
                 })
                 .AddGoogle(options =>
                 {
-                    options.ClientId = "262393147887-ed0pdsq9a2g01t7jde3kjiq71f0m0ttm.apps.googleusercontent.com";
-                    options.ClientSecret = "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";
+                    options.ClientId = "754688720640-k0jrt4pnfmu6k0vnkii263hvauq8oe8v.apps.googleusercontent.com";
+                    options.ClientSecret = "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";
                 });           
             services.AddScoped<IReportListServices, ReportListServices>();
             services.AddScoped<IReportVersionServices, ReportVersionServices>();

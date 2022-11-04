@@ -88,9 +88,6 @@ namespace WebTools.Services
                 new FileStream(Path.Combine(_webHostEnvironment.ContentRootPath, "credentials.json"), FileMode.Open, FileAccess.Read))
             {
                 string FolderPath = Path.Combine(_webHostEnvironment.WebRootPath, "GoogleDriveFiles");
-                //string FolderPath = Directory.GetCurrentDirectory(), @"wwwroot\\GoogleDriveFiles\\"
-                //string credPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-                //string FilePath = Path.Combine(FolderPath, "DriveServiceCredentials.json");
 
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,

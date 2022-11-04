@@ -48,11 +48,7 @@
                         <li class="nav-item d-none d-sm-inline-block">
                             <a class="nav-link" asp-area="" asp-controller="Report" asp-action="Index">Quản lý biểu mẫu</a>
                         </li>
-                        <li class="nav-item d-none d-sm-inline-block">
-                            <a class="nav-link" asp-area="" asp-controller="BaoHiemTuNguyen" asp-action="KhachHangThanhToanBHTN">Bảo hiểm tự nguyện</a>
-                        </li>
-
-
+                        
                         @if (User.IsInRole("Admin"))
                         {
                             @*dropdown-hover*@
