@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -71,36 +72,6 @@ namespace WebTools.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Index(string SearchString, string SearchTrangThaiSD, string SearchTrangThaiPM, string SearchDate, string SearchURD)
-        {
-            SearchURD = Request.Form["SearchURD"];
-            ReportListViewModel model = new ReportListViewModel();
-            model.URDs = new SelectList(await _reportURDServices.GetAll_URDAsync(), "ID", "Des");
-            List<ReportList> data = await _reportListServices.SearchReportListAsync(SearchURD);
-            if (!String.IsNullOrEmpty(SearchString))
-            {
-                data = data.Where(s => s.TenBM != null && convertToUnSign(s.TenBM.ToLower()).Contains(convertToUnSign(SearchString.ToLower())) || s.MaBM != null && s.MaBM.ToUpper().Contains(SearchString.ToUpper())).ToList();
-            }
-            if (!String.IsNullOrEmpty(SearchTrangThaiSD))
-            {
-                data = data.Where(s => s.TrangThai.ToLower().Contains(SearchTrangThaiSD.ToLower())).ToList();
-            }
-            if (!String.IsNullOrEmpty(SearchTrangThaiPM))
-            {
-                data = data.Where(s => s.TrangThaiPM.ToLower().Contains(SearchTrangThaiPM.ToLower())).ToList();
-            }
-            if (!String.IsNullOrEmpty(SearchDate))
-            {
-                data = data.Where(s => s.NgayBanHanh != null && s.NgayBanHanh.Contains(SearchDate.ToString())).ToList();
-            }
-            model.ReportLists = data;
-            TempData["SearchString"] = SearchString;
-            TempData["SearchDate"] = SearchDate;
-            TempData["SearchURD"] = SearchURD;
-            return View(model);
-        }
-        
         public async Task<JsonResult> SearchReportList(string searchString, string searchTrangThaiSD, string searchTrangThaiPM, string searchDate, string searchURD, string loai)
         {
             if(!String.IsNullOrEmpty(loai) && loai == "1")
@@ -385,6 +356,17 @@ namespace WebTools.Controllers
         #endregion
 
         #region Document View
+
+        public bool CheckPermissionExist(string permission)
+        {
+            ClaimsPrincipal currentUser = this.User;
+            var permissionss = currentUser.Claims.Where(x => x.Type == "Permission" &&
+                                                            x.Value == permission &&
+                                                            x.Issuer == "LOCAL AUTHORITY");
+
+            if (permissionss.Any()) { return true; }
+            else { return false; }
+        }
         //Document View
         public async Task<IActionResult> DocumentView(string link)
         {
@@ -404,15 +386,28 @@ namespace WebTools.Controllers
                 model.Extension = Path.GetExtension(reportList.FileLink);
                 model.FileLink = documentLink;
             }
-            model.DocumentViewer = new DocumentViewer
+            ClaimsPrincipal currentUser = this.User;
+            if (currentUser.IsInRole("Document"))
             {
-                Width = 1200,
-                Height = 600,
-                Resizable = false,
-                Document = documentLink,
-
-            };
-
+                model.DocumentViewer = new DocumentViewer
+                {
+                    Width = 1200,
+                    Height = 600,
+                    Resizable = false,
+                    Document = documentLink,
+                };
+            }
+            else
+            {
+                model.DocumentViewer = new DocumentViewer
+                {
+                    Width = 1200,
+                    Height = 600,
+                    Resizable = false,
+                    Document = documentLink,
+                    DeniedPermissions = DocumentViewerPermissions.Print | DocumentViewerPermissions.Download | DocumentViewerPermissions.DownloadAsPdf
+                };
+            }          
             return PartialView("_DocumentView", model);
         }
         //Document View
@@ -434,17 +429,36 @@ namespace WebTools.Controllers
                 model.Extension = Path.GetExtension(reportList.FileLink);
                 model.FileLink = documentLink;
             }
-            model.DocumentViewer = new DocumentViewer
+                ClaimsPrincipal currentUser = this.User;
+            if (currentUser.IsInRole("Document") || currentUser.IsInRole("Admin"))
             {
-                Width = 1100,
-                Height = 600,
-                Resizable = false,
-                Document = documentLink,
+                model.DocumentViewer = new DocumentViewer
+                {
+                    Width = 1100,
+                    Height = 600,
+                    Resizable = false,
+                    Document = documentLink,
+                    AllowedPermissions = DocumentViewerPermissions.All
 
-            };
+                };
+            }
+            else
+            {
+                model.DocumentViewer = new DocumentViewer
+                {
+                    Width = 1100,
+                    Height = 600,
+                    Resizable = false,
+                    Document = documentLink,
+                    AllowedPermissions = DocumentViewerPermissions.All,
+                    DeniedPermissions = DocumentViewerPermissions.Print | DocumentViewerPermissions.Download | DocumentViewerPermissions.DownloadAsPdf
+
+                };
+            }
+                
 
             return PartialView("_DocumentViewPartial", model);
-        } 
+        }  
         #endregion
     }
 }

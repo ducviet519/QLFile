@@ -26,6 +26,7 @@ function searchDataTable(id, columnData, url, disableColumn) {
         "order": [[0, 'asc']],
         "columnDefs": [
             { orderable: false, targets: array },
+            { orderable: false, targets: 'filters' },
             { className: "text-wrap", targets: "_all" },
             { defaultContent: '', targets: "_all" },
         ],
@@ -110,7 +111,7 @@ function searchDataTableWithInput(id, columnData, url, pageLength, disableColumn
                             $(api.column(colIdx).header()).index()
                         );
                         var title = $(cell).text();
-                        $(cell).html('<input type="text" class="form-control" placeholder="' + title + '" />');
+                        $(cell).html('<input type="text" class="form-control col p-0 m-0" placeholder="' + title + '" />');
                     }
                     // On every keypress in this input
                     $(

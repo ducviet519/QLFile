@@ -60,7 +60,7 @@ namespace WebTools.Services
                 {
                     dbConnection.Open();
                     reportLists = (await dbConnection.QueryAsync<ReportList>("sp_Report_List", commandType: CommandType.StoredProcedure)).ToList();
-                    dbConnection.Close();                   
+                    dbConnection.Close();
                 }
                 return reportLists;
             }
@@ -82,7 +82,7 @@ namespace WebTools.Services
             try
             {
                 using (IDbConnection dbConnection = Connection)
-                {                  
+                {
                     dbConnection.Open();
                     var data = await dbConnection.QueryAsync<ReportList>("sp_Report_New",
                         new
@@ -122,13 +122,14 @@ namespace WebTools.Services
                 using (IDbConnection dbConnection = Connection)
                 {
                     dbConnection.Open();
-                    reportLists = (await dbConnection.QueryAsync<ReportList>("sp_Report_List",new {
+                    reportLists = (await dbConnection.QueryAsync<ReportList>("sp_Report_List", new
+                    {
                         search = searchString,
                         NgayBH = searchDate,
                         TrangThaiSD = searchTrangThaiSD,
                         TrangThaiPM = searchTrangThaiPM,
                         URD = SearchURD
-                    } , commandType: CommandType.StoredProcedure)).ToList();
+                    }, commandType: CommandType.StoredProcedure)).ToList();
                     dbConnection.Close();
                 }
                 return reportLists;
@@ -187,6 +188,11 @@ namespace WebTools.Services
         public async Task<List<ReportList>> SearchReportNameAsync(string SearchURD = null, List<GoogleDriveFile> Table = null, string searchDate = null, string searchTrangThaiSD = null, string searchTrangThaiPM = null)
         {
             List<ReportList> reportLists = new List<ReportList>();
+            var fileTable = new List<GoogleDriveFile>();
+            foreach (var file in Table)
+            {
+                fileTable.Add(new GoogleDriveFile { FileName = file.FileName });
+            }
             try
             {
                 using (IDbConnection dbConnection = Connection)
@@ -196,7 +202,7 @@ namespace WebTools.Services
                     reportLists = (await dbConnection.QueryAsync<ReportList>("sp_Report_List_Content",
                         new
                         {
-                            FileName = Table.AsTableValuedParameter("dbo.ReportFileName",
+                            FileName = fileTable.AsTableValuedParameter("dbo.ReportFileName",
                             new[] { "FileName" }),
                             URD = SearchURD,
                             //TrangThaiSD = searchTrangThaiSD,

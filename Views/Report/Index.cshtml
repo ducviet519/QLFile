@@ -43,11 +43,11 @@
                         <!--Tìm kiếm -->
                         <form asp-action="Index" asp-controller="Report" id="searchForm" method="post">
                             <div class="row align-items-end">
-                                <div class="col-3">
+                                <div class="col">
                                     <div class="form-group row m-0">
                                         <label class="col-12">Tên/Mã biểu mẫu:</label>
                                         <input type="text" class="form-control col" name="SearchString" id="SearchString" />
-                                        <select id="search" class="form-control col-2">
+                                        <select id="search" class="form-control col-4 ml-1 p-0">
                                             <option value="1" selected>Theo tên</option>
                                             <option value="2">Theo nội dung</option>
                                         </select>
@@ -100,18 +100,18 @@
                         <div class="dataTables_wrapper dt-bootstrap4">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table class="table table-bordered table-striped dataTable dtr-inline" role="grid" id="tableReport">
+                                    <table class="table table-bordered table-striped dataTable dtr-inline" width="100%" role="grid" id="tableReport">
                                         <thead class="thead">
                                             <tr>
-                                                <th class="nowrap">STT</th>
-                                                <th class="nowrap">Tên biểu mẫu</th>
-                                                <th class="nowrap">Mã biểu mẫu</th>
-                                                <th class="nowrap">Phiên bản</th>
-                                                <th class="nowrap">Ngày phát hành</th>
-                                                <th class="nowrap">Trạng thái</th>
-                                                <th class="nowrap">Phần mềm</th>
-                                                <th class="nowrap">Trạng thái phần mềm</th>
-                                                <th class="nowrap"></th>
+                                                <th class="text-nowrap w-auto">STT</th>
+                                                <th class="text-nowrap w-auto">Tên biểu mẫu</th>
+                                                <th class="text-nowrap w-auto">Mã biểu mẫu</th>
+                                                <th class="text-nowrap w-auto">Phiên bản</th>
+                                                <th class="text-nowrap w-auto">Ngày phát hành</th>
+                                                <th class="text-nowrap w-auto">Trạng thái</th>
+                                                <th class="text-nowrap w-auto">Phần mềm</th>
+                                                <th class="text-nowrap w-auto">Trạng thái phần mềm</th>
+                                                <th class="text-nowrap w-auto"></th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -144,14 +144,14 @@
 
         $(function () {
             var columnData = [
-                { "data": "stt" },
+                { "data": "stt", "orderable": "false", "class": "text-center"},
                 { "data": "tenBM" },
                 { "data": "maBM" },
-                { "data": "phienBan" },
-                { "data": "ngayBanHanh" },
-                { "data": "trangThai" },
-                { "data": "phanMem" },
-                { "data": "trangThaiPM" },
+                { "data": "phienBan", "class": "text-center" },
+                { "data": "ngayBanHanh", "class": "text-center" },
+                { "data": "trangThai", "class": "text-center" },
+                { "data": "phanMem", "class": "text-center" },
+                { "data": "trangThaiPM", "class": "text-center" },
                 {
                     "data": { idBieuMau: "idBieuMau", idPhienBan: "idPhienBan", fileLink: "fileLink" },
                     "render": function (data, row) {
@@ -182,7 +182,7 @@
                     }
                 },
             ]
-            searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList/", 10, "0", 8);
+            searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList/", 10, "0,8", 8);
 
             $('#btnSearch').on('click', function () {
                 var loai = $("#search").val() || "";
@@ -192,6 +192,7 @@
                 var searchTrangThaiPM = $("#SearchTrangThaiPM").val() || "";
                 var searchURD = $("#SearchURD").val() || "";
 
+                if (loai === "2" && searchString === "") { loai = "1" }
                 var searchTerm = "loai=" + loai;
                 if ($.trim(searchString) != "")
                     searchTerm += "&searchString=" + encodeURIComponent($.trim(searchString));
@@ -204,7 +205,7 @@
                 if (searchURD != "")
                     searchTerm += "&searchURD=" + searchURD;
 
-                searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList?" + searchTerm, 10, "0", 8);
+                searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList?" + searchTerm, 10, "0,8", 8);
                                
             });
         });
