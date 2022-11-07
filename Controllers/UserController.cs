@@ -82,7 +82,7 @@ namespace WebTools.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl)
         {
-            ViewData["RerurnUrl"] = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
         [AllowAnonymous]
@@ -159,7 +159,11 @@ namespace WebTools.Controllers
                         {
                             IsPersistent = login.RememberLogin
                         });
-                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                    string returnUrl = Request.Form["ReturnUrl"];
+                    if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                        return Redirect(returnUrl);
+                    else
+                        return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
                 #endregion
 
