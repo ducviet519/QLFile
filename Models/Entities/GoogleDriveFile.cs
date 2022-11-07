@@ -12,5 +12,6 @@ namespace WebTools.Models.Entities
         public DateTime? CreatedTime { get; set; }
         public IList<string> Parents { get; set; }
         public string MimeType { get; set; }
+        public string FileName { get; set; }
     }
 }

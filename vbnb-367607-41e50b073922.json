@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "vbnb-367607",
+  "private_key_id": "41e50b073922bfc84dcdb3ba9b815092d48d3908",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC1jvgTd02B/708\nMK7fLzXRlVfmZyo/Hf9YelCp1vGKx34sTIS17nCcjWhS46/vQFlEZ0Z4rf51xKdI\nriMetDYInRENdfIo774niqAevTV/JpGYuFI8Xk1jfjAHCQOYYIDAvn0KgEIiV+ha\nmBmgaVfvmCwZRDLoS3VPFMjKmk1dPkqoV+4UI9Rz5umWoMDriU5ZHrsGeuy/mW/u\nLffK4C0Y9VRGgtqdA/RQEpKRgK2wyGLxIb2rVUXkC8AcVePo2dW2uyOMSgExG8I8\nP7/xpZK5inkghQgFrEGZEB2mDxKZCAHaZ4nsReiyZ3a8OK+l3TjT3YIHo3VORRvu\nO3SzbKaLAgMBAAECggEAD18B0MAWf02UC18BxyJ7l3lh3j9Yu8xB3I9Kef6ZJ4s5\nOu3lhHOh9BciwHXHZOWZSSnHNRtiAj16fjREA+r08ii+E1orfNzDSBy77q5NM60j\nwX7Fc5f2TFiYH1hbhhCRhf/6nSN7teWkZdsfvE1+5OmIvkDgYHtW/LGBSGnk5+Jj\n4s43C5apdiIARliJ+NewO7bCnE5uOg95hmOlXbfly4SSAoclXI+haStgCLw1834s\nCV/0BiQOFW6YEt2SEf1Pf16dirPs5EPP5Qkvt7NsUpEmCVxr4gp/mtzCs1G0S5xi\nk1dVqAGVT4hNcLz/C++Szz5fkpwodF+wxbgXjPLh/QKBgQD2OVODkl675qZm/lxh\n8IzAL3bZvzVY+FuSlXHdt6MwIPtqky99hSAUFHpS0MPKeKHUMSF/ofuJTtQCQeDH\nyJU8UAJ2J6yiIUBD3CxIIgqxizP+T0yBKuOSqXDbBOXHFb8DtO3VY6qCy/ORYbZ2\nuWYAai+WhPl7h8+YoND0Vn17xQKBgQC8xF52X6QO8Pt3zjBJO0X1VUe2Uf9CsKur\nqWCNFPTNv+yN8wktibbkXxXOSwEAq2BGkGLqFUAqXsoALfBHocjVQf1no82U8Wtq\nZ4AoqldybP7Px/LqWq+CDLIU+MKEFlf0xRKthySB4L/XXyYGOHNPccSsvVd0LfDz\nMVLpgtEuDwKBgBIA7xJXyYWDv/cX8jlXFXOYBOC3EneG8Wsucjz8CHqkbr3ENVzA\nNzBArxEPIsHTQEH7ta9XcMUBdo8TshPpnr/iOcvZ6s2QENrlZnd/xbhlrU+TDM0F\nDc7ThOT+3q5H8MecmydXOkiGETE4K9dShxrQqNogrv1RWOSYHa9AA7zhAoGAcK2G\n9YIBnCmc8dbSW+RVziwpslsf099BmiZwy8ZGmsqFmfYI9HXQBmH70jhTUOL7hSOK\n58/njWMnkRPa6edYynOpn8PXY6D4TXuatKt5p4QIVl80UU/wk+CgLISRF+d+eU1p\n6MtSr3RJD3ZsbComKrXugG5FVcRWn9RBecHsu2ECgYEAxIlHW4q9wv15jHbz7u2Z\nG2ahnaR8YN8EVrU8rdMXE2oAaYEs144dIJe7XydQrhl53jf/BmDCW4OoICWhIOQa\nphWkt+nSQEsMT93euaGWLyBViCsZ9t0E4t9ixUMGZ/CaKe2i6G3D+Fh3Wb77ej+Y\n+lINKApX601rSkAvO9bPWjQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "vbnb-ta-232@vbnb-367607.iam.gserviceaccount.com",
+  "client_id": "106920155981052707171",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/vbnb-ta-232%40vbnb-367607.iam.gserviceaccount.com"
+}

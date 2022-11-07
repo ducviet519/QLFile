@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WebTools.Models;
+using WebTools.Models.Entities;
 using WebTools.Services;
 using WebTools.Services.Interface;
 
@@ -99,6 +100,56 @@ namespace WebTools.Controllers
             TempData["SearchURD"] = SearchURD;
             return View(model);
         }
+        
+        public async Task<JsonResult> SearchReportList(string searchString, string searchTrangThaiSD, string searchTrangThaiPM, string searchDate, string searchURD, string loai)
+        {
+            if(!String.IsNullOrEmpty(loai) && loai == "1")
+            {
+                var data = await _reportListServices.SearchReportListAsync(searchURD);
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    data = data.Where(s => s.TenBM != null && convertToUnSign(s.TenBM.ToLower()).Contains(convertToUnSign(searchString.ToLower())) || s.MaBM != null && s.MaBM.ToUpper().Contains(searchString.ToUpper())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchDate))
+                {
+                    data = data.Where(s => s.NgayBanHanh != null && s.NgayBanHanh.Contains(searchDate.ToString())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchTrangThaiSD))
+                {
+                    data = data.Where(s => s.TrangThai.ToLower().Contains(searchTrangThaiSD.ToLower())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchTrangThaiPM))
+                {
+                    data = data.Where(s => s.TrangThaiPM.ToLower().Contains(searchTrangThaiPM.ToLower())).ToList();
+                }
+                return Json(new { data });
+            }
+            else if(!String.IsNullOrEmpty(loai) && loai == "2")
+            {
+                List<GoogleDriveFile> Table = new List<GoogleDriveFile>();
+                if (!String.IsNullOrEmpty(searchString)) { Table = await _googleDriveAPI.SearchDriveFiles(searchString); }
+                else { Table = null; }
+                var data = await _reportListServices.SearchReportNameAsync(searchURD, Table);
+                if (!String.IsNullOrEmpty(searchDate))
+                {
+                    data = data.Where(s => s.NgayBanHanh != null && s.NgayBanHanh.Contains(searchDate.ToString())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchTrangThaiSD))
+                {
+                    data = data.Where(s => s.TrangThai.ToLower().Contains(searchTrangThaiSD.ToLower())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchTrangThaiPM))
+                {
+                    data = data.Where(s => s.TrangThaiPM.ToLower().Contains(searchTrangThaiPM.ToLower())).ToList();
+                }
+                return Json(new { data });
+            }
+            else
+            {
+                var data = await _reportListServices.SearchReportListAsync();
+                return Json(new { data });
+            }
+        } 
         #endregion
 
         #region Khử dấu cho string        
@@ -333,6 +384,7 @@ namespace WebTools.Controllers
         }
         #endregion
 
+        #region Document View
         //Document View
         public async Task<IActionResult> DocumentView(string link)
         {
@@ -392,6 +444,7 @@ namespace WebTools.Controllers
             };
 
             return PartialView("_DocumentViewPartial", model);
-        }
+        } 
+        #endregion
     }
 }

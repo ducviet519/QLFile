@@ -44,39 +44,46 @@
                         <form asp-action="Index" asp-controller="Report" id="searchForm" method="post">
                             <div class="row align-items-end">
                                 <div class="col-3">
-                                    <label>Tên/Mã biểu mẫu:</label>
-                                    <input type="text" class="form-control" name="SearchString" id="SearchString" value="@TempData["SearchString"]" />
+                                    <div class="form-group row m-0">
+                                        <label class="col-12">Tên/Mã biểu mẫu:</label>
+                                        <input type="text" class="form-control col" name="SearchString" id="SearchString" />
+                                        <select id="search" class="form-control col-2">
+                                            <option value="1" selected>Theo tên</option>
+                                            <option value="2">Theo nội dung</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-auto pl-2">
                                     <label>Ngày ban hành:</label>
                                     <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                        <input type="text" id="SearchDate" name="SearchDate" class="form-control datetimepicker-input SearchDate" data-toggle="datetimepicker" data-target="#SearchDate" value="@TempData["SearchDate"]" autocomplete="off" />
+                                        <input type="text" id="SearchDate" name="SearchDate" class="form-control datetimepicker-input SearchDate" data-toggle="datetimepicker" data-target="#SearchDate" autocomplete="off" />
                                     </div>
                                 </div>
                                 <div class="col-auto pl-2">
                                     <label>Trạng thái:</label>
-                                    @Html.DropDownList("SearchTrangThaiSD", new List<SelectListItem>
-                                    {   new SelectListItem{Text="Đang sử dụng", Value="Đang sử dụng"},
-                                        new SelectListItem{Text="Chưa ban hành", Value="Chưa ban hành"},
-                                        new SelectListItem{Text="Đã hủy", Value="Đã hủy"}
-                                    }, "Tất cả", new { @class = "form-control" })
+                                    <select id="SearchTrangThaiSD" class="form-control col-auto">
+                                        <option value="" selected>Tất cả</option>
+                                        <option value="Đang sử dụng">Đang sử dụng</option>
+                                        <option value="Chưa ban hành">Chưa ban hành</option>
+                                        <option value="Đã hủy">Đã hủy</option>
+                                    </select>
                                 </div>
                                 <div class="col-auto pl-2">
-                                    <label>Trạng thái phần mềm:</label>
-                                    @Html.DropDownList("SearchTrangThaiPM", new List<SelectListItem>
-                                    {   new SelectListItem{Text="Đã hoàn thành", Value="Đã hoàn thành"},
-                                        new SelectListItem{Text="Chưa hoàn thành", Value="Chưa hoà"},
-                                        new SelectListItem{Text="Chưa có", Value="Chưa có"}
-                                    }, "Tất cả", new { @class = "form-control" })
+                                    <select id="SearchTrangThaiPM" class="form-control col-auto">
+                                        <option value="" selected>Tất cả</option>
+                                        <option value="Đã hoàn thành">Đã hoàn thành</option>
+                                        <option value="Chưa hoàn thành">Chưa hoàn thành</option>
+                                        <option value="Chưa có">Chưa có</option>
+                                    </select>
                                 </div>
                                 <div class="col-2 pl-2">
                                     <label>URD (Quy trình vận hành):</label>
                                     <div class="col">
                                         <select class="form-control selectURD2" multiple="multiple" data-placeholder="Chọn" style="width: 100%;" asp-items="@Model.URDs" name="SearchURD" id="SearchURD"></select>
-                                        <input type="hidden" id="txtURD" name="txtURD" value="@TempData["SearchURD"]" />
+                                        <input type="hidden" id="txtURD" name="txtURD" />
                                     </div>
                                 </div>
-                                <div class="col-auto"><button type="submit" class="btn btn-primary">Tìm kiếm</button></div>
+                                <div class="col-auto"><button type="button" class="btn btn-primary" id="btnSearch">Tìm kiếm</button></div>
 
                                 @*@if (User.IsInRole("Editer") || User.IsInRole("Manager") || User.IsInRole("Admin"))*@
                                 @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Add")).Result.Succeeded)
@@ -96,82 +103,17 @@
                                     <table class="table table-bordered table-striped dataTable dtr-inline" role="grid" id="tableReport">
                                         <thead class="thead">
                                             <tr>
-                                                <th>STT</th>
-                                                <th>Tên biểu mẫu</th>
-                                                <th>Mã biểu mẫu</th>
-                                                <th>Phiên bản</th>
-                                                <th>Ngày phát hành</th>
-                                                <th>Trạng thái</th>
-                                                <th>Phần mềm</th>
-                                                <th>Trạng thái phần mềm</th>
-                                                <th></th>
+                                                <th class="nowrap">STT</th>
+                                                <th class="nowrap">Tên biểu mẫu</th>
+                                                <th class="nowrap">Mã biểu mẫu</th>
+                                                <th class="nowrap">Phiên bản</th>
+                                                <th class="nowrap">Ngày phát hành</th>
+                                                <th class="nowrap">Trạng thái</th>
+                                                <th class="nowrap">Phần mềm</th>
+                                                <th class="nowrap">Trạng thái phần mềm</th>
+                                                <th class="nowrap"></th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @{
-                                                if (Model.ReportLists != null && Model.ReportLists.Count > 0)
-                                                {
-                                                    foreach (var item in Model.ReportLists)
-                                                    {
-                                                        <tr>
-                                                            <td>@item.STT</td>
-                                                            <td>@item.TenBM</td>
-                                                            <td>@item.MaBM</td>
-                                                            <td>@item.PhienBan</td>
-                                                            <td>@item.NgayBanHanh</td>
-                                                            <td>@item.TrangThai</td>
-                                                            <td>@item.PhanMem</td>
-                                                            <td>@item.TrangThaiPM</td>
-                                                            <td>
-                                                                <div class="btn-group">
-                                                                    @if (item.FileLink != null)
-                                                                    {
-                                                                        <a class="btn btn-link" data-toggle="ajax-modal" data-target="#documentView-@item.IDBieuMau" data-url="/Report/PopUpDocumentView?link=@item.IDPhienBan">File</a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <a href="#" target="_blank" class="btn btn-link">&nbsp; &nbsp; &nbsp; &nbsp;</a>
-                                                                    }
-
-                                                                    @if (User.IsInRole("Editer") || User.IsInRole("Manager") || User.IsInRole("Admin"))
-                                                                    {
-                                                                        <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-                                                                            Chi tiết
-                                                                        </button>
-                                                                        <div class="dropdown-menu" role="menu">
-                                                                            @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Versions.View")).Result.Succeeded)
-                                                                            {<a class="dropdown-item" data-toggle="ajax-modal" data-target="#reportVersion-@item.IDBieuMau" data-url="/Report/Version?id=@item.IDBieuMau">Phiên bản</a>}
-
-                                                                            @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Softs.View")).Result.Succeeded)
-                                                                            {<a class="dropdown-item" data-toggle="ajax-modal" data-target="#reportSoft-@item.IDBieuMau" data-url="/Report/Soft?id=@item.IDBieuMau">Phần mềm</a>}
-
-                                                                            @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Details.View")).Result.Succeeded)
-                                                                            {<a class="dropdown-item" data-toggle="ajax-modal" data-target="#reportDetail-@item.IDBieuMau" data-url="/Report/Detail?id=@item.IDBieuMau">Chi tiết</a>}
-
-                                                                            @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Edit")).Result.Succeeded)
-                                                                            {<a class="dropdown-item" data-toggle="ajax-modal" data-target="#reportEdit-@item.IDBieuMau" data-url="/Report/EditReport?id=@item.IDBieuMau">Sửa biểu mẫu</a>}
-                                                                        </div>
-                                                                    }
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                }
-                                            }
-                                        </tbody>
-                                        <tfoot style="display:none;">
-                                            <tr>
-                                                <th></th>
-                                                <th>Tên biểu mẫu</th>
-                                                <th>Mã biểu mẫu</th>
-                                                <th>Phiên bản</th>
-                                                <th>Ngày phát hành</th>
-                                                <th>Trạng thái</th>
-                                                <th>Phần mềm</th>
-                                                <th>Trạng thái phần mềm</th>
-                                                <th></th>
-                                            </tr>
-                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -185,109 +127,100 @@
 </section>
 
 @section Scripts{
-<script type="text/javascript">
-    $(document).ready(function () {
-        // Setup - add a text input to each footer cell
-        $('#tableReport thead tr')
-            .clone(true)
-            .addClass('filters')
-            .appendTo('#tableReport thead');
+    <script type="text/javascript">
 
-        var table = $('#tableReport').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            //"lengthMenu": [
-            //    [10, 25, 50, -1],
-            //    [10, 25, 50, 'All'],
-            //],
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            "orderCellsTop": true,
-            "fixedHeader": false,
-            "columnDefs": [{ orderable: false, targets: 8 }],
-            //"order": [[4, 'desc']],
-            "initComplete": function () {
-                var api = this.api();
+        $(function () {
+            $('#SearchDate').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi' });
+        });
 
-                // For each column
-                api
-                    .columns()
-                    .eq(0)
-                    .each(function (colIdx) {
-                        // Set the header cell to contain the input element
-                        if (colIdx != 8) {
-                            var cell = $('.filters th').eq(
-                                $(api.column(colIdx).header()).index()
-                            );
-                            var title = $(cell).text();
-                            $(cell).html('<input type="text" class="form-control" placeholder="' + title + '" />');
+        $(function () {
+            var string = $('#txtURD').val();
+            var array = string.split(",").map(Number);
+            //Dropdown
+            $('.selectURD2').select2()
+            $('#SearchURD').val(array);
+            $('#SearchURD').trigger('change');
+        });
+
+        $(function () {
+            var columnData = [
+                { "data": "stt" },
+                { "data": "tenBM" },
+                { "data": "maBM" },
+                { "data": "phienBan" },
+                { "data": "ngayBanHanh" },
+                { "data": "trangThai" },
+                { "data": "phanMem" },
+                { "data": "trangThaiPM" },
+                {
+                    "data": { idBieuMau: "idBieuMau", idPhienBan: "idPhienBan", fileLink: "fileLink" },
+                    "render": function (data, row) {
+                        if (data.fileLink == "") {
+                            var file = "<a href='#' target='_blank' class='btn btn-link'>&nbsp; &nbsp; &nbsp; &nbsp;</a>";
                         }
-                        // On every keypress in this input
-                        $(
-                            'input',
-                            $('.filters th').eq($(api.column(colIdx).header()).index())
-                        )
-                            .off('keyup change')
-                            .on('change', function (e) {
-                                // Get the search value
-                                $(this).attr('title', $(this).val());
-                                var regexr = '({search})'; //$(this).parents('th').find('select').val();
+                        else {
+                            var file = "<a class='btn btn-link' data-toggle='ajax-modal' data-target='#documentView-" + data.idPhienBan + "' data-url='/Report/PopUpDocumentView?link=" + data.idPhienBan + "'>File</a>";
+                        }
 
-                                var cursorPosition = this.selectionStart;
-                                // Search the column for that value
-                                api
-                                    .column(colIdx)
-                                    .search(
-                                        this.value != ''
-                                            ? regexr.replace('{search}', '(((' + this.value + ')))')
-                                            : '',
-                                        this.value != '',
-                                        this.value == ''
-                                    )
-                                    .draw();
-                            })
-                            .on('keyup', function (e) {
-                                e.stopPropagation();
+                        if (true) {
+                            var version = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportVersion-" + data.idBieuMau + "' data-url='/Report/Version?id=" + data.idBieuMau + "'>Phiên bản</a>";
+                        }
+                        else { var version = ""; }
+                        if (true) {
+                            var software = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportSoft-" + data.idBieuMau + "' data-url='/Report/Soft?id=" + data.idBieuMau + "'>Phần mềm</a>";
+                        } else { var software = ""; }
+                        if (true) {
+                            var detail = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportDetail-" + data.idBieuMau + "' data-url='/Report/Detail?id=" + data.idBieuMau + "'>Chi tiết</a>";
+                        } else { var detail = ""; }
+                        if ('@User.IsInRole("Editer")' == 'True' || '@User.IsInRole("Manager")' == 'True' || '@User.IsInRole("Admin")' == 'True') {
+                            var edit = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportEdit-" + data.idBieuMau + "' data-url='/Report/EditReport?id=" + data.idBieuMau + "'>Sửa biểu mẫu</a>";
+                        } else { var edit = ""; }
 
-                                $(this).trigger('change');
-                                $(this)
-                                    .focus()[0]
-                                    .setSelectionRange(cursorPosition, cursorPosition);
-                            });
-                    });
-            },
-            "columnDefs": [
-                { "searchable": false, "targets": 8 }
-            ],
-        });
-    });
-    $(function () {
-        $('#SearchDate').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi' });
-    })
-    $(function () {
-        var string = $('#txtURD').val();
-        var array = string.split(",").map(Number);
-        //Dropdown
-        $('.selectURD2').select2()
-        $('#SearchURD').val(array);
-        $('#SearchURD').trigger('change');
-    });
+                        var dropmenu = "<button type='button' class='btn btn-link dropdown-toggle' data-toggle='dropdown'>Chi tiết</button ><div class='dropdown-menu' role='menu'>" + version + " " + software + " " + detail + " " + edit + "</div>";
+                        var result = "<div class='btn-group'>" + file + " " + dropmenu + "</div>";
+                        return result;
+                    }
+                },
+            ]
+            searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList/", 10, "0", 8);
 
-    $(document).ready(function () {
-        $('body').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
-            var url = $(this).data('url');
-            $(this).callModal(url);
+            $('#btnSearch').on('click', function () {
+                var loai = $("#search").val() || "";
+                var searchString = ((document.getElementById("SearchString") || {}).value) || "";
+                var searchDate = ((document.getElementById("SearchDate") || {}).value) || "";
+                var searchTrangThaiSD = $("#SearchTrangThaiSD").val() || "";
+                var searchTrangThaiPM = $("#SearchTrangThaiPM").val() || "";
+                var searchURD = $("#SearchURD").val() || "";
+
+                var searchTerm = "loai=" + loai;
+                if ($.trim(searchString) != "")
+                    searchTerm += "&searchString=" + encodeURIComponent($.trim(searchString));
+                if (searchDate != "")
+                    searchTerm += "&searchDate=" + searchDate;
+                if (searchTrangThaiSD != "")
+                    searchTerm += "&searchTrangThaiSD=" + searchTrangThaiSD;
+                if (searchTrangThaiPM != "")
+                    searchTerm += "&searchTrangThaiPM=" + searchTrangThaiPM;
+                if (searchURD != "")
+                    searchTerm += "&searchURD=" + searchURD;
+
+                searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList?" + searchTerm, 10, "0", 8);
+                               
+            });
         });
-        $('body').on('click', 'button[data-toggle="ajax-modal"]', function (event) {
-            var url = $(this).data('url');
-            $(this).callModal(url);
+
+        $(document).ready(function () {
+            $('body').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
+                var url = $(this).data('url');
+                $(this).callModal(url);
+            });
+            $('body').on('click', 'button[data-toggle="ajax-modal"]', function (event) {
+                var url = $(this).data('url');
+                $(this).callModal(url);
+            });
         });
-    });
-</script>
- }
+    </script>
+}
 
 
 

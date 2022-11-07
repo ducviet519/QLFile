@@ -8,6 +8,7 @@ using System;
 using Dapper;
 using System.Linq;
 using System.Threading.Tasks;
+using WebTools.Models.Entities;
 
 namespace WebTools.Services
 
@@ -112,7 +113,7 @@ namespace WebTools.Services
             }
         }
 
-        public async Task<List<ReportList>> SearchReportListAsync(string SearchURD = null)
+        public async Task<List<ReportList>> SearchReportListAsync(string SearchURD = null, string searchString = null, string searchDate = null, string searchTrangThaiSD = null, string searchTrangThaiPM = null)
         {
             List<ReportList> reportLists = new List<ReportList>();
 
@@ -122,10 +123,10 @@ namespace WebTools.Services
                 {
                     dbConnection.Open();
                     reportLists = (await dbConnection.QueryAsync<ReportList>("sp_Report_List",new {
-                        //search = SearchString,
-                        //NgayBH = SearchDate,
-                        //TrangThaiSD = SearchTrangThaiSD,
-                        //TrangThaiPM = SearchTrangThaiPM,
+                        search = searchString,
+                        NgayBH = searchDate,
+                        TrangThaiSD = searchTrangThaiSD,
+                        TrangThaiPM = searchTrangThaiPM,
                         URD = SearchURD
                     } , commandType: CommandType.StoredProcedure)).ToList();
                     dbConnection.Close();
@@ -138,6 +139,7 @@ namespace WebTools.Services
                 return reportLists;
             }
         }
+
 
         public async Task<string> UpdateReportListAsync(ReportList reportList)
         {
@@ -181,6 +183,36 @@ namespace WebTools.Services
                 result = ex.Message;
                 return result;
             }
+        }
+        public async Task<List<ReportList>> SearchReportNameAsync(string SearchURD = null, List<GoogleDriveFile> Table = null, string searchDate = null, string searchTrangThaiSD = null, string searchTrangThaiPM = null)
+        {
+            List<ReportList> reportLists = new List<ReportList>();
+            try
+            {
+                using (IDbConnection dbConnection = Connection)
+                {
+                    if (dbConnection.State == ConnectionState.Closed)
+                        dbConnection.Open();
+                    reportLists = (await dbConnection.QueryAsync<ReportList>("sp_Report_List_Content",
+                        new
+                        {
+                            FileName = Table.AsTableValuedParameter("dbo.ReportFileName",
+                            new[] { "FileName" }),
+                            URD = SearchURD,
+                            //TrangThaiSD = searchTrangThaiSD,
+                            //TrangThaiPM = searchTrangThaiPM
+                        },
+                        commandType: CommandType.StoredProcedure)).ToList();
+                    dbConnection.Close();
+                }
+                return reportLists;
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.Message;
+                return reportLists;
+            }
+
         }
     }
 }
