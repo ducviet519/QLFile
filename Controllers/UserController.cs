@@ -142,15 +142,22 @@ namespace WebTools.Controllers
                         new Claim(ClaimTypes.GroupSid, string.IsNullOrEmpty(domain) ? "local" : domain),
                         new Claim(ClaimTypes.Email, $@"{login.UserName.Trim().ToLower()}@{domain}" ?? ""),
                     };
-                    foreach (var role in RoleInUser)
+                    if(RoleInUser.Count == 0)
                     {
-                        claims.Add(new Claim(ClaimTypes.Role, role.RoleName));
+                        claims.Add(new Claim(ClaimTypes.Role, "User"));
+                    }
+                    else
+                    {
+                        foreach (var role in RoleInUser)
+                        {
+                            claims.Add(new Claim(ClaimTypes.Role, role.RoleName));
 
-                    }
-                    foreach (var permission in PermissionsInUser)
-                    {
-                        claims.Add(new Claim("Permission", $"{permission.Permission}"));
-                    }
+                        }
+                        foreach (var permission in PermissionsInUser)
+                        {
+                            claims.Add(new Claim("Permission", $"{permission.Permission}"));
+                        }
+                    }                                      
 
                         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);

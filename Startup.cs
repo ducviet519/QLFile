@@ -47,12 +47,6 @@ namespace WebTools
                     {
                         OnSigningIn = async context =>
                         {
-                            var principal = context.Principal;
-                            if (principal.Claims.FirstOrDefault(c => c.Type != null && c.Type == ClaimTypes.Role).Value == "")
-                            {
-                                var claimsIdentity = principal.Identity as ClaimsIdentity;
-                                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "User"));
-                            }
                             await Task.CompletedTask;
                         },
                         OnSignedIn = async context =>
