@@ -387,7 +387,7 @@ namespace WebTools.Controllers
                 model.FileLink = documentLink;
             }
             ClaimsPrincipal currentUser = this.User;
-            if (currentUser.IsInRole("Document"))
+            if (currentUser.IsInRole("Document") || currentUser.IsInRole("Admin"))
             {
                 model.DocumentViewer = new DocumentViewer
                 {
@@ -395,6 +395,7 @@ namespace WebTools.Controllers
                     Height = 600,
                     Resizable = false,
                     Document = documentLink,
+                    AllowedPermissions = DocumentViewerPermissions.All,
                 };
             }
             else
@@ -405,6 +406,7 @@ namespace WebTools.Controllers
                     Height = 600,
                     Resizable = false,
                     Document = documentLink,
+                    AllowedPermissions = DocumentViewerPermissions.All,
                     DeniedPermissions = DocumentViewerPermissions.Print | DocumentViewerPermissions.Download | DocumentViewerPermissions.DownloadAsPdf
                 };
             }          
@@ -455,8 +457,6 @@ namespace WebTools.Controllers
 
                 };
             }
-                
-
             return PartialView("_DocumentViewPartial", model);
         }  
         #endregion

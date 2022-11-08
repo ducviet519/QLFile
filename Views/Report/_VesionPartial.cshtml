@@ -177,6 +177,9 @@
                 })
             }
         });
+        $('body').on('click', 'button[data-dismiss="modal"]', function (event) {
+            location.reload();
+        });
     });
 
 </script>
