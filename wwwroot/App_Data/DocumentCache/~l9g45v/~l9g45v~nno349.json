@@ -1,0 +1,47 @@
+{
+  "CacheSourceKey": "l9g45v",
+  "CachePdfKey": "l9g45v/l9g45v-15719fv.pdf",
+  "CacheXpzKey": "l9g45v/l9g45v-nno349.xpz",
+  "CacheInfoKey": "l9g45v/l9g45v-nno349.json",
+  "CacheCopyKey": null,
+  "Document": "07112022141742_BC cong viec theo tuan.xlsx",
+  "DocumentHandlerType": null,
+  "DocumentHandlerParameters": null,
+  "DocumentLocation": "D:\\VanBan\\My Drive\\VBNB FileUpload",
+  "DocumentFileName": "07112022141742_BC cong viec theo tuan.xlsx",
+  "InputOptions": {
+    "$type": "GleamTech.DocumentUltimate.SpreadsheetInputOptions, GleamTech.DocumentUltimate",
+    "OutputSheetRange": "visible",
+    "RenderColumnsFitToPages": 1,
+    "RenderRowsFitToPages": 0,
+    "RenderHeadings": false,
+    "RenderGridlines": false,
+    "RenderTitleColumns": null,
+    "RenderTitleRows": null,
+    "RenderArea": null,
+    "RenderBlackAndWhite": false,
+    "RenderCenterHorizontally": false,
+    "RenderCenterVertically": false,
+    "RenderLeftHeader": null,
+    "RenderCenterHeader": null,
+    "RenderRightHeader": null,
+    "RenderLeftFooter": null,
+    "RenderCenterFooter": null,
+    "RenderRightFooter": null,
+    "Format": "Xlsx",
+    "Password": null
+  },
+  "PdfOutputOptions": {
+    "Watermarks": [],
+    "FastWebViewEnabled": false,
+    "Password": null,
+    "Attachments": [],
+    "Format": "Pdf"
+  },
+  "XpzOutputOptions": {
+    "Password": "l9g45v",
+    "HighQualityEnabled": false,
+    "Format": "Xpz"
+  },
+  "Attachments": []
+}

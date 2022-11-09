@@ -9,10 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using WebTools.Models;
+using WebTools.Models.Entities;
 using WebTools.Services;
 using WebTools.Services.Interface;
 
@@ -70,35 +72,55 @@ namespace WebTools.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Index(string SearchString, string SearchTrangThaiSD, string SearchTrangThaiPM, string SearchDate, string SearchURD)
+        public async Task<JsonResult> SearchReportList(string searchString, string searchTrangThaiSD, string searchTrangThaiPM, string searchDate, string searchURD, string loai)
         {
-            SearchURD = Request.Form["SearchURD"];
-            ReportListViewModel model = new ReportListViewModel();
-            model.URDs = new SelectList(await _reportURDServices.GetAll_URDAsync(), "ID", "Des");
-            List<ReportList> data = await _reportListServices.SearchReportListAsync(SearchURD);
-            if (!String.IsNullOrEmpty(SearchString))
+            if(!String.IsNullOrEmpty(loai) && loai == "1")
             {
-                data = data.Where(s => s.TenBM != null && convertToUnSign(s.TenBM.ToLower()).Contains(convertToUnSign(SearchString.ToLower())) || s.MaBM != null && s.MaBM.ToUpper().Contains(SearchString.ToUpper())).ToList();
+                var data = await _reportListServices.SearchReportListAsync(searchURD);
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    data = data.Where(s => s.TenBM != null && convertToUnSign(s.TenBM.ToLower()).Contains(convertToUnSign(searchString.ToLower())) || s.MaBM != null && s.MaBM.ToUpper().Contains(searchString.ToUpper())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchDate))
+                {
+                    data = data.Where(s => s.NgayBanHanh != null && s.NgayBanHanh.Contains(searchDate.ToString())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchTrangThaiSD))
+                {
+                    data = data.Where(s => s.TrangThai.ToLower().Contains(searchTrangThaiSD.ToLower())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchTrangThaiPM))
+                {
+                    data = data.Where(s => s.TrangThaiPM.ToLower().Contains(searchTrangThaiPM.ToLower())).ToList();
+                }
+                return Json(new { data });
             }
-            if (!String.IsNullOrEmpty(SearchTrangThaiSD))
+            else if(!String.IsNullOrEmpty(loai) && loai == "2")
             {
-                data = data.Where(s => s.TrangThai.ToLower().Contains(SearchTrangThaiSD.ToLower())).ToList();
+                List<GoogleDriveFile> Table = new List<GoogleDriveFile>();
+                if (!String.IsNullOrEmpty(searchString)) { Table = await _googleDriveAPI.SearchDriveFiles(searchString); }
+                else { Table = null; }
+                var data = await _reportListServices.SearchReportNameAsync(searchURD, Table);
+                if (!String.IsNullOrEmpty(searchDate))
+                {
+                    data = data.Where(s => s.NgayBanHanh != null && s.NgayBanHanh.Contains(searchDate.ToString())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchTrangThaiSD))
+                {
+                    data = data.Where(s => s.TrangThai.ToLower().Contains(searchTrangThaiSD.ToLower())).ToList();
+                }
+                if (!String.IsNullOrEmpty(searchTrangThaiPM))
+                {
+                    data = data.Where(s => s.TrangThaiPM.ToLower().Contains(searchTrangThaiPM.ToLower())).ToList();
+                }
+                return Json(new { data });
             }
-            if (!String.IsNullOrEmpty(SearchTrangThaiPM))
+            else
             {
-                data = data.Where(s => s.TrangThaiPM.ToLower().Contains(SearchTrangThaiPM.ToLower())).ToList();
+                var data = await _reportListServices.SearchReportListAsync();
+                return Json(new { data });
             }
-            if (!String.IsNullOrEmpty(SearchDate))
-            {
-                data = data.Where(s => s.NgayBanHanh != null && s.NgayBanHanh.Contains(SearchDate.ToString())).ToList();
-            }
-            model.ReportLists = data;
-            TempData["SearchString"] = SearchString;
-            TempData["SearchDate"] = SearchDate;
-            TempData["SearchURD"] = SearchURD;
-            return View(model);
-        }
+        } 
         #endregion
 
         #region Khử dấu cho string        
@@ -333,6 +355,18 @@ namespace WebTools.Controllers
         }
         #endregion
 
+        #region Document View
+
+        public bool CheckPermissionExist(string permission)
+        {
+            ClaimsPrincipal currentUser = this.User;
+            var permissionss = currentUser.Claims.Where(x => x.Type == "Permission" &&
+                                                            x.Value == permission &&
+                                                            x.Issuer == "LOCAL AUTHORITY");
+
+            if (permissionss.Any()) { return true; }
+            else { return false; }
+        }
         //Document View
         public async Task<IActionResult> DocumentView(string link)
         {
@@ -352,15 +386,30 @@ namespace WebTools.Controllers
                 model.Extension = Path.GetExtension(reportList.FileLink);
                 model.FileLink = documentLink;
             }
-            model.DocumentViewer = new DocumentViewer
+            ClaimsPrincipal currentUser = this.User;
+            if (currentUser.IsInRole("Document") || currentUser.IsInRole("Admin"))
             {
-                Width = 1200,
-                Height = 600,
-                Resizable = false,
-                Document = documentLink,
-
-            };
-
+                model.DocumentViewer = new DocumentViewer
+                {
+                    Width = 1200,
+                    Height = 600,
+                    Resizable = false,
+                    Document = documentLink,
+                    AllowedPermissions = DocumentViewerPermissions.All,
+                };
+            }
+            else
+            {
+                model.DocumentViewer = new DocumentViewer
+                {
+                    Width = 1200,
+                    Height = 600,
+                    Resizable = false,
+                    Document = documentLink,
+                    AllowedPermissions = DocumentViewerPermissions.All,
+                    DeniedPermissions = DocumentViewerPermissions.Print | DocumentViewerPermissions.Download | DocumentViewerPermissions.DownloadAsPdf
+                };
+            }          
             return PartialView("_DocumentView", model);
         }
         //Document View
@@ -382,16 +431,34 @@ namespace WebTools.Controllers
                 model.Extension = Path.GetExtension(reportList.FileLink);
                 model.FileLink = documentLink;
             }
-            model.DocumentViewer = new DocumentViewer
+                ClaimsPrincipal currentUser = this.User;
+            if (currentUser.IsInRole("Document") || currentUser.IsInRole("Admin"))
             {
-                Width = 1100,
-                Height = 600,
-                Resizable = false,
-                Document = documentLink,
+                model.DocumentViewer = new DocumentViewer
+                {
+                    Width = 1100,
+                    Height = 600,
+                    Resizable = false,
+                    Document = documentLink,
+                    AllowedPermissions = DocumentViewerPermissions.All
 
-            };
+                };
+            }
+            else
+            {
+                model.DocumentViewer = new DocumentViewer
+                {
+                    Width = 1100,
+                    Height = 600,
+                    Resizable = false,
+                    Document = documentLink,
+                    AllowedPermissions = DocumentViewerPermissions.All,
+                    DeniedPermissions = DocumentViewerPermissions.Print | DocumentViewerPermissions.Download | DocumentViewerPermissions.DownloadAsPdf
 
+                };
+            }
             return PartialView("_DocumentViewPartial", model);
-        }
+        }  
+        #endregion
     }
 }

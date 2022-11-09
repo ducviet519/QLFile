@@ -1,34 +1,45 @@
 ﻿@{
-    ViewData["Title"] = "404 - Not Found";
+    ViewData["Title"] = ViewBag.ErrorMessage;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                </div>
-                <div class="col-sm-6">
-                    
-                </div>
-            </div>
-        </div><!-- /.container-fluid -->
-    </section>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
 
+    p {
+        margin: 0;
+    }
+
+    .layout-navbar-fixed .wrapper .content-wrapper {
+        margin-top: 50px;
+    }
+
+    .error-page > .error-content {
+        margin-left: 50px;
+    }
+</style>
+<div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
         <div class="error-page">
-            <h2 class="headline text-warning"> 404</h2>
+            <br />
+            <div class="col">
+                <div class="error-content text-center" style="font-size:14px; font-weight:bold">
+                    <h2><i class="fas fa-exclamation-triangle text-warning"></i> @ViewBag.ErrorMessage</h2>
 
-            <div class="error-content">
-                <h3><i class="fas fa-exclamation-triangle text-warning"></i> @ViewBag.ErrorMessage</h3>
-
-                <p>
-                    Chúng tôi không tìm thấy trang web bạn đang truy cập.
-                    <a href="@Url.Action("Index","Home")">Bấm vào đây để trở về trang chủ</a>
-                </p>             
+                    <p>
+                        @ViewBag.Msg
+                        <br />
+                        <a href="@Url.Action("Index","Home")">Bấm vào đây để trở về trang chủ</a>
+                    </p>
+                </div>
             </div>
+            <div class="col">
+                <img src="@ViewBag.ErrorImage" alt="error-@ViewBag.ErrorMessage" />
+            </div>
+
             <!-- /.error-content -->
         </div>
         <!-- /.error-page -->

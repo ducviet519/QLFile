@@ -48,11 +48,7 @@
                         <li class="nav-item d-none d-sm-inline-block">
                             <a class="nav-link" asp-area="" asp-controller="Report" asp-action="Index">Quản lý biểu mẫu</a>
                         </li>
-                        <li class="nav-item d-none d-sm-inline-block">
-                            <a class="nav-link" asp-area="" asp-controller="BaoHiemTuNguyen" asp-action="KhachHangThanhToanBHTN">Bảo hiểm tự nguyện</a>
-                        </li>
-
-
+                        
                         @if (User.IsInRole("Admin"))
                         {
                             @*dropdown-hover*@
@@ -65,15 +61,12 @@
                                     <li><a asp-area="" asp-controller="Permission" asp-action="ModuleAction" class="dropdown-item">ModuleActions</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item dropdown dropdown-hover">
+                            @*<li class="nav-item dropdown dropdown-hover">
                                 <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Google API</a>
                                 <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                                    <li><a asp-area="" asp-controller="GoogleAPI" asp-action="GoogleFiles" class="dropdown-item">Danh sách file Goolge Driver </a></li>
-                                    <li><a asp-area="" asp-controller="GoogleAPI" asp-action="UploadFileGG" class="dropdown-item">Upload File Google Drive</a></li>
                                     <li><a asp-area="" asp-controller="GoogleAPI" asp-action="SearchGoogleFiles" class="dropdown-item">Tìm File Google Drive</a></li>
                                 </ul>
-                            </li>
-
+                            </li>*@
                         }
 
                     </ul>

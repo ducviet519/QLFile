@@ -80,7 +80,7 @@
                                                                                 <a class="dropdown-item" href="/Permission/DeleteRoles?id=@item.RoleID"><i class="fa fa-trash-alt"></i> &nbspXóa</a>
                                                                                 <a class="dropdown-item" data-toggle="ajax-modal" data-target="#editRoleControllerAction" data-url="/Permission/RoleActions?id=@item.RoleID"><i class="fa fa-share-alt"></i> &nbspManager Role</a>
                                                                             </div>
-                                                                        </div>                                                                      
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
                                                             }
@@ -117,7 +117,7 @@
                                             <div class="row form-group">
                                                 <div class="col-2"><label for="Description">Mô tả:</label></div>
                                                 <div class="col"><textarea rows="4" class="form-control" name="Description" id="Description"></textarea></div>
-                                            </div>                                           
+                                            </div>
                                         </div>
                                         <!-- /.card-body -->
 
@@ -142,3 +142,17 @@
     </div>
     <div id="ReportPopup"></div>
 </section>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('body').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
+                var url = $(this).data('url');
+                $(this).callModal(url);
+            });
+            $('body').on('click', 'button[data-toggle="ajax-modal"]', function (event) {
+                var url = $(this).data('url');
+                $(this).callModal(url);
+            });
+        });
+    </script>
+}

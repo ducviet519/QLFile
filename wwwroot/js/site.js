@@ -11,6 +11,7 @@ function searchDataTable(id, columnData, url, disableColumn) {
     var table = $(id).DataTable();
     if ($.fn.dataTable.isDataTable(id)) {
         table.destroy();
+        $(id).find('thead .filters').remove();
         $(id).find('tbody').empty();
     }
     var table = $(id).DataTable({
@@ -25,6 +26,7 @@ function searchDataTable(id, columnData, url, disableColumn) {
         "order": [[0, 'asc']],
         "columnDefs": [
             { orderable: false, targets: array },
+            { orderable: false, targets: 'filters' },
             { className: "text-wrap", targets: "_all" },
             { defaultContent: '', targets: "_all" },
         ],
@@ -55,7 +57,7 @@ function searchDataTable(id, columnData, url, disableColumn) {
     return table;
 }
 
-function searchDataTableWithInput(id, columnData, url, pageLength, disableColumn) {
+function searchDataTableWithInput(id, columnData, url, pageLength, disableColumn, disableInput) {
     var array = [];
     $.each(disableColumn.split(','), function (idx, val) {
         array.push(parseInt(val));
@@ -104,12 +106,12 @@ function searchDataTableWithInput(id, columnData, url, pageLength, disableColumn
                 .eq(0)
                 .each(function (colIdx) {
                     // Set the header cell to contain the input element
-                    if (colIdx != 7) {
+                    if (colIdx != disableInput) {
                         var cell = $('.filters th').eq(
                             $(api.column(colIdx).header()).index()
                         );
                         var title = $(cell).text();
-                        $(cell).html('<input type="text" class="form-control" placeholder="' + title + '" />');
+                        $(cell).html('<input type="text" class="form-control col p-0 m-0" placeholder="' + title + '" />');
                     }
                     // On every keypress in this input
                     $(

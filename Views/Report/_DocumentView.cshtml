@@ -2,14 +2,20 @@
 @using GleamTech.DocumentUltimate.AspNet.UI
 @model WebTools.Models.DocumentViewModel
 
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>@Model.FileName</title>
     @this.RenderHead(Model.DocumentViewer)
+    <style>
+        .dv-control {
+            width: 100% !important;
+            /*height: 1500px !important;*/
+        }
+    </style>
 </head>
 <body style="margin: 20px;">
     @this.RenderBody(Model.DocumentViewer)
-    @DateTime.Now.ToString("T")
 </body>
 </html>
