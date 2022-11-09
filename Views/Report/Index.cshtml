@@ -88,9 +88,24 @@
                                 @*@if (User.IsInRole("Editer") || User.IsInRole("Manager") || User.IsInRole("Admin"))*@
                                 @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Add")).Result.Succeeded)
                                 {
-
                                     <div class="col-auto"><button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#addReport" data-url="@Url.Action("AddReport")">Thêm biểu mẫu</button></div>
                                 }
+                                @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Versions.View")).Result.Succeeded)
+                                {<input type="hidden" id="showVersion" value="View" /> }
+                                else
+                                { <input type="hidden" id="showVersion" value="Hide" />}
+                                @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Softs.View")).Result.Succeeded)
+                                {<input type="hidden" id="showSofts" value="View" /> }
+                                else
+                                { <input type="hidden" id="showSofts" value="Hide" />}
+                                @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Details.View")).Result.Succeeded)
+                                {<input type="hidden" id="showDetails" value="View" /> }
+                                else
+                                { <input type="hidden" id="showDetails" value="Hide" />}
+                                @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Edit")).Result.Succeeded)
+                                {<input type="hidden" id="showReport" value="Edit" /> }
+                                else
+                                { <input type="hidden" id="showReport" value="Hide" />}
                             </div>
                         </form>
                     </div>
@@ -143,7 +158,11 @@
         });
 
         $(function () {
-            var columnData = [
+            var showVersion = ((document.getElementById("showVersion") || {}).value) || "";
+            var showSofts = ((document.getElementById("showSofts") || {}).value) || "";
+            var showDetails = ((document.getElementById("showDetails") || {}).value) || "";
+            var showReport = ((document.getElementById("showReport") || {}).value) || "";
+                var columnData = [
                 { "data": "stt", "orderable": "false", "class": "text-center"},
                 { "data": "tenBM" },
                 { "data": "maBM" },
@@ -161,23 +180,26 @@
                         else {
                             var file = "<a class='btn btn-link' data-toggle='ajax-modal' data-target='#documentView-" + data.idPhienBan + "' data-url='/Report/PopUpDocumentView?link=" + data.idPhienBan + "'>File</a>";
                         }
-
-                        if (true) {
+                        if (showVersion == "View") {
                             var version = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportVersion-" + data.idBieuMau + "' data-url='/Report/Version?id=" + data.idBieuMau + "'>Phiên bản</a>";
                         }
                         else { var version = ""; }
-                        if (true) {
+                        if (showSofts == "View") {
                             var software = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportSoft-" + data.idBieuMau + "' data-url='/Report/Soft?id=" + data.idBieuMau + "'>Phần mềm</a>";
                         } else { var software = ""; }
-                        if (true) {
+                        if (showDetails = "View") {
                             var detail = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportDetail-" + data.idBieuMau + "' data-url='/Report/Detail?id=" + data.idBieuMau + "'>Chi tiết</a>";
                         } else { var detail = ""; }
-                        if ('@User.IsInRole("Editer")' == 'True' || '@User.IsInRole("Manager")' == 'True' || '@User.IsInRole("Admin")' == 'True') {
+                        if (showReport == "Edit") {
                             var edit = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportEdit-" + data.idBieuMau + "' data-url='/Report/EditReport?id=" + data.idBieuMau + "'>Sửa biểu mẫu</a>";
                         } else { var edit = ""; }
 
                         var dropmenu = "<button type='button' class='btn btn-link dropdown-toggle' data-toggle='dropdown'>Chi tiết</button ><div class='dropdown-menu' role='menu'>" + version + " " + software + " " + detail + " " + edit + "</div>";
-                        var result = "<div class='btn-group'>" + file + " " + dropmenu + "</div>";
+                        if ('@User.IsInRole("Editer")' == 'True' || '@User.IsInRole("Manager")' == 'True' || '@User.IsInRole("Admin")' == 'True') {
+                            var result = "<div class='btn-group'>" + file + " " + dropmenu + "</div>";
+                        }
+                        else { var result = "<div class='btn-group'>" + file + "</div>"; }
+
                         return result;
                     }
                 },
@@ -206,7 +228,7 @@
                     searchTerm += "&searchURD=" + searchURD;
 
                 searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList?" + searchTerm, 10, "0,8", 8);
-                               
+
             });
         });
 
