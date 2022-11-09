@@ -9,6 +9,8 @@ namespace WebTools.Models.Entities
     {
         public string Permission { get; set; }
         public string UserName { get; set; }
+        public string UserID { get; set; }
+        public string RoleID { get; set; }
         public int ControllerID { get; set; }
         public int ActionID { get; set; }
     }

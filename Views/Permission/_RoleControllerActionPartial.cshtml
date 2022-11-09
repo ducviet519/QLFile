@@ -15,13 +15,13 @@
             <div class="modal-body">
                 <form method="post" asp-controller="Permission" asp-action="AddRoldAction" id="userForm">
                     @Html.AntiForgeryToken()
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" width="100%">
                         <thead>
                             <tr>
-                                <th>Controller</th>
-                                <th>Action</th>
-                                <th>Mô tả</th>
-                                <th>Trạng thái</th>
+                                <th class="text-nowrap w-auto">Controller</th>
+                                <th class="text-nowrap w-auto">Action</th>
+                                <th class="text-nowrap w-auto">Mô tả</th>
+                                <th class="text-nowrap w-auto">Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,14 +38,14 @@
                                                 <input type="hidden" id="RoleID" name="RoleID-@count" value="@Model.Roles.RoleID" />
                                             </td>
                                             <td>
-                                                @item.ActionName
+                                                Permission.@item.ControllerName.@item.ActionName
                                                 <input type="hidden" id="ActionID" name="ActionID-@count" value="@item.ActionID" />
                                             </td>
                                             <td>
                                                 @item.Description
                                                 <input type="hidden" id="Description" name="Description-@count" value="@item.Description" />
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <input type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" id="Status-@count" name="Status-@count" value="false" checked="@item.Status">
                                                 <script type="text/javascript">
                                                     $(function () {
