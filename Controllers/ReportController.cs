@@ -32,6 +32,7 @@ namespace WebTools.Controllers
         private readonly IReportDetailServices _reportDetailServices;
         private readonly IReportURDServices _reportURDServices;
         private readonly IDepts _depts;
+        private readonly ISoftwareServices _softwareServices;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IGoogleDriveAPI _googleDriveAPI;
         private readonly IUploadFileServices _uploadFileServices;
@@ -44,6 +45,7 @@ namespace WebTools.Controllers
             IReportDetailServices reportDetailServices,
             IReportURDServices reportURDServices,
             IDepts depts,
+            ISoftwareServices softwareServices,
             IWebHostEnvironment webHostEnvironment,
             IUploadFileServices uploadFileServices,
             IGoogleDriveAPI googleDriveAPI
@@ -56,6 +58,7 @@ namespace WebTools.Controllers
             _reportDetailServices = reportDetailServices;
             _reportURDServices = reportURDServices;
             _depts = depts;
+            _softwareServices = softwareServices;
             _webHostEnvironment = webHostEnvironment;
             _uploadFileServices = uploadFileServices;
             _googleDriveAPI = googleDriveAPI;
@@ -268,14 +271,7 @@ namespace WebTools.Controllers
             model.URDs = new SelectList(await _reportURDServices.GetAll_URDAsync(), "ID", "Des");
 
             //Softs SelectList
-            var PhanMems = new List<PhanMems>
-            {
-                new PhanMems{ID =  1, Name = "HIS" },
-                new PhanMems{ID =  2, Name = "IVF" },
-                new PhanMems{ID =  3, Name = "HRM" },
-                new PhanMems{ID =  4, Name = "PM Kế toán" },
-            };
-            model.PhanMems = new SelectList(PhanMems, "Name", "Name");
+            model.PhanMems = new SelectList(await _softwareServices.GetSoftwareAsync(), "Name", "Name");
 
             return PartialView("_SoftPartial", model);
         }

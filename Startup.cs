@@ -66,6 +66,7 @@ namespace WebTools
             services.AddScoped<IReportDetailServices, ReportDetailServices>();
             services.AddScoped<IReportURDServices, ReportURDServices>();
             services.AddScoped<IDepts, DeptsServices>();
+            services.AddScoped<ISoftwareServices, SoftwareServices>();
             services.AddScoped<IRolesServices, RolesServices>();
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IModuleControllerServices, ModuleControllerServices>();
@@ -74,6 +75,7 @@ namespace WebTools
             services.AddScoped<IBaoHiemTuNguyenServices, BaoHiemTuNguyenServices>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IUploadFileServices, UploadFileServices>();
+            
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ToolsDB")));
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddGleamTech();
