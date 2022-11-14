@@ -107,14 +107,6 @@
     <None Include="wwwroot\lib\moment\locales.js" />
     <None Include="wwwroot\lib\moment\locales.min.js" />
     <None Include="wwwroot\lib\moment\locales.min.js.map" />
-    <None Include="wwwroot\lib\moment\locale\en-au.js" />
-    <None Include="wwwroot\lib\moment\locale\en-ca.js" />
-    <None Include="wwwroot\lib\moment\locale\en-gb.js" />
-    <None Include="wwwroot\lib\moment\locale\en-ie.js" />
-    <None Include="wwwroot\lib\moment\locale\en-il.js" />
-    <None Include="wwwroot\lib\moment\locale\en-in.js" />
-    <None Include="wwwroot\lib\moment\locale\en-nz.js" />
-    <None Include="wwwroot\lib\moment\locale\en-SG.js" />
     <None Include="wwwroot\lib\moment\locale\vi.js" />
     <None Include="wwwroot\lib\moment\moment-with-locales.js" />
     <None Include="wwwroot\lib\moment\moment-with-locales.min.js" />
