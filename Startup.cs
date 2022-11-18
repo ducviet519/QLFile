@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using WebTools.Authorization;
 using WebTools.Context;
 using WebTools.Models.Entities;
+using WebTools.Router;
 using WebTools.Services;
 using WebTools.Services.Interface;
 
@@ -108,6 +109,10 @@ namespace WebTools
             app.UseAuthentication();
             app.UseAuthorization();
 
+            //var rewrite = new RewriteOptions();
+            //    rewrite.Rules.Add(new CustomRule());
+            //app.UseRewriter(rewrite);
+
             var options = new RewriteOptions()
             .AddRedirectToHttps();
             app.UseRewriter(options);
@@ -119,7 +124,7 @@ namespace WebTools
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-
+            
         }
     }
 }
