@@ -271,7 +271,7 @@ namespace WebTools.Controllers
             model.URDs = new SelectList(await _reportURDServices.GetAll_URDAsync(), "ID", "Des");
 
             //Softs SelectList
-            model.PhanMems = new SelectList(await _softwareServices.GetSoftwareAsync(), "Name", "Name");
+            model.PhanMems = new SelectList(await _softwareServices.GetSoftwareAsync(), "ID", "Name");
 
             return PartialView("_SoftPartial", model);
         }

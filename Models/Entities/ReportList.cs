@@ -75,6 +75,11 @@ namespace WebTools.Models
         public int PhanMem1 { get; set; }
         public int PhienBan1 { get; set; }
 
+        public string KySo { get; set; }
+        public string KyDienTu { get; set; }
+        public string KyTay { get; set; }
+        public string HSBADienTu { get; set; }
+
 
         [StringLength(1000)]
         public string FileLink { get; set; }
@@ -85,5 +90,6 @@ namespace WebTools.Models
         [Display(Name = "File:")]
         [BindProperty]
         public IFormFile fileUpload { get; set; }
+
     }
 }

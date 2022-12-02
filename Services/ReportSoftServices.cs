@@ -64,7 +64,11 @@ namespace WebTools.Services
                     URD = reportSoft.URD,
                     ViTriIn = reportSoft.ViTriIn,
                     CachIn = reportSoft.CachIn,
-                    TrangThaiPM = reportSoft.TrangThaiPM
+                    TrangThaiPM = reportSoft.TrangThaiPM,
+                    KySo = reportSoft.KySo,
+                    KyDienTu = reportSoft.KyDienTu,
+                    KyTay = reportSoft.KyTay,
+                    HSBADienTu = reportSoft.HSBADienTu
                 }
             };
             try
@@ -77,7 +81,7 @@ namespace WebTools.Services
                         new
                         {
                             ReportSoft = softTable.AsTableValuedParameter("dbo.ReportSoft",
-                            new[] { "IDBieuMau", "IDPhienBan", "PhanMem", "URD", "ViTriIn", "CachIn", "TrangThaiPM" }),
+                            new[] { "IDBieuMau", "IDPhienBan", "PhanMem", "URD", "ViTriIn", "CachIn", "TrangThaiPM", "KySo", "KyDienTu", "KyTay", "HSBADienTu" }),
                             User = reportSoft.User
                         },
                         commandType: CommandType.StoredProcedure);

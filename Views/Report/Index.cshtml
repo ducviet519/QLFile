@@ -115,18 +115,22 @@
                         <div class="dataTables_wrapper dt-bootstrap4">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table class="table table-bordered table-striped dataTable dtr-inline" width="100%" role="grid" id="tableReport">
+                                    <table class="table table-striped table-bordered table-responsive nowrap" width="100%" role="grid" id="tableReport">
                                         <thead class="thead">
                                             <tr>
-                                                <th class="text-nowrap w-auto">STT</th>
-                                                <th class="text-nowrap w-auto">Tên biểu mẫu</th>
-                                                <th class="text-nowrap w-auto">Mã biểu mẫu</th>
-                                                <th class="text-nowrap w-auto">Phiên bản</th>
-                                                <th class="text-nowrap w-auto">Ngày phát hành</th>
-                                                <th class="text-nowrap w-auto">Trạng thái</th>
-                                                <th class="text-nowrap w-auto">Phần mềm</th>
-                                                <th class="text-nowrap w-auto">Trạng thái phần mềm</th>
-                                                <th class="text-nowrap w-auto"></th>
+                                                <th>STT</th>
+                                                <th>Tên biểu mẫu</th>
+                                                <th>Mã biểu mẫu</th>
+                                                <th>Phiên bản</th>
+                                                <th>Ngày phát hành</th>
+                                                <th>Trạng thái</th>
+                                                <th>Phần mềm</th>
+                                                <th>Trạng thái phần mềm</th>
+                                                <th>Ký số</th>
+                                                <th>Ký điện tử</th>
+                                                <th>Ký tay</th>
+                                                <th>HSBA Điện tử</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -164,21 +168,26 @@
             var showReport = ((document.getElementById("showReport") || {}).value) || "";
                 var columnData = [
                 { "data": "stt", "orderable": "false", "class": "text-center"},
-                { "data": "tenBM" },
+                { "data": "tenBM", "width": "100%"},
                 { "data": "maBM" },
                 { "data": "phienBan", "class": "text-center" },
                 { "data": "ngayBanHanh", "class": "text-center" },
                 { "data": "trangThai", "class": "text-center" },
                 { "data": "phanMem", "class": "text-center" },
                 { "data": "trangThaiPM", "class": "text-center" },
+                { "data": "kySo", "class": "text-center" },
+                { "data": "kyDienTu", "class": "text-center" },
+                { "data": "kyTay", "class": "text-center" },
+                { "data": "hsbaDienTu", "class": "text-center" },
+
                 {
                     "data": { idBieuMau: "idBieuMau", idPhienBan: "idPhienBan", fileLink: "fileLink" },
                     "render": function (data, row) {
                         if (data.fileLink == "") {
-                            var file = "<a href='#' target='_blank' class='btn btn-link'>&nbsp; &nbsp; &nbsp; &nbsp;</a>";
+                            var file = "<a href='#' target='_blank' class='btn btn-link pl-0 pr-0'>&nbsp; &nbsp; &nbsp; &nbsp;</a>";
                         }
                         else {
-                            var file = "<a class='btn btn-link' data-toggle='ajax-modal' data-target='#documentView-" + data.idPhienBan + "' data-url='/Report/PopUpDocumentView?link=" + data.idPhienBan + "'>File</a>";
+                            var file = "<a class='btn btn-link pl-0 pr-0' data-toggle='ajax-modal' data-target='#documentView-" + data.idPhienBan + "' data-url='/Report/PopUpDocumentView?link=" + data.idPhienBan + "'>File</a>";
                         }
                         if (showVersion == "View") {
                             var version = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportVersion-" + data.idBieuMau + "' data-url='/Report/Version?id=" + data.idBieuMau + "'>Phiên bản</a>";
@@ -204,7 +213,7 @@
                     }
                 },
             ]
-            searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList/", 10, "0,8", 8);
+            searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList/", 10, "0,8,9,10,11,12", 8);
 
             $('#btnSearch').on('click', function () {
                 var loai = $("#search").val() || "";
@@ -228,7 +237,6 @@
                     searchTerm += "&searchURD=" + searchURD;
 
                 searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList?" + searchTerm, 10, "0,8", 8);
-
             });
         });
 
@@ -240,7 +248,7 @@
             $('body').on('click', 'button[data-toggle="ajax-modal"]', function (event) {
                 var url = $(this).data('url');
                 $(this).callModal(url);
-            });
+            });           
         });
     </script>
 }

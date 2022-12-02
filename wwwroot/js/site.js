@@ -81,11 +81,12 @@ function searchDataTableWithInput(id, columnData, url, pageLength, disableColumn
         "pageLength": pageLength,
         "searching": true,
         "processing": true,
-        "ordering": true,
+        "ordering": false,
         "info": true,
-        "autoWidth": true,
-        "responsive": false,
-        "order": [[0, 'asc']],
+        "autoWidth": false,
+        "responsive": true,
+        "orderCellsTop": true,
+        //"order": [[0, 'asc']],
         "columnDefs": [
             { orderable: false, targets: array },
             { className: "text-wrap", targets: "_all" },
@@ -106,12 +107,21 @@ function searchDataTableWithInput(id, columnData, url, pageLength, disableColumn
                 .eq(0)
                 .each(function (colIdx) {
                     // Set the header cell to contain the input element
-                    if (colIdx != disableInput) {
+                    if (colIdx > 0 && colIdx < 8) {
                         var cell = $('.filters th').eq(
                             $(api.column(colIdx).header()).index()
                         );
                         var title = $(cell).text();
-                        $(cell).html('<input type="text" class="form-control col p-0 m-0" placeholder="' + title + '" />');
+                        $(cell).html('<input type="text" class="form-control col p-0 m-0" />');
+                        //$(cell).html('<input type="text" class="form-control col p-0 m-0" placeholder="' + title + '" />');
+                    }
+                    else {
+                        var cell = $('.filters th').eq(
+                            $(api.column(colIdx).header()).index()
+                        );
+                        var title = $(cell).text();
+                        $(cell).empty();
+                        
                     }
                     // On every keypress in this input
                     $(
