@@ -108,23 +108,13 @@ namespace WebTools
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            //var rewrite = new RewriteOptions();
-            //    rewrite.Rules.Add(new CustomRule());
-            //app.UseRewriter(rewrite);
-
-            var options = new RewriteOptions()
-            .AddRedirectToHttps();
-            app.UseRewriter(options);
-
+          
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-            
+            });           
         }
     }
 }
