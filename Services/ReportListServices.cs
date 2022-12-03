@@ -220,5 +220,35 @@ namespace WebTools.Services
             }
 
         }
+
+        public async Task<string> DeleteReportListAsync(string IDBieuMau, string IDPhienBan)
+        {
+            string result = String.Empty;
+            try
+            {
+                using (IDbConnection dbConnection = Connection)
+                {
+                    dbConnection.Open();
+                    var data = await dbConnection.QueryAsync<ReportList>("sp_Report_Delete",
+                        new
+                        {
+                            IDBieuMau = IDBieuMau,
+                            IDPhienBan = IDPhienBan,
+                        },
+                        commandType: CommandType.StoredProcedure);
+                    if (data != null)
+                    {
+                        result = "OK";
+                    }
+                    dbConnection.Close();
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                result = ex.Message;
+                return result;
+            }
+        }
     }
 }

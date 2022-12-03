@@ -201,6 +201,38 @@ namespace WebTools.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteReport(string IDBieuMau, string IDPhienBan)
+        {
+            string message = String.Empty;
+            string title = String.Empty;
+            string result = String.Empty;
+            try
+            {
+                result = await _reportListServices.DeleteReportListAsync(IDBieuMau, IDPhienBan);
+                if (result == "OK")
+                {
+                    message = $"Đã xóa biểu mẫu";
+                    title = "Thành công!";
+                    result = "success";
+                }
+                else
+                {
+                    message = $"Lỗi! {result}";
+                    title = "Lỗi!";
+                    result = "error";
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                title = "Lỗi!";
+                result = "error";
+            }
+            return Json(new { Result = result, Title = title, Message = message });
+        }
+
         #endregion
 
         #region Phiên bản

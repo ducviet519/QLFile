@@ -111,6 +111,11 @@
                     </div>
                     <div class="card-body">
                         <div id="ReportPopup"></div>
+                        <div class="row justify-content-end">
+                            <div class="col">
+                                <a class="btn btn-primary" href="/ExportExcel/DanhSachBieuMauExcel">Xuất Excel Danh sách Biểu mẫu</a>
+                            </div>
+                        </div>
                         <!--Bảng biểu mẫu -->
                         <div class="dataTables_wrapper dt-bootstrap4">
                             <div class="row">
@@ -202,8 +207,10 @@
                         if (showReport == "Edit") {
                             var edit = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportEdit-" + data.idBieuMau + "' data-url='/Report/EditReport?id=" + data.idBieuMau + "'>Sửa biểu mẫu</a>";
                         } else { var edit = ""; }
-
-                        var dropmenu = "<button type='button' class='btn btn-link dropdown-toggle' data-toggle='dropdown'>Chi tiết</button ><div class='dropdown-menu' role='menu'>" + version + " " + software + " " + detail + " " + edit + "</div>";
+                        if ('@User.IsInRole("Admin")' == 'True') {
+                            var del = "<a class='dropdown-item' data-toggle='delete' data-target='#reportDelete-" + data.idBieuMau + "' data-url='/Report/DeleteReport?IDBieuMau=" + data.idBieuMau + "&&IDPhienBan=" + data.idPhienBan+"'>Xóa biểu mẫu</a>";
+                        } else { var del = "";}
+                        var dropmenu = "<button type='button' class='btn btn-link dropdown-toggle' data-toggle='dropdown'>Chi tiết</button ><div class='dropdown-menu' role='menu'>" + version + " " + software + " " + detail + " " + edit + " " + del + "</div>";
                         if ('@User.IsInRole("Editer")' == 'True' || '@User.IsInRole("Manager")' == 'True' || '@User.IsInRole("Admin")' == 'True') {
                             var result = "<div class='btn-group'>" + file + " " + dropmenu + "</div>";
                         }
@@ -248,7 +255,24 @@
             $('body').on('click', 'button[data-toggle="ajax-modal"]', function (event) {
                 var url = $(this).data('url');
                 $(this).callModal(url);
-            });           
+            });
+            $('body').on('click', 'a[data-toggle="delete"]', function (event) {
+                var url = $(this).data('url');
+                var result = confirm("Bạn có chắc chắn muốn xóa biểu mẫu này?");
+                if (result) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        success: function (data) {
+                            $(this).callToast(data.result, data.title, data.message);
+                        },
+                        error: function (data) {
+                            $(this).callToast(data.result, data.title, data.message);
+                        }
+                    });
+                }
+                
+            });
         });
     </script>
 }
