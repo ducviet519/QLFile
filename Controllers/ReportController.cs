@@ -448,7 +448,8 @@ namespace WebTools.Controllers
 
         public async Task<IActionResult> PopUpDocumentView(string link)
         {
-            DocumentViewModel model = await GetDocumentViewerModel(link);         
+            DocumentViewModel model = await GetDocumentViewerModel(link);                  
+            ViewData["Iframe"] = @$"<iframe name='myIframe' id='myIframe' src='/Report/DocumentView?link={link}' title='preview' style='width:100%;' frameborder='0' scrolling='no' onload='resizeIframe(this)' allowfullscreen></iframe>";
             //return PartialView("_DocumentViewPartial", model);
             return PartialView("_PreviewPartial", model);
         }
