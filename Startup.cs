@@ -1,3 +1,4 @@
+using GleamTech.AspNet;
 using GleamTech.AspNet.Core;
 using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -36,7 +38,6 @@ namespace WebTools
         {
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-
             services.AddControllersWithViews();
             services.AddAuthentication(           
                 CookieAuthenticationDefaults.AuthenticationScheme)
@@ -44,7 +45,7 @@ namespace WebTools
                 {
                     options.LoginPath = "/User/Login";
                     options.AccessDeniedPath = "/User/Denied";
-                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.Cookie.IsEssential = true;
                     options.Events = new CookieAuthenticationEvents()
@@ -65,10 +66,13 @@ namespace WebTools
                 });
             services.AddSession(options =>
             {
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.IsEssential = true;
+		        options.IdleTimeout = TimeSpan.FromDays(1);
+                //options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                //options.Cookie.IsEssential = true;
             });
+            services.AddGleamTech();
+
             services.AddScoped<IReportListServices, ReportListServices>();
             services.AddScoped<IReportVersionServices, ReportVersionServices>();
             services.AddScoped<IReportSoftServices, ReportSoftServices>();
@@ -87,7 +91,6 @@ namespace WebTools
             
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ToolsDB")));
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            services.AddGleamTech();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

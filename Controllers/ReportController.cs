@@ -395,8 +395,9 @@ namespace WebTools.Controllers
             if (permissionss.Any()) { return true; }
             else { return false; }
         }
+
         //Document View
-        public async Task<IActionResult> DocumentView(string link)
+        private async Task<DocumentViewModel> GetDocumentViewerModel(string link)
         {
             var data = (await _reportListServices.GetReportListAsync()).ToList();
             if (!String.IsNullOrEmpty(link))
@@ -406,6 +407,7 @@ namespace WebTools.Controllers
             ReportList reportList = data.FirstOrDefault();
             var documentLink = "";
             DocumentViewModel model = new DocumentViewModel();
+            model.IDPhienBan = link;
             if (!String.IsNullOrEmpty(reportList.FileLink))
             {
                 documentLink = $@"{reportList.FileLink}";
@@ -419,74 +421,42 @@ namespace WebTools.Controllers
             {
                 model.DocumentViewer = new DocumentViewer
                 {
-                    Width = 1200,
+                    Width = 1100,
                     Height = 600,
                     Resizable = false,
                     Document = documentLink,
                     AllowedPermissions = DocumentViewerPermissions.All,
+                    //DisplayMode = GleamTech.AspNet.UI.DisplayMode.Window,
                 };
             }
             else
             {
                 model.DocumentViewer = new DocumentViewer
                 {
-                    Width = 1200,
+                    Width = 1100,
                     Height = 600,
                     Resizable = false,
                     Document = documentLink,
                     AllowedPermissions = DocumentViewerPermissions.All,
-                    DeniedPermissions = DocumentViewerPermissions.Print | DocumentViewerPermissions.Download | DocumentViewerPermissions.DownloadAsPdf
+                    DeniedPermissions = DocumentViewerPermissions.Print | DocumentViewerPermissions.Download | DocumentViewerPermissions.DownloadAsPdf,
+                    //DisplayMode = GleamTech.AspNet.UI.DisplayMode.Window,
                 };
-            }          
-            return PartialView("_DocumentView", model);
+            }
+
+            return model;
         }
-        //Document View
+
         public async Task<IActionResult> PopUpDocumentView(string link)
         {
-            var data = (await _reportListServices.GetReportListAsync()).ToList();
-            if (!String.IsNullOrEmpty(link))
-            {
-                data = data.Where(s => !String.IsNullOrEmpty(s.IDPhienBan) && s.IDPhienBan.ToLower().Contains(link.ToLower())).ToList();
-            }
-            ReportList reportList = data.FirstOrDefault();
-            var documentLink = "";
-            DocumentViewModel model = new DocumentViewModel();
-            if (!String.IsNullOrEmpty(reportList.FileLink))
-            {
-                documentLink = $@"{reportList.FileLink}";
-                string name = Path.GetFileName(reportList.FileLink);
-                model.FileName = name.Substring(15, name.Length - 15);
-                model.Extension = Path.GetExtension(reportList.FileLink);
-                model.FileLink = documentLink;
-            }
-                ClaimsPrincipal currentUser = this.User;
-            if (currentUser.IsInRole("Document") || currentUser.IsInRole("Admin"))
-            {
-                model.DocumentViewer = new DocumentViewer
-                {
-                    Width = 1100,
-                    Height = 600,
-                    Resizable = false,
-                    Document = documentLink,
-                    AllowedPermissions = DocumentViewerPermissions.All
-
-                };
-            }
-            else
-            {
-                model.DocumentViewer = new DocumentViewer
-                {
-                    Width = 1100,
-                    Height = 600,
-                    Resizable = false,
-                    Document = documentLink,
-                    AllowedPermissions = DocumentViewerPermissions.All,
-                    DeniedPermissions = DocumentViewerPermissions.Print | DocumentViewerPermissions.Download | DocumentViewerPermissions.DownloadAsPdf
-
-                };
-            }
-            return PartialView("_DocumentViewPartial", model);
-        }  
+            DocumentViewModel model = await GetDocumentViewerModel(link);         
+            //return PartialView("_DocumentViewPartial", model);
+            return PartialView("_PreviewPartial", model);
+        }
+        public async Task<IActionResult> DocumentView(string link)
+        {
+            DocumentViewModel model = await GetDocumentViewerModel(link);
+            return PartialView("_DocumentView", model);
+        }
         #endregion
     }
 }

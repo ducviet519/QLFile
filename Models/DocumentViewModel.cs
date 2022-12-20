@@ -13,5 +13,6 @@ namespace WebTools.Models
         public string FileName { get; set; }
         public string FullName { get; set; }
         public string Extension { get; set; }
+        public string IDPhienBan { get; set; }
     }
 }

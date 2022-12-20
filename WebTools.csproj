@@ -104,8 +104,6 @@
     <None Include="wwwroot\lib\jquery\jquery.slim.js" />
     <None Include="wwwroot\lib\jquery\jquery.slim.min.js" />
     <None Include="wwwroot\lib\jquery\jquery.slim.min.map" />
-    <None Include="wwwroot\lib\jszip\jszip.js" />
-    <None Include="wwwroot\lib\jszip\jszip.min.js" />
     <None Include="wwwroot\lib\moment\locales.js" />
     <None Include="wwwroot\lib\moment\locales.min.js" />
     <None Include="wwwroot\lib\moment\locales.min.js.map" />
@@ -115,11 +113,6 @@
     <None Include="wwwroot\lib\moment\moment-with-locales.min.js.map" />
     <None Include="wwwroot\lib\moment\moment.min.js" />
     <None Include="wwwroot\lib\moment\moment.min.js.map" />
-    <None Include="wwwroot\lib\pdfmake\pdfmake.js" />
-    <None Include="wwwroot\lib\pdfmake\pdfmake.js.map" />
-    <None Include="wwwroot\lib\pdfmake\pdfmake.min.js" />
-    <None Include="wwwroot\lib\pdfmake\pdfmake.min.js.map" />
-    <None Include="wwwroot\lib\pdfmake\vfs_fonts.js" />
   </ItemGroup>
 
   <ItemGroup>

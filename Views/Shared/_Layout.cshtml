@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/lib/fontawesome-free/css/all.min.css">
-    <!-- daterange picker -->
-    <link rel="stylesheet" href="~/lib/daterangepicker/daterangepicker.css">
-    <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="/lib/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="~/lib/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <!-- Select2 -->
@@ -20,7 +16,6 @@
     <!-- DataTables -->
     <link rel="stylesheet" href="~/lib/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="~/lib/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/lib/datatables-buttons/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="~/lib/datatables-fixedheader/css/fixedHeader.bootstrap4.min.css">
     <!-- Toastr -->
     <link rel="stylesheet" href="~/lib/toastr/toastr.min.css">
@@ -48,7 +43,7 @@
                         <li class="nav-item d-none d-sm-inline-block">
                             <a class="nav-link" asp-area="" asp-controller="Report" asp-action="Index">Quản lý biểu mẫu</a>
                         </li>
-                        
+
                         @if (User.IsInRole("Admin"))
                         {
                             @*dropdown-hover*@
@@ -88,15 +83,10 @@
         <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- Select2 -->
         <script src="~/lib/select2/js/select2.full.min.js"></script>
-        <!-- Bootstrap4 Duallistbox -->
-        <script src="~/lib/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
         <!-- InputMask -->
         <script src="~/lib/moment/moment.min.js"></script>
-		<script src="~/lib/moment/moment-with-locales.min.js"></script>
         <script src="~/lib/moment/locales.min.js"></script>
         <script src="~/lib/inputmask/jquery.inputmask.min.js"></script>
-        <!-- date-range-picker -->
-        <script src="~/lib/daterangepicker/daterangepicker.js"></script>
         <!-- Tempusdominus Bootstrap 4 -->
         <script src="~/lib/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
         <!-- bs-custom-file-input -->
@@ -110,14 +100,6 @@
         <script src="~/lib/datatables-fixedheader/js/dataTables.fixedHeader.min.js"></script>
         <script src="~/lib/datatables-responsive/js/dataTables.responsive.min.js"></script>
         <script src="~/lib/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-        <script src="~/lib/datatables-buttons/js/dataTables.buttons.min.js"></script>
-        <script src="~/lib/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-        <script src="~/lib/jszip/jszip.min.js"></script>
-        <script src="~/lib/pdfmake/pdfmake.min.js"></script>
-        <script src="~/lib/pdfmake/vfs_fonts.js"></script>
-        <script src="~/lib/datatables-buttons/js/buttons.html5.min.js"></script>
-        <script src="~/lib/datatables-buttons/js/buttons.print.min.js"></script>
-        <script src="~/lib/datatables-buttons/js/buttons.colVis.min.js"></script>
         <!-- Toastr -->
         <script src="~/lib/toastr/toastr.min.js"></script>
         <!-- Bootstrap Toggle -->

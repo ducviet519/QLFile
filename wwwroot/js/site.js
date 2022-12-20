@@ -205,7 +205,7 @@ $.fn.clearData = function ($form) {
 
 $.fn.callModal = function (url) {
 
-    var ReportPopupElement = $('#ReportPopup');
+    var ReportPopupElement = $('#ReportPopup'); 
     $.ajax({
         url: url,
         dataType: 'html',

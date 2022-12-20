@@ -1,6 +1,5 @@
-﻿@using GleamTech.AspNet.Core
-@using GleamTech.DocumentUltimate.AspNet.UI
-@model WebTools.Models.DocumentViewModel
+﻿@using WebTools.Models
+@model DocumentViewModel
 <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="@Model.FileName" aria-hidden="true" id="documentview">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -9,17 +8,14 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" style="color:white">&times;&nbsp;</span>
                 </button>
-
             </div>
-            <div class="modal-body">
-                @this.RenderHead(Model.DocumentViewer)
-                <style>
-                    .dv-control {
-                        width: 100% !important;
-                        /*height: 1500px !important;*/
-                    }
-                </style>
-                @this.RenderBody(Model.DocumentViewer)
+            <div class="modal-body p-0">
+                <script>
+                  function resizeIframe(obj) {
+                    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+                  }
+                </script>
+                <iframe src="@Url.Action("DocumentView", "Report", new {link =  Model.IDPhienBan}, Context.Request.Scheme, null)" title="preview" style="width:100%;" frameborder="0" scrolling="no" onload="resizeIframe(this)"></iframe>
             </div>
             <div class="modal-footer">
             </div>
