@@ -1,4 +1,6 @@
-﻿@model WebTools.Models.ReportVersionViewModel
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model WebTools.Models.ReportVersionViewModel
 @addTagHelper*, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = null;
@@ -79,11 +81,16 @@
                         <div class="col"><input type="text" class="form-control" name="GhiChu" id="GhiChu" value="@Model.VersionList.GhiChu" /></div>
                     </div>
                     <div class="modal-footer">
+
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                        @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+                        @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Versions.Add")).Result.Succeeded)
                         {
                             <button type="button" class="btn btn-primary" data-save="modalFile">Lưu</button>
                         }
+                        @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Versions.Delete")).Result.Succeeded)
+                        {<input type="hidden" id="deleteVersion" value="View" /> }
+                        else
+                        { <input type="hidden" id="deleteVersion" value="Hide" />}
                     </div>
                 </form>
             </div>
@@ -103,6 +110,7 @@
 
     $(function () {
         var idBieuMau = $('#IDBieuMau').val();
+        var deleteVersion = ((document.getElementById("deleteVersion") || {}).value) || "";
         var columnData = [
             { "data": "stt" },
             { "data": "phienBan" },
@@ -115,14 +123,19 @@
                     if (data.fileLink == null || data.fileLink == "") {
                         return "&nbsp;";
                     }
-                    else {                      
+                    else {
                         return "<a href='/Report/DocumentView?link=" + data.idPhienBan + "' target='_blank'>File</a>";
                     }
                 }
             },
             {
                 "data": { idPhienBan: "idPhienBan", idBieuMau: "idBieuMau", fileLink: "fileLink" },
-                "render": function (data, row) { return '<a type="button" class="btn btn-link btn-sm" data-toggle="delete" data-target="#deleteRow-' + data.idPhienBan + '" data-mode-phienban="' + data.idPhienBan + '" data-mode-bieumau="' + data.idBieuMau + '" data-mode-link="' + data.fileLink + '">Xóa</a>'; }
+                "render": function (data, row) {
+                    if (showVersion == "View") {
+                        return '<a type="button" class="btn btn-link btn-sm" data-toggle="delete" data-target="#deleteRow-' + data.idPhienBan + '" data-mode-phienban="' + data.idPhienBan + '" data-mode-bieumau="' + data.idBieuMau + '" data-mode-link="' + data.fileLink + '">Xóa</a>';
+                    }
+                    else { return null; }
+                }
             },
         ]
         var table = searchDataTable("#versionTable", columnData, "/Report/GetVersionsJson?id=" + idBieuMau, "");

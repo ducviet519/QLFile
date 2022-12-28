@@ -1,4 +1,6 @@
-﻿@model WebTools.Models.ReportListViewModel
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model WebTools.Models.ReportListViewModel
 @{
     Layout = null;
 }
@@ -74,7 +76,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                        @if (User.IsInRole("Editer") || User.IsInRole("Manager") || User.IsInRole("Admin"))
+                        @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Edit")).Result.Succeeded)
                         {
                             <button type="submit" class="btn btn-primary" data-save="modalFile">Lưu</button>
                         }

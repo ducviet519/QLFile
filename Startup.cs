@@ -88,6 +88,7 @@ namespace WebTools
             services.AddScoped<IBaoHiemTuNguyenServices, BaoHiemTuNguyenServices>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IUploadFileServices, UploadFileServices>();
+            services.AddScoped<IGopYServices, GopYServices>();
             
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ToolsDB")));
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));

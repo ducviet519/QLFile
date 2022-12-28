@@ -88,7 +88,7 @@
                                 @*@if (User.IsInRole("Editer") || User.IsInRole("Manager") || User.IsInRole("Admin"))*@
                                 @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Add")).Result.Succeeded)
                                 {
-                                    <div class="col-auto"><button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#addReport" data-url="@Url.Action("AddReport")">Thêm biểu mẫu</button></div>
+                                <div class="col-auto"><button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#addReport" data-url="@Url.Action("AddReport")">Thêm biểu mẫu</button></div>
                                 }
                                 @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Versions.View")).Result.Succeeded)
                                 {<input type="hidden" id="showVersion" value="View" /> }
@@ -106,6 +106,10 @@
                                 {<input type="hidden" id="showReport" value="Edit" /> }
                                 else
                                 { <input type="hidden" id="showReport" value="Hide" />}
+                                @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Delete")).Result.Succeeded)
+                                {<input type="hidden" id="deleteReport" value="Edit" /> }
+                                else
+                                { <input type="hidden" id="deleteReport" value="Hide" />}
                             </div>
                         </form>
                     </div>
@@ -150,7 +154,7 @@
             </div>
         </div>
     </div>
-    <div id="ReportPopup"></div>
+    
 </section>
 
 @section Scripts{
@@ -174,6 +178,7 @@
             var showSofts = ((document.getElementById("showSofts") || {}).value) || "";
             var showDetails = ((document.getElementById("showDetails") || {}).value) || "";
             var showReport = ((document.getElementById("showReport") || {}).value) || "";
+            var deleteReport = ((document.getElementById("deleteReport") || {}).value) || "";
                 var columnData = [
                 { "data": "stt", "orderable": "false", "class": "text-center"},
                 { "data": "tenBM", "width": "100%"},
@@ -195,7 +200,7 @@
                             var file = "<a href='#' target='_blank' class='btn btn-link pl-0 pr-0'>&nbsp; &nbsp; &nbsp; &nbsp;</a>";
                         }
                         else {
-                            var file = "<a class='btn btn-link pl-0 pr-0' data-toggle='ajax-modal' data-target='#documentView-" + data.idPhienBan + "' data-url='/Report/PopUpDocumentView?link=" + data.idPhienBan + "'>File</a>";
+                            var file = "<a class='btn btn-link pl-0 pr-0' data-toggle='ajax-modal' data-target='#documentView-" + data.idPhienBan + "' data-url='/Report/PopUpDocumentView?link=" + data.idPhienBan + "'>Xem</a>";
                         }
                         if (showVersion == "View") {
                             var version = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportVersion-" + data.idBieuMau + "' data-url='/Report/Version?id=" + data.idBieuMau + "'>Phiên bản</a>";
@@ -210,15 +215,16 @@
                         if (showReport == "Edit") {
                             var edit = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportEdit-" + data.idBieuMau + "' data-url='/Report/EditReport?id=" + data.idBieuMau + "'>Sửa biểu mẫu</a>";
                         } else { var edit = ""; }
-                        if ('@User.IsInRole("Admin")' == 'True') {
+                        if (deleteReport = "View") {
                             var del = "<a class='dropdown-item' data-toggle='delete' data-target='#reportDelete-" + data.idBieuMau + "' data-url='/Report/DeleteReport?IDBieuMau=" + data.idBieuMau + "&&IDPhienBan=" + data.idPhienBan+"'>Xóa biểu mẫu</a>";
-                        } else { var del = "";}
-                        var dropmenu = "<button type='button' class='btn btn-link dropdown-toggle' data-toggle='dropdown'>Chi tiết</button ><div class='dropdown-menu' role='menu'>" + version + " " + software + " " + detail + " " + edit + " " + del + "</div>";
-                        if ('@User.IsInRole("Editer")' == 'True' || '@User.IsInRole("Manager")' == 'True' || '@User.IsInRole("Admin")' == 'True') {
+                        } else { var del = ""; }
+                        var gopy = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#gopy-" + data.idBieuMau + "' data-url='/GopY/Index?IDBieuMau=" + data.idBieuMau + "'>Góp ý</a>";
+                        var dropmenu = "<button type='button' class='btn btn-link dropdown-toggle' data-toggle='dropdown'>Chi tiết</button ><div class='dropdown-menu' role='menu'>" + version + " " + software + " " + detail + " " + edit + " " + del + " " + gopy + "</div>";
+                        @*if ('@User.IsInRole("Editer")' == 'True' || '@User.IsInRole("Manager")' == 'True' || '@User.IsInRole("Admin")' == 'True') {
                             var result = "<div class='btn-group'>" + file + " " + dropmenu + "</div>";
                         }
-                        else { var result = "<div class='btn-group'>" + file + "</div>"; }
-
+                        else { var result = "<div class='btn-group'>" + file + "</div>"; }*@
+                        var result = "<div class='btn-group'>" + file + " " + dropmenu + "</div>";
                         return result;
                     }
                 },
@@ -274,7 +280,7 @@
                         }
                     });
                 }
-                
+
             });
         });
     </script>

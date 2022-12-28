@@ -1,4 +1,6 @@
-﻿@model WebTools.Models.ReportListViewModel
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model WebTools.Models.ReportListViewModel
 @{
     Layout = null;
 }
@@ -68,13 +70,13 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                        @if (User.IsInRole("Editer") || User.IsInRole("Manager") || User.IsInRole("Admin"))
+                        @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Add")).Result.Succeeded)
                         {
-                        <button type="submit" class="btn btn-primary" data-save="modalFile">Lưu</button>
+                            <button type="submit" class="btn btn-primary" data-save="modalFile">Lưu</button>
                         }
                     </div>
                 </form>
-            </div>           
+            </div>
         </div>
     </div>
 </div>
@@ -83,7 +85,7 @@
         var tenBM = this.getElementById("TenBM");
         $.validator.setDefaults({
             submitHandler: function (form) {
-                form.submit();                
+                form.submit();
             }
         });
         $('#reportForm').validate({
@@ -121,7 +123,7 @@
         });
     });
 
-    //$(function () {        
+    //$(function () {
 
     //    $(this).on('click', '[data-save="modalFile"]', function (event) {
     //        event.preventDefault();
