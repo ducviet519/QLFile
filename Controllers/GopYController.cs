@@ -35,7 +35,7 @@ namespace WebTools.Controllers
             string result = String.Empty;
             try
             {
-                string user = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value;
+                string user = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 result = await _gopYServices.ThemGopY(IDBieuMau,noidung,user);
                 if (result == "OK")
                 {

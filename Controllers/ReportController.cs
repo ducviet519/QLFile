@@ -140,7 +140,7 @@ namespace WebTools.Controllers
         public async Task<IActionResult> AddReport()
         {
             ReportListViewModel model = new ReportListViewModel();
-            model.Depts = new SelectList(await _depts.GetAll_DeptsAsync(), "STT", "KhoaP");
+            model.Depts = new SelectList((await _depts.GetAll_DeptsAsync()).OrderBy(i => i.KhoaP), "STT", "KhoaP");
             return PartialView("_AddReportPartial", model);
         }
 
@@ -158,7 +158,7 @@ namespace WebTools.Controllers
             else
             {
                 reportList.KhoaPhong = Request.Form["KhoaPhong"];
-                reportList.CreatedUser = User.Identity.Name;
+                reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload);
                 var result = await _reportListServices.InsertReportListAsync(reportList);
                 if (result == "OK")
@@ -179,7 +179,7 @@ namespace WebTools.Controllers
         {
             ReportListViewModel model = new ReportListViewModel();
             model.ReportList = await _reportListServices.GetReportByIDAsync(id);
-            model.Depts = new SelectList(await _depts.GetAll_DeptsAsync(), "STT", "KhoaP");
+            model.Depts = new SelectList((await _depts.GetAll_DeptsAsync()).OrderBy(i => i.KhoaP), "STT", "KhoaP");
             return PartialView("_EditReportPartial", model);
         }
         [HttpPost]
@@ -187,7 +187,7 @@ namespace WebTools.Controllers
         {
             string getDateS = DateTime.Now.ToString("ddMMyyyyHHmmss");
             reportList.KhoaPhong = Request.Form["KhoaPhong"];
-            reportList.CreatedUser = User.Identity.Name;
+            reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
             reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload);
             var result = await _reportListServices.UpdateReportListAsync(reportList);
@@ -250,7 +250,7 @@ namespace WebTools.Controllers
         [DisableRequestSizeLimit]
         public async Task<IActionResult> AddVersion(ReportVersion reportVersion)
         {
-            reportVersion.CreatedUser = User.Identity.Name;
+            reportVersion.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             string getDateS = DateTime.Now.ToString("ddMMyyyy");
             string IDBieuMau = reportVersion.IDBieuMau;
             string resault = string.Empty;
@@ -300,10 +300,10 @@ namespace WebTools.Controllers
             model.ReportSofts = (await _reportSoftServices.GetReportSoftAsync(id)).ToList();
 
             //URD SelectList
-            model.URDs = new SelectList(await _reportURDServices.GetAll_URDAsync(), "ID", "Des");
+            model.URDs = new SelectList((await _reportURDServices.GetAll_URDAsync()).OrderBy(i => i.Des), "ID", "Des");
 
             //Softs SelectList
-            model.PhanMems = new SelectList(await _softwareServices.GetSoftwareAsync(), "ID", "Name");
+            model.PhanMems = new SelectList((await _softwareServices.GetSoftwareAsync()).OrderBy(i => i.Name), "ID", "Name");
 
             return PartialView("_SoftPartial", model);
         }
@@ -323,7 +323,7 @@ namespace WebTools.Controllers
                 reportSoft.ViTriIn = Request.Form["ViTriIn"];
                 reportSoft.CachIn = Request.Form["CachIn"];
                 reportSoft.TrangThaiPM = Request.Form["TrangThaiPM-" + i];
-                reportSoft.User = User.Identity.Name;
+                reportSoft.User = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 if (reportSoft.IDBieuMau != null)
                 {
                     var result = await _reportSoftServices.InsertReportSoftAsync(reportSoft);
@@ -348,7 +348,7 @@ namespace WebTools.Controllers
             ReportDetailViewModel model = new ReportDetailViewModel();
             model.ReportDetail = (await _reportDetailServices.GetReportDetailAsync(id)).FirstOrDefault();
             model.ReportDetails = (await _reportDetailServices.GetReportDetailAsync(id)).ToList();
-            model.Depts = new SelectList(await _depts.GetAll_DeptsAsync(), "STT", "KhoaP");
+            model.Depts = new SelectList((await _depts.GetAll_DeptsAsync()).OrderBy(i => i.KhoaP), "STT", "KhoaP");
             return PartialView("_DetailPartial", model);
         }
 
@@ -364,7 +364,7 @@ namespace WebTools.Controllers
                 reportDetail.KhoaPhong = Request.Form["KhoaPhong"];
                 reportDetail.GhiChu = Request.Form["GhiChu-" + i];
                 reportDetail.TrangThai = Request.Form["TrangThai-" + i];
-                reportDetail.User = "1";
+                reportDetail.User = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 if (reportDetail.IDBieuMau != null)
                 {
                     var result = await _reportDetailServices.InsertReportDetailAsync(reportDetail);

@@ -21,15 +21,12 @@
     <link rel="stylesheet" href="~/lib/toastr/toastr.min.css">
     <!-- Bootstrap Toggle -->
     <link rel="stylesheet" href="~/lib/bootstrap-toggle/css/bootstrap-toggle.min.css">
-    <!-- include summernote css/js-->
-    <link href="~/lib/summernote/summernote.min.css" rel="stylesheet">
-    <link href="~/lib/summernote/summernote-bs4.css" rel="stylesheet">
     <!-- Theme style -->
     <link rel="stylesheet" href="~/lib/admin-lte/css/adminlte.min.css">
     <link rel="stylesheet" href="~/css/site_default.css">
 </head>
 <body class="control-sidebar-slide-open layout-navbar-fixed sidebar-collapse">
-    <div id="ReportPopup"></div>
+      
     <div class="wrapper">
         @if (User.Identity.IsAuthenticated)
         {
@@ -49,6 +46,7 @@
                         </li>
                         <li class="nav-item d-none d-sm-inline-block">
                             <a class="nav-link" data-toggle="ajax-modal" data-target="#GopY-0" data-url="GopY/Index">Góp ý</a>
+
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
@@ -63,11 +61,11 @@
                                 </ul>
                             </li>
                             @*<li class="nav-item dropdown dropdown-hover">
-                                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Google API</a>
-                                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                                        <li><a asp-area="" asp-controller="GoogleAPI" asp-action="SearchGoogleFiles" class="dropdown-item">Tìm File Google Drive</a></li>
-                                    </ul>
-                                </li>*@
+                                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Google API</a>
+                                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                                    <li><a asp-area="" asp-controller="GoogleAPI" asp-action="SearchGoogleFiles" class="dropdown-item">Tìm File Google Drive</a></li>
+                                </ul>
+                            </li>*@
                         }
 
                     </ul>
@@ -81,6 +79,7 @@
             <div class="content-wrapper">
                 @RenderBody()
             </div>
+            <div id="GopYPopup"></div>
         }
 
         <!-- jQuery -->
@@ -110,17 +109,36 @@
         <script src="~/lib/toastr/toastr.min.js"></script>
         <!-- Bootstrap Toggle -->
         <script src="~/lib/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
-        <!-- include summernote css/js-->
-        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="~/lib/summernote/summernote.min.js"></script>
-        <script src="~/lib/summernote/summernote-bs4.min.js"></script>
         <!-- AdminLTE App -->
         <script src="~/lib/admin-lte/js/adminlte.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script type="text/javascript">
             $('body').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
                 var url = $(this).data('url');
-                $(this).callModal(url);
+                var ReportPopupElement = $('#GopYPopup');
+                $.ajax({
+                    url: url,
+                    dataType: 'html',
+                    success: function (data) {
+                        $("body").find(".modal-backdrop").remove();
+                        ReportPopupElement.html(data);
+                        ReportPopupElement.find('.modal').modal('show');
+                    }, error: function (xhr, status) {
+                        switch (status) {
+                            case 404:
+                                $(this).callToast("error", 'Lỗi!', 'Đường dẫn không đúng hoặc tính năng không tồn tại!');
+                                break;
+                            case 500:
+                                $(this).callToast("error", 'Lỗi!', 'Không kết nối được tới Server!');
+                                break;
+                            case 0:
+                                $(this).callToast("error", 'Lỗi!', 'Hệ thống không phản hồi!');
+                                break;
+                            default:
+                                $(this).callToast("error", 'Lỗi!', 'Sự cố không xác định! Lỗi: ' + status);
+                        }
+                    }
+                });
             });
         </script>
         @await RenderSectionAsync("Scripts", required: false)

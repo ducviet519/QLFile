@@ -37,7 +37,7 @@ namespace WebTools.Services
             string FileLink = "";
             string getDateS = DateTime.Now.ToString("ddMMyyyyHHmmss");
             //string uploadsFolder = Path.Combine(_webHostEnvironment.ContentRootPath, "Upload");
-            string uploadsFolder = "D:\\VanBan\\My Drive\\VBNB FileUpload";
+            string uploadsFolder = "D:\\VanBan";
             if (!Directory.Exists(uploadsFolder)) { Directory.CreateDirectory(uploadsFolder); }
 
             if (fileUpload != null && fileUpload.Length > 0)

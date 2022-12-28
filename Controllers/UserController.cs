@@ -138,7 +138,7 @@ namespace WebTools.Controllers
                     var claims = new List<Claim>()
                     {
                         new Claim(ClaimTypes.Name, UserLoginInfo.DisplayName),
-                        new Claim(ClaimTypes.NameIdentifier, Convert.ToString(UserLoginInfo.UserID)),
+                        new Claim(ClaimTypes.NameIdentifier, Convert.ToString(UserLoginInfo.UserName)),
                         new Claim(ClaimTypes.GivenName, Convert.ToString(UserLoginInfo.UserName)),
                         new Claim(ClaimTypes.GroupSid, string.IsNullOrEmpty(domain) ? "local" : domain),
                         new Claim(ClaimTypes.Email, $@"{login.UserName.Trim().ToLower()}@{domain}" ?? ""),

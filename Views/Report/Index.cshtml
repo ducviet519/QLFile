@@ -6,6 +6,7 @@
     ViewData["Title"] = "Quản lý biểu mẫu";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -88,7 +89,7 @@
                                 @*@if (User.IsInRole("Editer") || User.IsInRole("Manager") || User.IsInRole("Admin"))*@
                                 @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Add")).Result.Succeeded)
                                 {
-                                <div class="col-auto"><button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#addReport" data-url="@Url.Action("AddReport")">Thêm biểu mẫu</button></div>
+                                    <div class="col-auto"><button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#addReport" data-url="@Url.Action("AddReport")">Thêm biểu mẫu</button></div>
                                 }
                                 @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Versions.View")).Result.Succeeded)
                                 {<input type="hidden" id="showVersion" value="View" /> }
@@ -114,14 +115,13 @@
                         </form>
                     </div>
                     <div class="card-body">
-                        <div id="ReportPopup"></div>
-                        @if(User.IsInRole("Admin"))
+                        @if (User.IsInRole("Admin"))
                         {
-                        <div class="row justify-content-end">
-                            <div class="col">
-                                <a class="btn btn-primary" href="/ExportExcel/DanhSachBieuMauExcel">Xuất Excel Danh sách Biểu mẫu</a>
+                            <div class="row justify-content-end">
+                                <div class="col">
+                                    <a class="btn btn-primary" href="/ExportExcel/DanhSachBieuMauExcel">Xuất Excel Danh sách Biểu mẫu</a>
+                                </div>
                             </div>
-                        </div>
                         }
                         <!--Bảng biểu mẫu -->
                         <div class="dataTables_wrapper dt-bootstrap4">
@@ -154,7 +154,7 @@
             </div>
         </div>
     </div>
-    
+    <div id="ReportPopup"></div>
 </section>
 
 @section Scripts{
@@ -257,7 +257,7 @@
         });
 
         $(document).ready(function () {
-            $('body').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
+            $('body .dropdown-menu').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
                 var url = $(this).data('url');
                 $(this).callModal(url);
             });
@@ -282,6 +282,7 @@
                 }
 
             });
+
         });
     </script>
 }
