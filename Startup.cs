@@ -1,24 +1,17 @@
-using GleamTech.AspNet;
 using GleamTech.AspNet.Core;
-using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using WebTools.Authorization;
 using WebTools.Context;
-using WebTools.Models.Entities;
-using WebTools.Router;
 using WebTools.Services;
 using WebTools.Services.Interface;
 
@@ -86,12 +79,10 @@ namespace WebTools
             services.AddScoped<IModuleActionServices, ModuleActionServices>();
             services.AddScoped<IGoogleDriveAPI, GoogleDriveAPI>();
             services.AddScoped<IBaoHiemTuNguyenServices, BaoHiemTuNguyenServices>();
-            services.AddScoped<IMailService, MailService>();
             services.AddScoped<IUploadFileServices, UploadFileServices>();
             services.AddScoped<IGopYServices, GopYServices>();
             
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ToolsDB")));
-            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

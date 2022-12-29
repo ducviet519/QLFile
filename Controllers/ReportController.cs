@@ -355,7 +355,7 @@ namespace WebTools.Controllers
         //9. Tạo chức năng lưu dữ liệu khi ấn nút Lưu ở phần 8
         public async Task<IActionResult> AddDetail(ReportDetail reportDetail)
         {
-            reportDetail.User = User.Identity.Name;
+            reportDetail.User = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             int count = Int32.Parse(Request.Form["count"]);
             for (int i = 0; i < count; i++)
             {
@@ -387,13 +387,9 @@ namespace WebTools.Controllers
 
         public bool CheckPermissionExist(string permission)
         {
-            ClaimsPrincipal currentUser = this.User;
-            var permissionss = currentUser.Claims.Where(x => x.Type == "Permission" &&
-                                                            x.Value == permission &&
-                                                            x.Issuer == "LOCAL AUTHORITY");
-
-            if (permissionss.Any()) { return true; }
-            else { return false; }
+            var check = HttpContext.User.Claims.Where(c => c.Type == "Permission" && c.Value.Contains(permission));
+            if (check == null) { return false; }
+            else { return true; }
         }
 
         //Document View
