@@ -250,5 +250,28 @@ namespace WebTools.Services
                 return result;
             }
         }
+
+        public async Task<List<ExportExcel>> ExcelData()
+        {
+            List<ExportExcel> data = new List<ExportExcel>();
+            
+            try
+            {
+                using (IDbConnection dbConnection = Connection)
+                {
+                    if (dbConnection.State == ConnectionState.Closed)
+                        dbConnection.Open();
+                    data = (await dbConnection.QueryAsync<ExportExcel>("sp_Report_Excel",
+                        new { }, commandType: CommandType.StoredProcedure)).ToList();
+                    dbConnection.Close();
+                }
+                return data;
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.Message;
+                return data;
+            }
+        }
     }
 }
