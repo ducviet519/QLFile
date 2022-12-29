@@ -240,7 +240,7 @@ namespace WebTools.Services
             }
         }
 
-        public List<Roles> GetRoleInUser(int id)
+        public List<Roles> GetRoleInUser(string user)
         {
             List<Roles> roles = new List<Roles>();
             try
@@ -251,7 +251,7 @@ namespace WebTools.Services
                     roles = dbConnection.Query<Roles>("sp_Users"
                         , new
                         {
-                            ID = id,
+                            UserName = user,
                             Action = "GetRoleInUser"
 
                         }
@@ -402,27 +402,53 @@ namespace WebTools.Services
             }
         }
 
-        public List<UserPermissions> GetAllUserPermissions(string userName)
+        public async Task<List<UserPermissions>> GetAllUserPermissions(string user)
         {
-            List<UserPermissions> permissions = new List<UserPermissions>();
-            var sql = "SELECT * FROM dbo.UserPermissions WHERE UPPER(Username) = UPPER(@UserName)";
+            List<UserPermissions> data = new List<UserPermissions>();
             try
             {
                 using (IDbConnection dbConnection = Connection)
                 {
                     dbConnection.Open();
-                    permissions = dbConnection.Query<UserPermissions>(sql, new
+                    data = (await dbConnection.QueryAsync<UserPermissions>("sp_Users", new
                     {
-                        UserName = userName,
-                    }).ToList();
+                        UserName = user,
+                        Action = "GetUserPermissions"
+
+                    }, commandType: CommandType.StoredProcedure)).ToList();
                     dbConnection.Close();
                 }
-                return permissions;
+                return data;
             }
             catch (Exception ex)
             {
                 string errorMsg = ex.Message;
-                return permissions;
+                return data;
+            }
+        }
+
+        public async Task<List<UserPermissions>> GetDefaultPermissions(string roleName)
+        {
+            List<UserPermissions> data = new List<UserPermissions>();
+            try
+            {
+                using (IDbConnection dbConnection = Connection)
+                {
+                    dbConnection.Open();
+                    data = (await dbConnection.QueryAsync<UserPermissions>("sp_Users", new
+                    {
+                        RoleName = roleName,
+                        Action = "GetRolePermissions"
+
+                    }, commandType: CommandType.StoredProcedure)).ToList();
+                    dbConnection.Close();
+                }
+                return data;
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.Message;
+                return data;
             }
         }
     }

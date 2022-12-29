@@ -103,12 +103,14 @@
                                 {<input type="hidden" id="showDetails" value="View" /> }
                                 else
                                 { <input type="hidden" id="showDetails" value="Hide" />}
+                                
                                 @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Edit")).Result.Succeeded)
                                 {<input type="hidden" id="showReport" value="Edit" /> }
                                 else
                                 { <input type="hidden" id="showReport" value="Hide" />}
+                                
                                 @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Delete")).Result.Succeeded)
-                                {<input type="hidden" id="deleteReport" value="Edit" /> }
+                                {<input type="hidden" id="deleteReport" value="View" /> }
                                 else
                                 { <input type="hidden" id="deleteReport" value="Hide" />}
                             </div>
@@ -209,13 +211,13 @@
                         if (showSofts == "View") {
                             var software = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportSoft-" + data.idBieuMau + "' data-url='/Report/Soft?id=" + data.idBieuMau + "'>Phần mềm</a>";
                         } else { var software = ""; }
-                        if (showDetails = "View") {
+                        if (showDetails == "View") {
                             var detail = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportDetail-" + data.idBieuMau + "' data-url='/Report/Detail?id=" + data.idBieuMau + "'>Chi tiết</a>";
                         } else { var detail = ""; }
                         if (showReport == "Edit") {
                             var edit = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportEdit-" + data.idBieuMau + "' data-url='/Report/EditReport?id=" + data.idBieuMau + "'>Sửa biểu mẫu</a>";
                         } else { var edit = ""; }
-                        if (deleteReport = "View") {
+                        if (deleteReport == "View") {
                             var del = "<a class='dropdown-item' data-toggle='delete' data-target='#reportDelete-" + data.idBieuMau + "' data-url='/Report/DeleteReport?IDBieuMau=" + data.idBieuMau + "&&IDPhienBan=" + data.idPhienBan+"'>Xóa biểu mẫu</a>";
                         } else { var del = ""; }
                         var gopy = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#gopy-" + data.idBieuMau + "' data-url='/GopY/Index?IDBieuMau=" + data.idBieuMau + "'>Góp ý</a>";

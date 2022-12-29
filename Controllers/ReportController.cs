@@ -70,7 +70,7 @@ namespace WebTools.Controllers
         public async Task<IActionResult> Index()
         {
             ReportListViewModel model = new ReportListViewModel();
-            model.URDs = new SelectList(await _reportURDServices.GetAll_URDAsync(), "ID", "Des");
+            model.URDs = new SelectList((await _reportURDServices.GetAll_URDAsync()).OrderBy(i => i.Des), "ID", "Des");
             model.ReportLists = await _reportListServices.GetReportListAsync();
             return View(model);
         }

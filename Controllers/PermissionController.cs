@@ -108,7 +108,6 @@ namespace WebTools.Controllers
             if (count > 0) 
             {
                 _userServices.DeleteRoleInUser(userRoles.UserID);
-                _userServices.DeleteUserPermissions(userRoles.UserName);
             }
             for (int i = 0; i < count; i++)
             {
@@ -120,20 +119,7 @@ namespace WebTools.Controllers
                 if (userRoles.UserID > 0 && userRoles.RoleID > 0 && userRoles.Status == true)
                 {
                     var result = _userServices.AddUserRolesByID(userRoles);
-                    UserPermissions userPermissions = new UserPermissions();
                     
-                    foreach (var permission in _roleServices.GetRolePermissions(userRoles.RoleID))
-                    {
-                        userPermissions = new UserPermissions()
-                        {
-                            UserName = userRoles.UserName,
-                            Permission = permission.Permission,
-                            ControllerID = permission.ControllerID,
-                            ActionID = permission.ActionID,
-                        };
-                        _userServices.AddUserPermissions(userPermissions);
-                    }    
-
                     if (result == "OK")
                     {
                         TempData["SuccessMsg"] = $"Người dùng đã được cập nhật lại Role thành công!";

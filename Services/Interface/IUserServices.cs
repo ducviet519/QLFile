@@ -16,7 +16,7 @@ namespace WebTools.Services.Interface
 
         public Users FindByName(string userName);
 
-        public List<Roles> GetRoleInUser(int id);
+        
 
         public string AddUser(Users users);
 
@@ -32,7 +32,9 @@ namespace WebTools.Services.Interface
         public string AddUserPermissions(UserPermissions userPermissions);
         public string DeleteUserPermissions(string UserName);
 
-        public List<UserPermissions> GetAllUserPermissions(string userName);
+        public List<Roles> GetRoleInUser(string user);
+        public Task<List<UserPermissions>> GetAllUserPermissions(string user);
+        public Task<List<UserPermissions>> GetDefaultPermissions(string roleName);
 
     }
 }
