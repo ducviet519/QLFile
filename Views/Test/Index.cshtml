@@ -2,3 +2,38 @@
     ViewData["Title"] = "Test EasyUI";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<table id="tableTest"></table>
+
+@section Scripts{
+    
+    <script type="text/javascript">
+        $('#tableTest').datagrid({
+            url: '/Test/GetData',
+            method: 'get',
+            loader: function (param, success, error) {
+                var opts = $(this).datagrid('options');
+                if (!opts.url) return false;
+                $.ajax({
+                    type: opts.method,
+                    url: opts.url,
+                    data: param,
+                    dataType: 'json',
+                    success: function (data) {
+                        success(data);
+                    },
+                    error: function () {
+                        error.apply(this, arguments);
+                    }
+                });
+            },
+            treeField: 'data',
+            columns: [[
+                { field: 'tenBM', title: 'Tên Biểu mẫu', width: 180 },
+                { field: 'maBM', title: 'Mã Biểu mẫu', width: 60, align: 'right' },
+                { field: 'theLoai', title: 'Thể loại', width: 80 },
+                { field: null , title: 'Test', width: 80 }
+            ]]
+        });
+    </script>
+}

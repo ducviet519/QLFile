@@ -4,30 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebTools</title>
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="~/lib/fontawesome-free/css/all.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="~/lib/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-    <!-- Select2 -->
-    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css">
-    <link rel="stylesheet" href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Plugins -->
+    @await Html.PartialAsync("_Plugins_Styles")
     <!-- DataTables -->
-    <link rel="stylesheet" href="~/lib/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/lib/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/lib/datatables-fixedheader/css/fixedHeader.bootstrap4.min.css">
-    <!-- Toastr -->
-    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css">
-    <!-- Bootstrap Toggle -->
-    <link rel="stylesheet" href="~/lib/bootstrap-toggle/css/bootstrap-toggle.min.css">
+    @await Html.PartialAsync("_Datatable_Styles")
+    <!-- EasyUI -->
+    @await Html.PartialAsync("_EasyUI_Styles")
     <!-- Theme style -->
     <link rel="stylesheet" href="~/lib/admin-lte/css/adminlte.min.css">
     <link rel="stylesheet" href="~/css/site_default.css">
 
     <style>
-        .narh-50{
-            height:50px;
+        .narh-50 {
+            height: 50px;
         }
     </style>
 </head>
@@ -81,34 +70,12 @@
             </div>
             <div id="GopYPopup"></div>
         }
-
-        <!-- jQuery -->
-        <script src="~/lib/jquery/jquery.min.js"></script>
-        <!-- Bootstrap 4 -->
-        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- Select2 -->
-        <script src="~/lib/select2/js/select2.full.min.js"></script>
-        <!-- InputMask -->
-        <script src="~/lib/moment/moment.min.js"></script>
-        <script src="~/lib/moment/locales.min.js"></script>
-        <script src="~/lib/inputmask/jquery.inputmask.min.js"></script>
-        <!-- Tempusdominus Bootstrap 4 -->
-        <script src="~/lib/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-        <!-- bs-custom-file-input -->
-        <script src="~/lib/bs-custom-file-input/bs-custom-file-input.min.js"></script>
-        <!-- jquery-validation -->
-        <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation/additional-methods.min.js"></script>
-        <!-- DataTables  & Plugins -->
-        <script src="~/lib/datatables/jquery.dataTables.min.js"></script>
-        <script src="~/lib/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-        <script src="~/lib/datatables-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-        <script src="~/lib/datatables-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="~/lib/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-        <!-- Toastr -->
-        <script src="~/lib/toastr/toastr.min.js"></script>
-        <!-- Bootstrap Toggle -->
-        <script src="~/lib/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
+        <!-- Plugins -->
+        @await Html.PartialAsync("_Plugins_Scripts")
+        <!-- DataTables -->
+        @await Html.PartialAsync("_Datatable_Scripts")
+        <!-- EasyUI -->
+        @await Html.PartialAsync("_EasyUI_Scripts")
         <!-- AdminLTE App -->
         <script src="~/lib/admin-lte/js/adminlte.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
@@ -141,6 +108,7 @@
                 });
             });
         </script>
+        @await Html.PartialAsync("_EasyUI_Scripts")
         @await RenderSectionAsync("Scripts", required: false)
     </div>
 </body>
