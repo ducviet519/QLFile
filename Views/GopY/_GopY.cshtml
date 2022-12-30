@@ -47,7 +47,7 @@
 
 <script type="text/javascript">
         $(document).ready(function () {
-            $('body').on('click', 'button[data-save="gopy"]', function () {
+            $('body .modal').on('click', 'button[data-save="gopy"]', function () {
                 var data = $('#formGopY').serialize();
                 $.ajax({
                     type: 'POST',

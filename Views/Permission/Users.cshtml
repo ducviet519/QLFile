@@ -4,7 +4,11 @@
     ViewData["Title"] = "Phân quyền người dùng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    div.dataTables_wrapper div.dataTables_length select{
+        width: 50px;
+    }
+</style>
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -51,14 +55,13 @@
                                     <!-- form start -->
                                     <form>
                                         <div class="card-body">
-                                            <table class="table table-bordered table-striped dataTable dtr-inline" role="grid" id="tableRoles">
+                                            <table class="table table-bordered table-striped dataTable dtr-inline" role="grid" id="tableUsers">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Tên người dùng</th>
                                                         <th>Tài khoản</th>
                                                         <th>Email</th>
-                                                        <th>Trạng thái</th>
                                                         <th>Vai trò</th>
                                                         <th></th>
                                                     </tr>
@@ -73,26 +76,8 @@
                                                             <td>@item.UserID</td>
                                                             <td>@item.DisplayName</td>
                                                             <td>@item.UserName</td>
-                                                            <td>@item.Email</td>
-                                                            <td>
-                                                                @if (item.Status == true)
-                                                                        {
-                                                                <span class="badge bg-success">Đang sử dụng</span>
-                                                                        }
-                                                                        else if (item.Status == false)
-                                                                        {
-                                                                <span class="badge bg-danger">Ngưng sử dụng</span>
-                                                                        }
-                                                            </td>
-                                                            <td>
-                                                                @foreach (var roles in Model.RolesList)
-                                                                        {
-                                                                            if (roles.RoleID == item.RoleID)
-                                                                            {
-                                                                <span class="badge bg-primary">@roles.RoleName</span>
-                                                                            }
-                                                                        }
-                                                            </td>
+                                                            <td>@item.Email</td>      
+                                                            <td>@item.RoleName</td>
                                                             <td>
                                                                 <div class="btn-group">
                                                                     <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown">
@@ -129,6 +114,10 @@
 @section Scripts{ 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#tableUsers').DataTable({
+            order: [[0, 'desc']],
+        });
+
         $('body').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
             var url = $(this).data('url');
             $(this).callModal(url);

@@ -62,9 +62,24 @@ namespace WebTools.Controllers
         public IActionResult Users()
         {
             UsersViewModel model = new UsersViewModel();
-            model.UsersList = _userServices.GetAllUsers();
-            //model.Roles = new SelectList(_roleServices.GetAllRoles(), "RoleID", "RoleName");
-            model.RolesList = _roleServices.GetAllRoles();
+            var users = _userServices.GetAllUsers();
+            List<Users> usersData = new List<Users>();
+            foreach ( var user in users)
+            {
+                Users u = new Users() 
+                {
+                    DisplayName = user.DisplayName,
+                    UserName = user.UserName,
+                    UserID = user.UserID,
+                    Email = user.Email,
+                    Source = user.Source,
+                    Status = user.Status,
+                    RoleName = String.Join(",", (_userServices.GetRoleInUser(user.UserName)).Select(i => i.RoleName).ToArray())
+                };
+                usersData.Add(u);
+
+            }
+            model.UsersList = usersData;
             return View(model);
         }
 
