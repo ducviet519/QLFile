@@ -27,10 +27,10 @@ if ($.fn.validatebox){
 	$.fn.validatebox.defaults.rules.length.message = 'Xin hãy nhập giá trị trong khoảng từ {0} đến {1}.';
 	$.fn.validatebox.defaults.rules.remote.message = 'Xin hãy kiểm tra lại dữ liệu.';
 }
-if ($.fn.calendar){
-	$.fn.calendar.defaults.weeks = ['CN','T2','T3','T4','T5','T6','T7'];
+if ($.fn.calendar) {
+	$.fn.calendar.defaults.weeks = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 	$.fn.calendar.defaults.months = ['Th1', 'Th2', 'Th3', 'Th4', 'Th5', 'Th6', 'Th7', 'Th8', 'Th9', 'Th10', 'Th11', 'Th12'];
-
+}
 if ($.fn.datebox){
 	$.fn.datebox.defaults.currentText = 'Hôm nay';
 	$.fn.datebox.defaults.closeText = 'Đóng';

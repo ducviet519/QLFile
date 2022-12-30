@@ -2,38 +2,113 @@
     ViewData["Title"] = "Test EasyUI";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<table id="tableTest"></table>
-
+<table id="dg"></table>
+<table id="files"></table>
 @section Scripts{
     
     <script type="text/javascript">
-        $('#tableTest').datagrid({
-            url: '/Test/GetData',
-            method: 'get',
-            loader: function (param, success, error) {
-                var opts = $(this).datagrid('options');
-                if (!opts.url) return false;
-                $.ajax({
-                    type: opts.method,
-                    url: opts.url,
-                    data: param,
-                    dataType: 'json',
-                    success: function (data) {
-                        success(data);
-                    },
-                    error: function () {
-                        error.apply(this, arguments);
-                    }
-                });
-            },
-            treeField: 'data',
-            columns: [[
-                { field: 'tenBM', title: 'Tên Biểu mẫu', width: 180 },
-                { field: 'maBM', title: 'Mã Biểu mẫu', width: 60, align: 'right' },
-                { field: 'theLoai', title: 'Thể loại', width: 80 },
-                { field: null , title: 'Test', width: 80 }
-            ]]
+        $(document).ready(function () {
+            $('#dg').treegrid({
+                url: '/Test/GetData',
+                method: 'post',
+                loadFilter: function (data) {
+                    return {
+                        total: data.total,
+                        rows: data.rows
+                    };
+                },
+                rownumbers: true,
+                singleSelect: true,
+                autoRowHeight: false,
+                pagination: true,
+                pageSize: 10,
+                columns: [[
+                    { field: 'stt', title: 'STT', resizable: false, width: "5%" },
+                    { field: 'tenBM', title: 'Tên Biểu mẫu', resizable: false, width: "65%"},
+                    { field: 'maBM', title: 'Mã Biểu mẫu', resizable: false, width: "15%", align: 'center'},
+                    { field: 'ngayBanHanh', title: 'Ngày ban hành', resizable: false, width: "15%", align: 'center'}
+                ]],
+                sortName: 'stt',
+                sortOrder: 'asc'
+            });
+            
         });
+        $('#files').treegrid({
+            method: 'get',
+            idField: 'id',
+            treeField: 'tsid',
+            columns: [[
+                { field: 'tsid', title: 'File ID', width: 230, fixed: true, sortable: true, order: 'asc' },
+                { field: 'fname', title: 'Filename', width: 350, fixed: true, sortable: true, order: 'asc' },
+                { field: 'appid', title: 'App ID', width: 250, fixed: true, sortable: true, order: 'asc' },
+                { field: 'description', title: 'Description', width: 300 }
+            ]],
+
+            data: [
+                {
+                    "id": "vwltsa",
+                    "tsid": "vwltsa",
+                    "text": "vwltsa",
+                    "children": [
+                        {
+                            "id": "1441119159753.pdf",
+                            "tsid": "1441119159753.pdf",
+                            "fname": "1240-00.pdf",
+                            "description": "Test",
+                            "appid": "vwltsa^sa_jobman",
+                        },
+                        {
+                            "id": "1440992190931.pdf",
+                            "tsid": "1440992190931.pdf",
+                            "fname": "31082015043906.pdf",
+                            "description": "drawing",
+                            "appid": "vwltsa^sa_jobman",
+                        },
+                    ]
+                },
+                {
+                    "id": "dqm",
+                    "tsid": "dqm",
+                    "text": "dqm",
+                    "children": [
+                        {
+                            "id": "1441174846837.gif",
+                            "tsid": "1441174846837.gif",
+                            "fname": "dimension.gif",
+                            "description": "Image",
+                            "appid": "dqm^coc_man",
+                        },
+                        {
+                            "id": "qp_ncr",
+                            "tsid": "qp_ncr",
+                            "text": "qp_ncr",
+                            "children": [
+                                {
+                                    "id": "1440999131386.gif",
+                                    "tsid": "1440999131386.gif",
+                                    "fname": "image001.gif",
+                                    "description": "Test",
+                                    "appid": "dqm^qp_ncr^qp_ncr_create",
+                                }
+                            ]
+                        },
+                        {
+                            "id": "cpar",
+                            "tsid": "cpar",
+                            "text": "cpar",
+                            "children": [
+                                {
+                                    "id": "1440999769215.jpg",
+                                    "tsid": "1440999769215.jpg",
+                                    "fname": "image003.jpg",
+                                    "description": "Test PAC",
+                                    "appid": "dqm^cpar^cpar_man",
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        })
     </script>
 }

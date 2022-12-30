@@ -43,8 +43,12 @@
                             <a class="nav-link narh-50" data-toggle="ajax-modal" data-target="#GopY-0" data-url="GopY/Index">Góp ý</a>
 
                         </li>
+
                         @if (User.IsInRole("Admin"))
                         {
+                            <li class="nav-item d-none d-sm-inline-block narh-50">
+                                <a class="nav-link narh-50" asp-area="" asp-controller="Test" asp-action="Index">Test Code</a>
+                            </li>
                             @*dropdown-hover*@
                             <li class="nav-item dropdown dropdown-hover narh-50">
                                 <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Phân quyền</a>
@@ -52,7 +56,7 @@
                                     <li><a asp-area="" asp-controller="Permission" asp-action="Users" class="dropdown-item">Tài khoản người dùng </a></li>
                                     <li><a asp-area="" asp-controller="Permission" asp-action="Roles" class="dropdown-item">Vai trò hệ thống</a></li>
                                     @*<li><a asp-area="" asp-controller="Permission" asp-action="ModuleController" class="dropdown-item">ModuleControllers</a></li>
-                                    <li><a asp-area="" asp-controller="Permission" asp-action="ModuleAction" class="dropdown-item">ModuleActions</a></li>*@
+                    <li><a asp-area="" asp-controller="Permission" asp-action="ModuleAction" class="dropdown-item">ModuleActions</a></li>*@
                                 </ul>
                             </li>
                         }
@@ -108,7 +112,6 @@
                 });
             });
         </script>
-        @await Html.PartialAsync("_EasyUI_Scripts")
         @await RenderSectionAsync("Scripts", required: false)
     </div>
 </body>

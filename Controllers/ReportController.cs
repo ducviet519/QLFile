@@ -203,8 +203,8 @@ namespace WebTools.Controllers
             string getDateS = DateTime.Now.ToString("ddMMyyyyHHmmss");
             reportList.KhoaPhong = Request.Form["KhoaPhong"];
             reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-
-            reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload);
+            if(reportList.fileUpload != null) { reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload);  }
+            
             var result = await _reportListServices.UpdateReportListAsync(reportList);
             if (result == "OK")
             {

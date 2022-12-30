@@ -47,7 +47,7 @@
                                 <div class="col">
                                     <div class="form-group row m-0">
                                         <label class="col-12">Tên/Mã biểu mẫu:</label>
-                                        <input type="text" class="form-control col" name="SearchString" id="SearchString" />
+                                        <input type="text" class="form-control col" name="SearchString" id="SearchString" data-press="search"/>
                                         <select id="search" class="form-control col-4 ml-1 p-0">
                                             <option value="1" selected>Theo tên</option>
                                             <option value="2">Theo nội dung</option>
@@ -57,12 +57,12 @@
                                 <div class="col-auto pl-2">
                                     <label>Ngày ban hành:</label>
                                     <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                        <input type="text" id="SearchDate" name="SearchDate" class="form-control datetimepicker-input SearchDate" data-toggle="datetimepicker" data-target="#SearchDate" autocomplete="off" />
+                                        <input type="text" id="SearchDate" name="SearchDate" class="form-control datetimepicker-input SearchDate" data-toggle="datetimepicker" data-target="#SearchDate" autocomplete="off" data-press="search" />
                                     </div>
                                 </div>
                                 <div class="col-auto pl-2">
                                     <label>Trạng thái:</label>
-                                    <select id="SearchTrangThaiSD" class="form-control col-auto">
+                                    <select id="SearchTrangThaiSD" class="form-control col-auto" data-press="search">
                                         <option value="0" selected>Tất cả</option>
                                         <option value="1">Đang sử dụng</option>
                                         <option value="2">Chưa ban hành</option>
@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="col-auto pl-2">
                                     <label>Trạng thái phần mềm:</label>
-                                    <select id="SearchTrangThaiPM" class="form-control col-auto">
+                                    <select id="SearchTrangThaiPM" class="form-control col-auto" data-press="search">
                                         <option value="0" selected>Tất cả</option>
                                         <option value="1">Đã hoàn thành</option>
                                         <option value="2">Chưa hoàn thành</option>
@@ -81,7 +81,7 @@
                                 <div class="col-2 pl-2">
                                     <label>URD (Quy trình vận hành):</label>
                                     <div class="col">
-                                        <select class="form-control selectURD2" multiple="multiple" data-placeholder="Chọn" style="width: 100%;" asp-items="@Model.URDs" name="SearchURD" id="SearchURD"></select>
+                                        <select class="form-control selectURD2" multiple="multiple" data-placeholder="Chọn" style="width: 100%;" asp-items="@Model.URDs" name="SearchURD" id="SearchURD" data-press="search"></select>
                                         <input type="hidden" id="txtURD" name="txtURD" />
                                     </div>
                                 </div>
@@ -234,7 +234,16 @@
             ]
             searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList/", 10, "0,8,9,10,11,12", 8);
 
+            $('[data-press="search"]').on('keypress', function (event) {               
+                if (event.key === 'Enter' || event.keyCode === 13) {
+                    searchTable();
+                }
+            });
+            
             $('#btnSearch').on('click', function () {
+                searchTable();
+            });
+            function searchTable() {
                 var loai = $("#search").val() || "";
                 var searchString = ((document.getElementById("SearchString") || {}).value) || "";
                 var searchDate = ((document.getElementById("SearchDate") || {}).value) || "";
@@ -256,7 +265,7 @@
                     searchTerm += "&searchURD=" + searchURD;
 
                 searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList?" + searchTerm, 10, "0,8", 8);
-            });
+            }
         });
 
         $(document).ready(function () {
