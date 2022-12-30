@@ -79,23 +79,8 @@ namespace WebTools.Controllers
         {
             if(!String.IsNullOrEmpty(loai) && loai == "1")
             {
-                var data = await _reportListServices.SearchReportListAsync(searchURD);
-                if (!String.IsNullOrEmpty(searchString))
-                {
-                    data = data.Where(s => s.TenBM != null && convertToUnSign(s.TenBM.ToLower()).Contains(convertToUnSign(searchString.ToLower())) || s.MaBM != null && s.MaBM.ToUpper().Contains(searchString.ToUpper())).ToList();
-                }
-                if (!String.IsNullOrEmpty(searchDate))
-                {
-                    data = data.Where(s => s.NgayBanHanh != null && s.NgayBanHanh.Contains(searchDate.ToString())).ToList();
-                }
-                if (!String.IsNullOrEmpty(searchTrangThaiSD))
-                {
-                    data = data.Where(s => s.TrangThai.ToLower().Contains(searchTrangThaiSD.ToLower())).ToList();
-                }
-                if (!String.IsNullOrEmpty(searchTrangThaiPM))
-                {
-                    data = data.Where(s => s.TrangThaiPM.ToLower().Contains(searchTrangThaiPM.ToLower())).ToList();
-                }
+                var data = await _reportListServices.SearchReportListAsync(searchURD, searchString, searchDate, searchTrangThaiSD, searchTrangThaiPM);
+                
                 return Json(new { data });
             }
             else if(!String.IsNullOrEmpty(loai) && loai == "2")
@@ -110,10 +95,40 @@ namespace WebTools.Controllers
                 }
                 if (!String.IsNullOrEmpty(searchTrangThaiSD))
                 {
+                    switch (searchTrangThaiSD)
+                    {
+                        case "0":
+                            searchTrangThaiSD = "";
+                            break;
+                        case "1":
+                            searchTrangThaiSD = "Đang sử dụng";
+                            break;
+                        case "2":
+                            searchTrangThaiSD = "Chưa ban hành";
+                            break;
+                        case "3":
+                            searchTrangThaiSD = "Đã hủy";
+                            break;                        
+                    }
                     data = data.Where(s => s.TrangThai.ToLower().Contains(searchTrangThaiSD.ToLower())).ToList();
                 }
                 if (!String.IsNullOrEmpty(searchTrangThaiPM))
                 {
+                    switch (searchTrangThaiPM)
+                    {
+                        case "0":
+                            searchTrangThaiPM = "";
+                            break;
+                        case "1":
+                            searchTrangThaiPM = "Đã hoàn thành";
+                            break;
+                        case "2":
+                            searchTrangThaiPM = "Chưa hoàn thành";
+                            break;
+                        case "3":
+                            searchTrangThaiPM = "Chưa có";
+                            break;
+                    }
                     data = data.Where(s => s.TrangThaiPM.ToLower().Contains(searchTrangThaiPM.ToLower())).ToList();
                 }
                 return Json(new { data });

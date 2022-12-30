@@ -80,9 +80,10 @@ namespace WebTools
             services.AddScoped<IGoogleDriveAPI, GoogleDriveAPI>();
             services.AddScoped<IBaoHiemTuNguyenServices, BaoHiemTuNguyenServices>();
             services.AddScoped<IUploadFileServices, UploadFileServices>();
-            services.AddScoped<IGopYServices, GopYServices>();
-            
+            services.AddScoped<IGopYServices, GopYServices>();           
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ToolsDB")));
+
+            services.AddInfrastructure();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
