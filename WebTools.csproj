@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\GoogleDriveFiles\" />
+    <Folder Include="wwwroot\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>
