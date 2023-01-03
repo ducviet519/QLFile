@@ -266,17 +266,6 @@
 
                 searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList?" + searchTerm, 10, "0,8", 8);
             }
-        });
-
-        $(document).ready(function () {
-            $('body .dropdown-menu').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
-                var url = $(this).data('url');
-                $(this).callModal(url);
-            });
-            $('body').on('click', 'button[data-toggle="ajax-modal"]', function (event) {
-                var url = $(this).data('url');
-                $(this).callModal(url);
-            });
             $('body').on('click', 'a[data-toggle="delete"]', function (event) {
                 var url = $(this).data('url');
                 var result = confirm("Bạn có chắc chắn muốn xóa biểu mẫu này?");
@@ -295,6 +284,18 @@
                 }
 
             });
+        });
+
+        $(document).ready(function () {
+            $('body .dropdown-menu').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
+                var url = $(this).data('url');
+                $(this).callModal(url);
+            });
+            $('body').on('click', 'button[data-toggle="ajax-modal"]', function (event) {
+                var url = $(this).data('url');
+                $(this).callModal(url);
+            });
+            
 
         });
     </script>

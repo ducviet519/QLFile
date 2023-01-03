@@ -46,8 +46,12 @@
 
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item d-none d-sm-inline-block narh-50">
-                                <a class="nav-link narh-50" asp-area="" asp-controller="Test" asp-action="Index">Test Code</a>
+                            <li class="nav-item dropdown dropdown-hover narh-50">
+                                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Văn bản (Test)</a>
+                                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                                    <li><a asp-area="" asp-controller="Test" asp-action="Index" class="dropdown-item">Danh sách văn bản chi tiết</a></li>
+                                    <li><a asp-area="" asp-controller="VanBan" asp-action="DanhMuc_VanBan" class="dropdown-item">Bảng tin văn bản</a></li>
+                                </ul>
                             </li>
                             @*dropdown-hover*@
                             <li class="nav-item dropdown dropdown-hover narh-50">

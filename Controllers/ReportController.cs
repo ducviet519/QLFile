@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WebTools.Extensions;
 using WebTools.Models;
 using WebTools.Models.Entities;
 using WebTools.Services;
@@ -77,13 +78,13 @@ namespace WebTools.Controllers
 
         public async Task<JsonResult> SearchReportList(string searchString, string searchTrangThaiSD, string searchTrangThaiPM, string searchDate, string searchURD, string loai)
         {
-            if(!String.IsNullOrEmpty(loai) && loai == "1")
+            if (!String.IsNullOrEmpty(loai) && loai == "1")
             {
                 var data = await _reportListServices.SearchReportListAsync(searchURD, searchString, searchDate, searchTrangThaiSD, searchTrangThaiPM);
-                
+
                 return Json(new { data });
             }
-            else if(!String.IsNullOrEmpty(loai) && loai == "2")
+            else if (!String.IsNullOrEmpty(loai) && loai == "2")
             {
                 List<GoogleDriveFile> Table = new List<GoogleDriveFile>();
                 if (!String.IsNullOrEmpty(searchString)) { Table = await _googleDriveAPI.SearchDriveFiles(searchString); }
@@ -108,7 +109,7 @@ namespace WebTools.Controllers
                             break;
                         case "3":
                             searchTrangThaiSD = "Đã hủy";
-                            break;                        
+                            break;
                     }
                     data = data.Where(s => s.TrangThai.ToLower().Contains(searchTrangThaiSD.ToLower())).ToList();
                 }
@@ -138,7 +139,7 @@ namespace WebTools.Controllers
                 var data = await _reportListServices.SearchReportListAsync();
                 return Json(new { data });
             }
-        } 
+        }
         #endregion
 
         #region Khử dấu cho string        
@@ -164,7 +165,7 @@ namespace WebTools.Controllers
         public async Task<IActionResult> AddReport(ReportList reportList)
         {
             var data = await _reportListServices.GetReportListAsync();
-            data = data.Where(r => r.MaBM != null && r.MaBM.ToUpper() == reportList.MaBM.ToUpper()).ToList();
+            data = data.Where(r => r.MaBM != null && StaticHelper.RemoveSpecialCharacters(r.MaBM).ToUpper().Contains(StaticHelper.RemoveSpecialCharacters(reportList.MaBM).ToUpper())).ToList();
             if (data.Count > 0)
             {
                 TempData["ErrorMsg"] = $"Lỗi! Mã biểu mẫu: {reportList.MaBM} đã tồn tại. Xin vui lòng kiểm tra lại";
@@ -188,6 +189,50 @@ namespace WebTools.Controllers
             }
         }
 
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public async Task<JsonResult> AddReport_Json(ReportList reportList)
+        {
+            string message = String.Empty;
+            string title = String.Empty;
+            string result = String.Empty;
+            try
+            {
+                var data = await _reportListServices.GetReportListAsync();
+                data = data.Where(r => r.MaBM != null && StaticHelper.RemoveSpecialCharacters(r.MaBM).ToUpper().Contains(StaticHelper.RemoveSpecialCharacters(reportList.MaBM).ToUpper())).ToList();
+                if (data.Count > 0)
+                {
+                    message = $"Mã biểu mẫu: <b>{reportList.MaBM}</b> đã tồn tại trên hệ thống. Xin vui lòng kiểm tra lại.";
+                    title = "Thông báo!";
+                    result = "info";
+                }
+                else
+                {
+                    reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                    reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload);
+                    result = await _reportListServices.InsertReportListAsync(reportList);
+                    if (result == "OK")
+                    {
+                        message = $"Đã thêm biểu mẫu <b>{reportList.TenBM}</b> thành công.";
+                        title = "Thành công!";
+                        result = "success";
+                    }
+                    else
+                    {
+                        message = result;
+                        title = "Lỗi!";
+                        result = "error";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                title = "Lỗi!";
+                result = "error";
+            }
+            return Json(new { Result = result, Title = title, Message = message });
+        }
 
         [HttpGet]
         public async Task<IActionResult> EditReport(string id)
@@ -203,8 +248,8 @@ namespace WebTools.Controllers
             string getDateS = DateTime.Now.ToString("ddMMyyyyHHmmss");
             reportList.KhoaPhong = Request.Form["KhoaPhong"];
             reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            if(reportList.fileUpload != null) { reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload);  }
-            
+            if (reportList.fileUpload != null) { reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload); }
+
             var result = await _reportListServices.UpdateReportListAsync(reportList);
             if (result == "OK")
             {
@@ -223,11 +268,14 @@ namespace WebTools.Controllers
             string message = String.Empty;
             string title = String.Empty;
             string result = String.Empty;
+            string filelink = (await _reportListServices.GetReportByIDAsync(IDBieuMau)).FileLink;
             try
             {
                 result = await _reportListServices.DeleteReportListAsync(IDBieuMau, IDPhienBan);
                 if (result == "OK")
                 {
+                    if (!String.IsNullOrEmpty(filelink)) { System.IO.File.Delete(filelink); }
+                   
                     message = $"Đã xóa biểu mẫu";
                     title = "Thành công!";
                     result = "success";
@@ -459,7 +507,7 @@ namespace WebTools.Controllers
 
         public async Task<IActionResult> PopUpDocumentView(string link)
         {
-            DocumentViewModel model = await GetDocumentViewerModel(link);                  
+            DocumentViewModel model = await GetDocumentViewerModel(link);
             ViewData["Iframe"] = @$"<iframe name='myIframe' id='myIframe' src='/Report/DocumentView?link={link}' title='preview' style='width:100%;' frameborder='0' scrolling='no' onload='resizeIframe(this)' allowfullscreen></iframe>";
             //return PartialView("_DocumentViewPartial", model);
             return PartialView("_PreviewPartial", model);

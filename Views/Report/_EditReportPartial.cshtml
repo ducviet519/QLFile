@@ -49,7 +49,11 @@
                             <input type="hidden" id="FileLink" name="FileLink" value="@Model.ReportList.FileLink" />
                         </div>
                         <div class="col-2 text-right"><label for="PhienBan">Phiên bản</label></div>
-                        <div class="col-2"><input type="text" class="form-control" id="PhienBan" name="PhienBan" value="@Model.ReportList.PhienBan" /></div>
+                        @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Versions.Edit")).Result.Succeeded)
+                        {<div class="col-2"><input type="text" class="form-control" id="PhienBan" name="PhienBan" value="@Model.ReportList.PhienBan" /></div> }
+                        else
+                        { <div class="col-2"><input type="text" class="form-control" id="PhienBan" name="PhienBan" value="@Model.ReportList.PhienBan" readonly/></div>}
+                        
                     </div>
                     <div class="row mb-3">
                         <div class="col-3"><label for="GhiChu">Ghi chú:</label></div>
@@ -178,12 +182,14 @@
         bsCustomFileInput.init()
     });
     $(function () {
-        var string = $('#txtKhoaPhong').val();
-        var array = string.split(",").map(Number);
         //Dropdown
         $('.selectDepts3').select2()
-        $('#KhoaPhong').val(array);
-        $('#KhoaPhong').trigger('change');
+        var string = $('#txtKhoaPhong').val();
+        if (string.length > 0) {
+            var array = string.split(",").map(Number);
+            $('#KhoaPhong').val(array);
+            $('#KhoaPhong').trigger('change');
+        }
     });
 </script>
 

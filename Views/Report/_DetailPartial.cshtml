@@ -116,11 +116,13 @@
 <script>
 
     $(function () {
-        var string = $('#txtKhoaPhong').val();
-        var array = string.split(",").map(Number);
         //Dropdown
         $('.selectDepts2').select2()
-        $('#KhoaPhong').val(array);
-        $('#KhoaPhong').trigger('change');
+        var string = $('#txtKhoaPhong').val();
+        if (string.length > 0) {
+            var array = string.split(",").map(Number);
+            $('#KhoaPhong').val(array);
+            $('#KhoaPhong').trigger('change');
+        }       
     });
 </script>

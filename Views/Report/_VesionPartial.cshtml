@@ -131,7 +131,7 @@
             {
                 "data": { idPhienBan: "idPhienBan", idBieuMau: "idBieuMau", fileLink: "fileLink" },
                 "render": function (data, row) {
-                    if (showVersion == "View") {
+                    if (deleteVersion == "View") {
                         return '<a type="button" class="btn btn-link btn-sm" data-toggle="delete" data-target="#deleteRow-' + data.idPhienBan + '" data-mode-phienban="' + data.idPhienBan + '" data-mode-bieumau="' + data.idBieuMau + '" data-mode-link="' + data.fileLink + '">Xóa</a>';
                     }
                     else { return null; }
