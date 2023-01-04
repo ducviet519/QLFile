@@ -45,5 +45,21 @@ namespace WebTools.Controllers
             Root data = JsonConvert.DeserializeObject<Root>(json);
             return Json( new { rows = data.rows, total = data.total });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckFile()
+        {
+            var data = await _services.Report_List.GetReportListAsync();
+            List<ReportList> list = new List<ReportList>();
+            foreach (var item in data)
+            {
+                if (System.IO.File.Exists(item.FileLink) == false)
+                {                
+                    list.Add(item);
+                }
+            }
+
+            return View(list);
+        }
     }
 }

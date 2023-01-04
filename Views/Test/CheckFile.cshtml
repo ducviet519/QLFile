@@ -1,0 +1,27 @@
+﻿@using WebTools.Models
+@model List<ReportList>
+@{
+    ViewData["Title"] = "CheckFile";
+ Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Tên Biểu mẫu</td>
+            <td>Mã biểu mẫu</td>
+            <td>Trạng thái file</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.TenBM</td>
+                    <td>@item.MaBM</td>
+                    <td><span class="float-right badge bg-danger">File không tồn tại</span></td>
+                </tr>
+            }
+    </tbody>
+</table>
+

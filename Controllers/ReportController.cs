@@ -181,7 +181,7 @@ namespace WebTools.Controllers
                 {
                     reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
                     reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload);
-                    if (reportList.fileUpload.Length > 0 && String.IsNullOrEmpty(reportList.FileLink))
+                    if (reportList.fileUpload != null && String.IsNullOrEmpty(reportList.FileLink))
                     {
                         message = $"File <b>{reportList.fileUpload.FileName}</b> tải lên không thành công. Vui lòng kiểm tra lại file.";
                         title = "Lỗi!";
@@ -254,7 +254,7 @@ namespace WebTools.Controllers
             {
                 reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 if (reportList.fileUpload != null) { reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload); }
-                if (reportList.fileUpload.Length > 0 && String.IsNullOrEmpty(reportList.FileLink))
+                if (reportList.fileUpload != null && String.IsNullOrEmpty(reportList.FileLink))
                 {
                     message = $"File <b>{reportList.fileUpload.FileName}</b> tải lên không thành công. Vui lòng kiểm tra lại file.";
                     title = "Lỗi!";
@@ -346,7 +346,7 @@ namespace WebTools.Controllers
                 string getDateS = DateTime.Now.ToString("ddMMyyyy");
                 string IDBieuMau = reportVersion.IDBieuMau;
                 reportVersion.FileLink = await _uploadFileServices.UploadFileAsync(reportVersion.fileUpload);
-                if (reportVersion.fileUpload.Length > 0 && String.IsNullOrEmpty(reportVersion.FileLink))
+                if (reportVersion.fileUpload != null && String.IsNullOrEmpty(reportVersion.FileLink))
                 {
                     message = $"File <b>{reportVersion.fileUpload.FileName}</b> tải lên không thành công. Vui lòng kiểm tra lại file.";
                     title = "Lỗi!";

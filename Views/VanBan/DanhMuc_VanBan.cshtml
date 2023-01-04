@@ -62,6 +62,18 @@
         width: 200px;
     }
 
+    .col-120 {
+        width: 120px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
+    .col-130 {
+        width: 130px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
     .itemvb {
         height: 50px;
         text-transform: uppercase;
@@ -95,11 +107,12 @@
     .search-advance {
         display: none;
         width: 860px;
-        border-radius:3px;
+        border-radius: 3px;
         background: #ececec;
     }
-    .bootstrap-datetimepicker-widget{
-        width:130px;
+
+    .bootstrap-datetimepicker-widget.dropdown-menu {
+        width: auto !important;
     }
 </style>
 <div class="container-fluid">
@@ -120,34 +133,82 @@
                             <button class="btn btn btn-primary" id="btnTimKiemNangCao"><i class="fas fa-search-plus"></i> Tìm kiếm nâng cao</button>
                         </div>
                     </div>
+
                     <div class="row justify-content-center">
                         <div class="fieldset search-advance">
                             <form>
                                 <div class="form-group row">
-                                    <label class="col-auto col-form-label">Tên/Mã văn bản:</label>
-                                    <div class="col-4">
+                                    <label class="col-120 col-form-label">Tên/Mã văn bản:</label>
+                                    <div class="col-5 mr-5">
                                         <input type="text" id="txtTen" class="form-control" />
                                     </div>
-                                    <label class="col-auto col-form-label">Nhóm tra cứu:</label>
+                                    
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-120 col-form-label">Ngày ban hành:</label>
+                                    <div class="col-sm-2">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-auto col-form-label">Từ:</label>
+                                            <input type="text" id="ngaybanhanh_tungay" name="ngayKham" class="form-control datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngaybanhanh_tungay" autocomplete="off" data-timepicker="date" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 mr-5">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-auto col-form-label">Đến:</label>
+                                            <input type="text" id="ngaybanhanh_denngay" name="ngayKham" class="form-control datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngaybanhanh_denngay" autocomplete="off" data-timepicker="date" />
+                                        </div>
+                                    </div>
+                                    <div class="col-1"></div>
+                                    <label class="col-130 col-form-label">Nhóm tra cứu:</label>
                                     <div class="col-2">
                                         <select class="form-control">
                                             <option>Tên mã nhóm</option>
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="form-group row">
-                                    <label class="col-auto col-form-label">Ngày ban hành:</label>
-                                    <div class="col-2">
-                                        <input type="text" id="ngaybanhanh_tungay" name="ngayKham" class="form-control datetimepicker-input ngaybanhanh_tungay" data-toggle="datetimepicker" data-target="#ngaybanhanh_tungay" autocomplete="off"/>
+                                    <label class="col-120 col-form-label">Ngày hiệu lực:</label>
+                                    <div class="col-sm-2">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-auto col-form-label">Từ:</label>
+                                            <input type="text" id="ngayhieuluc_tungay" name="ngayKham" class="form-control datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngayhieuluc_tungay" autocomplete="off" data-timepicker="date" />
+                                        </div>
                                     </div>
-                                    <div class="col-2">
-                                        <input type="text" id="ngaybanhanh_denngay" name="ngayKham" class="form-control datetimepicker-input ngaybanhanh_denngay" data-toggle="datetimepicker" data-target="#ngaybanhanh_denngay" autocomplete="off"/>
+                                    <div class="col-sm-2 mr-5">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-auto col-form-label">Đến:</label>
+                                            <input type="text" id="ngayhieuluc_denngay" name="ngayKham" class="form-control datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngayhieuluc_denngay" autocomplete="off" data-timepicker="date" />
+                                        </div>
                                     </div>
-                                    <label class="col-auto col-form-label">Đơn vị áp dụng:</label>
+                                    <div class="col-1"></div>
+                                    <label class="col-130 col-form-label">Đơn vị áp dụng:</label>
                                     <div class="col-2">
                                         <select class="form-control">
                                             <option>Nhập tên</option>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-120 col-form-label">Người soạn thảo:</label>
+                                    <div class="col-4 mr-5">
+                                        <select class="form-control col-10">
+                                            <option>Nhập tên</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1"></div>
+                                    <label class="col-130 col-form-label">Đối tượng áp dụng:</label>
+                                    <div class="col-2">
+                                        <select class="form-control">
+                                            <option>Nhập tên</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="pl-2 pr-2" width="100px">
+                                        <button class="btn btn btn-primary" id="btnTimKiem"><i class="fas fa-search"></i> Tìm kiếm</button>
                                     </div>
                                 </div>
                             </form>
@@ -344,8 +405,7 @@
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.ngaybanhanh_tungay').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi', });
-            $('.ngaybanhanh_denngay').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi', });
+            $('input[data-timepicker="date"]').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi', });
 
             $('#tbVanBan').DataTable();
             $('body .dropdown-menu').on('click', 'a[data-toggle="ajax-modal"]', function (event) {

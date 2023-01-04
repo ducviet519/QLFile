@@ -155,7 +155,7 @@ namespace WebTools.Services
                 using (IDbConnection dbConnection = Connection)
                 {
                     dbConnection.Open();
-                    var data = await dbConnection.QueryAsync<ReportList>("sp_Report_Edit",
+                    var data = await dbConnection.ExecuteAsync("sp_Report_Edit",
                         new
                         {
                             IDBieuMau = reportList.IDBieuMau,
@@ -171,7 +171,7 @@ namespace WebTools.Services
                             User = reportList.CreatedUser
                         },
                         commandType: CommandType.StoredProcedure);
-                    if (data != null)
+                    if (data > 0)
                     {
                         result = "OK";
                     }
