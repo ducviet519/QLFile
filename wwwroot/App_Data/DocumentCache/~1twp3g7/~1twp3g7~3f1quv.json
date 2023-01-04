@@ -1,0 +1,47 @@
+{
+  "CacheSourceKey": "1twp3g7",
+  "CachePdfKey": "1twp3g7/1twp3g7-15719fv.pdf",
+  "CacheXpzKey": "1twp3g7/1twp3g7-3f1quv.xpz",
+  "CacheInfoKey": "1twp3g7/1twp3g7-3f1quv.json",
+  "CacheCopyKey": null,
+  "Document": "04012023094132_VBKhongCo.xlsx",
+  "DocumentHandlerType": null,
+  "DocumentHandlerParameters": null,
+  "DocumentLocation": "D:\\VanBan",
+  "DocumentFileName": "04012023094132_VBKhongCo.xlsx",
+  "InputOptions": {
+    "$type": "GleamTech.DocumentUltimate.SpreadsheetInputOptions, GleamTech.DocumentUltimate",
+    "OutputSheetRange": "visible",
+    "RenderColumnsFitToPages": 1,
+    "RenderRowsFitToPages": 0,
+    "RenderHeadings": false,
+    "RenderGridlines": false,
+    "RenderTitleColumns": null,
+    "RenderTitleRows": null,
+    "RenderArea": null,
+    "RenderBlackAndWhite": false,
+    "RenderCenterHorizontally": false,
+    "RenderCenterVertically": false,
+    "RenderLeftHeader": null,
+    "RenderCenterHeader": null,
+    "RenderRightHeader": null,
+    "RenderLeftFooter": null,
+    "RenderCenterFooter": null,
+    "RenderRightFooter": null,
+    "Format": "Xlsx",
+    "Password": null
+  },
+  "PdfOutputOptions": {
+    "Watermarks": [],
+    "FastWebViewEnabled": false,
+    "Password": null,
+    "Attachments": [],
+    "Format": "Pdf"
+  },
+  "XpzOutputOptions": {
+    "Password": "1twp3g7",
+    "HighQualityEnabled": false,
+    "Format": "Xpz"
+  },
+  "Attachments": null
+}

@@ -49,12 +49,12 @@
         display: none;
     }
 
-    thead {
+    .dataTable thead {
         background-color: #3882b6;
         color: #ffffff;
     }
 
-        thead:first-child {
+        .dataTable thead:first-child {
             background-color: #3882b6;
         }
 
@@ -69,24 +69,37 @@
         justify-content: flex-start;
         align-items: center;
         background-color: #3882b6;
-        color:white;
-        border-radius:5px;
-        padding-left:10px;
-        padding-right:10px;
+        color: white;
+        border-radius: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
+
     .dropdown-item {
         width: 200px;
         padding-top: 8px;
         padding-bottom: 8px;
         box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
     }
-    .dropdown-item:hover {
-        background-color: aliceblue;
-        color:Highlight;
+
+        .dropdown-item:hover {
+            background-color: aliceblue;
+            color: Highlight;
+        }
+
+    .dropdown-menu {
+        padding-top: 0;
+        padding-bottom: 0;
     }
-    .dropdown-menu{
-        padding-top:0;
-        padding-bottom:0;
+
+    .search-advance {
+        display: none;
+        width: 860px;
+        border-radius:3px;
+        background: #ececec;
+    }
+    .bootstrap-datetimepicker-widget{
+        width:130px;
     }
 </style>
 <div class="container-fluid">
@@ -101,10 +114,43 @@
                             <input type="text" id="txtSearch" name="txtSearch" class="form-control col" />
                         </div>
                         <div class="pl-2 pr-2" width="100px">
-                            <button class="btn btn btn-primary"><i class="fas fa-search"></i> Tìm kiếm</button>
+                            <button class="btn btn btn-primary" id="btnTimKiem"><i class="fas fa-search"></i> Tìm kiếm</button>
                         </div>
                         <div width="155px">
-                            <button class="btn btn btn-primary"><i class="fas fa-search-plus"></i> Tìm kiếm nâng cao</button>
+                            <button class="btn btn btn-primary" id="btnTimKiemNangCao"><i class="fas fa-search-plus"></i> Tìm kiếm nâng cao</button>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="fieldset search-advance">
+                            <form>
+                                <div class="form-group row">
+                                    <label class="col-auto col-form-label">Tên/Mã văn bản:</label>
+                                    <div class="col-4">
+                                        <input type="text" id="txtTen" class="form-control" />
+                                    </div>
+                                    <label class="col-auto col-form-label">Nhóm tra cứu:</label>
+                                    <div class="col-2">
+                                        <select class="form-control">
+                                            <option>Tên mã nhóm</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-auto col-form-label">Ngày ban hành:</label>
+                                    <div class="col-2">
+                                        <input type="text" id="ngaybanhanh_tungay" name="ngayKham" class="form-control datetimepicker-input ngaybanhanh_tungay" data-toggle="datetimepicker" data-target="#ngaybanhanh_tungay" autocomplete="off"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="text" id="ngaybanhanh_denngay" name="ngayKham" class="form-control datetimepicker-input ngaybanhanh_denngay" data-toggle="datetimepicker" data-target="#ngaybanhanh_denngay" autocomplete="off"/>
+                                    </div>
+                                    <label class="col-auto col-form-label">Đơn vị áp dụng:</label>
+                                    <div class="col-2">
+                                        <select class="form-control">
+                                            <option>Nhập tên</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -297,12 +343,19 @@
 </div>
 @section Scripts{
     <script type="text/javascript">
-        $('#tbVanBan').DataTable();
-        $('body .dropdown-menu').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
-            var url = $(this).data('url');
-            $(this).callModal(url);
-        });
+        $(document).ready(function () {
+            $('.ngaybanhanh_tungay').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi', });
+            $('.ngaybanhanh_denngay').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi', });
 
+            $('#tbVanBan').DataTable();
+            $('body .dropdown-menu').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
+                var url = $(this).data('url');
+                $(this).callModal(url);
+            });
+            $('#btnTimKiemNangCao').click(function () {
+                $('.search-advance').toggle(500);
+            });
+        });
     </script>
 }
 

@@ -36,24 +36,22 @@ namespace WebTools.Services
         {
             string FileLink = "";
             string getDateS = DateTime.Now.ToString("ddMMyyyyHHmmss");
-            //string uploadsFolder = Path.Combine(_webHostEnvironment.ContentRootPath, "Upload");
             string uploadsFolder = "D:\\VanBan";
             if (!Directory.Exists(uploadsFolder)) { Directory.CreateDirectory(uploadsFolder); }
 
             if (fileUpload != null && fileUpload.Length > 0)
             {
                 string fileName = $"{getDateS}_{fileUpload.FileName}";
-                //string fileName = Guid.NewGuid().ToString() + Path.GetExtension(fileUpload.FileName);
-
                 string filePath = Path.Combine(uploadsFolder, fileName);
-
                 using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                 {
                     await fileUpload.CopyToAsync(fileStream);
                 }
-
-                //string fileGoogleID = _googleDriveAPI.UploadFile(filePath);
-                return FileLink = filePath;
+                if(File.Exists(filePath))
+                {
+                    return FileLink = filePath;
+                }    
+                else { return FileLink = ""; }
             }
             else
                 return FileLink = "";

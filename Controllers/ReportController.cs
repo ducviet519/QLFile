@@ -162,35 +162,6 @@ namespace WebTools.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> AddReport(ReportList reportList)
-        {
-            var data = await _reportListServices.GetReportListAsync();
-            data = data.Where(r => r.MaBM != null && StaticHelper.RemoveSpecialCharacters(r.MaBM).ToUpper().Contains(StaticHelper.RemoveSpecialCharacters(reportList.MaBM).ToUpper())).ToList();
-            if (data.Count > 0)
-            {
-                TempData["ErrorMsg"] = $"Lỗi! Mã biểu mẫu: {reportList.MaBM} đã tồn tại. Xin vui lòng kiểm tra lại";
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                reportList.KhoaPhong = Request.Form["KhoaPhong"];
-                reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-                reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload);
-                var result = await _reportListServices.InsertReportListAsync(reportList);
-                if (result == "OK")
-                {
-                    TempData["SuccessMsg"] = "Thêm biểu mẫu: " + reportList.TenBM + " thành công!";
-                }
-                else
-                {
-                    TempData["ErrorMsg"] = "Lỗi! " + result;
-                }
-                return RedirectToAction("Index");
-            }
-        }
-
-        [HttpPost]
-        [DisableRequestSizeLimit]
         public async Task<JsonResult> AddReport_Json(ReportList reportList)
         {
             string message = String.Empty;
@@ -210,18 +181,27 @@ namespace WebTools.Controllers
                 {
                     reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
                     reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload);
-                    result = await _reportListServices.InsertReportListAsync(reportList);
-                    if (result == "OK")
+                    if (reportList.fileUpload.Length > 0 && String.IsNullOrEmpty(reportList.FileLink))
                     {
-                        message = $"Đã thêm biểu mẫu <b>{reportList.TenBM}</b> thành công.";
-                        title = "Thành công!";
-                        result = "success";
+                        message = $"File <b>{reportList.fileUpload.FileName}</b> tải lên không thành công. Vui lòng kiểm tra lại file.";
+                        title = "Lỗi!";
+                        result = "error";
                     }
                     else
                     {
-                        message = result;
-                        title = "Lỗi!";
-                        result = "error";
+                        result = await _reportListServices.InsertReportListAsync(reportList);
+                        if (result == "OK")
+                        {
+                            message = $"Đã thêm biểu mẫu <b>{reportList.TenBM}</b> thành công.";
+                            title = "Thành công!";
+                            result = "success";
+                        }
+                        else
+                        {
+                            message = result;
+                            title = "Lỗi!";
+                            result = "error";
+                        }
                     }
                 }
             }
@@ -242,10 +222,11 @@ namespace WebTools.Controllers
             model.Depts = new SelectList((await _depts.GetAll_DeptsAsync()).OrderBy(i => i.KhoaP), "STT", "KhoaP");
             return PartialView("_EditReportPartial", model);
         }
+
         [HttpPost]
+        [DisableRequestSizeLimit]
         public async Task<IActionResult> EditReport(ReportList reportList)
         {
-            string getDateS = DateTime.Now.ToString("ddMMyyyyHHmmss");
             reportList.KhoaPhong = Request.Form["KhoaPhong"];
             reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
             if (reportList.fileUpload != null) { reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload); }
@@ -263,6 +244,49 @@ namespace WebTools.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
+        public async Task<JsonResult> EditReport_Json(ReportList reportList)
+        {
+            string message = String.Empty;
+            string title = String.Empty;
+            string result = String.Empty;
+            try
+            {
+                reportList.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                if (reportList.fileUpload != null) { reportList.FileLink = await _uploadFileServices.UploadFileAsync(reportList.fileUpload); }
+                if (reportList.fileUpload.Length > 0 && String.IsNullOrEmpty(reportList.FileLink))
+                {
+                    message = $"File <b>{reportList.fileUpload.FileName}</b> tải lên không thành công. Vui lòng kiểm tra lại file.";
+                    title = "Lỗi!";
+                    result = "error";
+                }
+                else
+                {
+                    result = await _reportListServices.UpdateReportListAsync(reportList);
+                    if (result == "OK")
+                    {
+                        message = $"Cập nhật thông tin Biểu mẫu: <b>{reportList.TenBM}</b> thành công.";
+                        title = "Thành công!";
+                        result = "success";
+                    }
+                    else
+                    {
+                        message = result;
+                        title = "Lỗi!";
+                        result = "error";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                title = "Lỗi!";
+                result = "error";
+            }
+            return Json(new { Result = result, Title = title, Message = message });
+        }
+
+        [HttpPost]
         public async Task<JsonResult> DeleteReport(string IDBieuMau, string IDPhienBan)
         {
             string message = String.Empty;
@@ -275,7 +299,7 @@ namespace WebTools.Controllers
                 if (result == "OK")
                 {
                     if (!String.IsNullOrEmpty(filelink)) { System.IO.File.Delete(filelink); }
-                   
+
                     message = $"Đã xóa biểu mẫu";
                     title = "Thành công!";
                     result = "success";
@@ -311,24 +335,47 @@ namespace WebTools.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> AddVersion(ReportVersion reportVersion)
+        public async Task<JsonResult> AddVersion(ReportVersion reportVersion)
         {
-            reportVersion.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            string getDateS = DateTime.Now.ToString("ddMMyyyy");
-            string IDBieuMau = reportVersion.IDBieuMau;
-            string resault = string.Empty;
-
-            reportVersion.FileLink = await _uploadFileServices.UploadFileAsync(reportVersion.fileUpload);
-            var result = await _reportVersionServices.InsertReportVersionAsync(reportVersion);
-            if (result == "OK")
+            string message = String.Empty;
+            string title = String.Empty;
+            string result = String.Empty;
+            try
             {
-                TempData["SuccessMsg"] = "Thêm phiên bản thành công!";
+                reportVersion.CreatedUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.GivenName).Value ?? HttpContext.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                string getDateS = DateTime.Now.ToString("ddMMyyyy");
+                string IDBieuMau = reportVersion.IDBieuMau;
+                reportVersion.FileLink = await _uploadFileServices.UploadFileAsync(reportVersion.fileUpload);
+                if (reportVersion.fileUpload.Length > 0 && String.IsNullOrEmpty(reportVersion.FileLink))
+                {
+                    message = $"File <b>{reportVersion.fileUpload.FileName}</b> tải lên không thành công. Vui lòng kiểm tra lại file.";
+                    title = "Lỗi!";
+                    result = "error";
+                }
+                else
+                {
+                    result = await _reportVersionServices.InsertReportVersionAsync(reportVersion);
+                    if (result == "OK")
+                    {
+                        message = $"Đã xóa biểu mẫu";
+                        title = "Thành công!";
+                        result = "success";
+                    }
+                    else
+                    {
+                        message = $"Lỗi! {result}";
+                        title = "Lỗi!";
+                        result = "error";
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["ErrorMsg"] = "Lỗi! " + result;
+                message = ex.Message;
+                title = "Lỗi!";
+                result = "error";
             }
-            return RedirectToAction("Index");
+            return Json(new { Result = result, Title = title, Message = message });
         }
 
 
