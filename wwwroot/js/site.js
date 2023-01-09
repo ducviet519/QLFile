@@ -3,12 +3,32 @@
 
 // Write your JavaScript code.
 
+//Add Ajax Loading Screen
 $body = $("body");
-
 $(document).on({
     ajaxStart: function () { $body.addClass("loading"); },
     ajaxStop: function () { $body.removeClass("loading"); }
 });
+
+//Multiple Modal Open
+$(document).on({
+    'show.bs.modal': function () {
+        var zIndex = 1040 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(function () {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+    },
+    'hidden.bs.modal': function () {
+        if ($('.modal:visible').length > 0) {
+            // restore the modal-open class to the body element, so that scrolling works
+            // properly after de-stacking a modal.
+            setTimeout(function () {
+                $(document.body).addClass('modal-open');
+            }, 0);
+        }
+    }
+}, '.modal');
 
 function searchDataTable(id, columnData, url, disableColumn) {
     var array = [];
@@ -209,6 +229,34 @@ $.fn.clearData = function ($form) {
     $form.find('input:text, input:password, input:file, select, textarea').val('');
     $form.find('input:radio, input:checkbox')
         .removeAttr('checked').removeAttr('selected');
+}
+
+$.fn.callMultipleModal = function (url, element) {
+
+    var ReportPopupElement = $(element);
+    $.ajax({
+        url: url,
+        dataType: 'html',
+        success: function (data) {
+            $("body").find(".modal-backdrop").remove();
+            ReportPopupElement.html(data);
+            ReportPopupElement.find('.modal').modal('show');
+        }, error: function (xhr, status) {
+            switch (status) {
+                case 404:
+                    $(this).callToast("error", 'Lỗi!', 'Đường dẫn không đúng hoặc tính năng không tồn tại!');
+                    break;
+                case 500:
+                    $(this).callToast("error", 'Lỗi!', 'Không kết nối được tới Server!');
+                    break;
+                case 0:
+                    $(this).callToast("error", 'Lỗi!', 'Hệ thống không phản hồi!');
+                    break;
+                default:
+                    $(this).callToast("error", 'Lỗi!', 'Sự cố không xác định! Lỗi: ' + status);
+            }
+        }
+    });
 }
 
 $.fn.callModal = function (url) {

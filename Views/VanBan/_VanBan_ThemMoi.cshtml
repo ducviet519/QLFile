@@ -212,32 +212,45 @@
                         <label class="label-checkbox"><input type="checkbox" id="watermarkthongtinnguoidung" />Gắn watermark thông tin người dùng</label>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-3">
                     <label class="col-form-label col-120">Phân quyền</label>
                     <div class="col">
                         <div class="row">
                             <label class="label-checkbox"><input type="checkbox" id="quyenxem" />Không giới hạn quyền xem</label>
                         </div>
                         <div class="row d-flex justify-content-around">
-                            <button type="button" class="btn btn-success"><i class="fas fa-users"></i> Quyền nhóm</button>
-                            <button type="button" class="btn btn-success"><i class="fas fa-user"></i> Quyền cá nhân</button>
-                            <button type="button" class="btn btn-success"><i class="fas fa-people-arrows"></i> Cập nhật phân quyền</button>
+                            <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#modalQuyenNhom" data-url="@Url.Action("QuyenNhom","PhanQuyen")"><i class="fas fa-users"></i> Quyền nhóm</button>
+                            <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#modalQuyenCaNhan" data-url="@Url.Action("QuyenCaNhan","PhanQuyen")"><i class="fas fa-user"></i> Quyền cá nhân</button>
+                            <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#modalCapNhatPhanQuyen" data-url="@Url.Action("ThemThuMuc","PhanQuyen")"><i class="fas fa-people-arrows"></i> Cập nhật phân quyền</button>
                         </div>
                     </div>
-                </div>
+                </div>       
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Lưu</button>
+                <div class="row col-12 d-flex justify-content-between">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#modalTaiLieuLienQuan" data-url="@Url.Action("TaiLieuLienQuan","VanBan")">><i class="fas fa-project-diagram"></i> Danh sách tài liệu liên quan</button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Đóng</button>
+                    </div>                                       
+                </div>   
             </div>
         </div>
     </div>
 </div>
+<div class="second-modal"></div>
 
 <script type="text/javascript">
     $(document).ready(function () {
         bsCustomFileInput.init();
 
         $('input[datetimepicker]').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi' });
+
+        $('body .modal').on('click', 'button[data-toggle="ajax-modal"]', function (event) {
+            var url = $(this).data('url');
+            $(this).callMultipleModal(url,".second-modal");
+        });
     });
 </script>

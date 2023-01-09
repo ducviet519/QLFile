@@ -1,0 +1,91 @@
+﻿<style>
+    .tab-custom-content {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .col-70 {
+        width: 86px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+</style>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-xl" id="modalQuyenCaNhan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-user"></i> Quyền cá nhân</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-4">
+                        <form id="frmTaoQuyenCaNhan">
+                            <div class="card-body m-0 p-0">
+                                <div class="tab-custom-content"><label class="col-form-label col-12 text-center">Tạo mới quyền cá nhân</label></div>
+                                <div class="row">
+                                    <div class="form-group row col">
+                                        <label class="col-form-label col-70">Khoa phòng</label>
+                                        <div class="col">
+                                            <select class="form-control" id="khoaphong"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group row col">
+                                        <label class="col-form-label col-70">Tên Cán bộ</label>
+                                        <div class="col">
+                                            <select class="form-control" id="tennhanvien"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group row col">
+                                        <label class="col-form-label col-70">Chọn quyền</label>
+                                        <div class="col">
+                                            <select class="form-control" id="quyencanhan"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-around">
+                                    <button type="button" class="btn btn-success"><i class="fas fa-user-plus"></i> Thêm quyền</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-8">
+                        <div class="tab-custom-content"><label class="col-form-label col-12 text-center">Tạo mới quyền cá nhân</label></div>
+                        <table class="table table-bordered table-striped" id="tbQuyenCaNhan">
+                            <thead class="thead">
+                                <tr>
+                                    <th>Họ tên</th>
+                                    <th>Email</th>
+                                    <th>Đối tượng</th>
+                                    <th>Khoa phòng</th>
+                                    <th>Xem</th>
+                                    <th>Xem và In</th>
+                                    <th>Xem In Download</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Đóng</button>
+                <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tbQuyenCaNhan').DataTable();
+    });
+</script>

@@ -129,7 +129,11 @@ namespace WebTools.Controllers
             return PartialView("_VanBan_ThemMoi");
         }
 
-        
+        [HttpGet]
+        public IActionResult TaiLieuLienQuan()
+        {
+            return PartialView("_TaiLieuLienQuan");
+        }
         #endregion
 
 
