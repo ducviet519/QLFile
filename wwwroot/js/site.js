@@ -2,6 +2,14 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+$body = $("body");
+
+$(document).on({
+    ajaxStart: function () { $body.addClass("loading"); },
+    ajaxStop: function () { $body.removeClass("loading"); }
+});
+
 function searchDataTable(id, columnData, url, disableColumn) {
     var array = [];
     $.each(disableColumn.split(','), function (idx, val) {

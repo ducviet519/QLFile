@@ -1,20 +1,243 @@
-﻿<!-- Modal -->
+﻿<style>
+    .col-120 {
+        width: 135px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
+    .col-90 {
+        width: 110px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
+    .end {
+        justify-content: flex-end;
+    }
+
+    .label-checkbox {
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+        padding: 4px;
+        cursor: pointer;
+        width: fit-content;
+    }
+
+        .label-checkbox:hover {
+            background-color: lightblue;
+        }
+
+    input[type="checkbox"], input[type="radio"] {
+        height: 20px;
+        width: 20px;
+        background: #fff;
+        border: 2px solid var(--color-subtle);
+        margin: 0 8px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        outline-offset: 5px;
+        outline-color: var(--color-subtle);
+    }
+
+        input[type="checkbox"]:disabled, input[type="radio"]:disabled {
+            opacity: 0.7;
+            background: var(--color-subtle);
+            cursor: not-allowed;
+        }
+
+        input[type="checkbox"]:after, input[type="radio"]:after {
+            content: "";
+            display: block;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+        }
+
+        input[type="checkbox"]:checked:after, input[type="radio"]:checked:after {
+            transform: scale(1);
+        }
+
+    input[type="checkbox"] {
+        border-radius: 5px;
+    }
+
+        input[type="checkbox"]:after {
+            width: 12px;
+            height: 12px;
+        }
+
+        input[type="checkbox"]:checked {
+            border: none;
+            background-color: var(--color-primary, #dfdfdf);
+        }
+
+            input[type="checkbox"]:checked:after {
+                font-family: "Font Awesome 5 Free";
+                content: "\f00c";
+            }
+
+    input[type="radio"] {
+        border-radius: 20px;
+    }
+
+        input[type="radio"]:after {
+            width: 10px;
+            height: 10px;
+            border-radius: 7px;
+        }
+
+        input[type="radio"]:checked {
+            border-color: var(--color-primary);
+        }
+
+            input[type="radio"]:checked:after {
+                background-color: var(--color-primary);
+            }
+</style>
+<!-- Modal -->
 <div class="modal fade bd-example-modal-lg" id="modalThemVanBan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-file-medical"></i> Thêm mới văn bản</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                ...
+                <div class="form-group row">
+                    <label class="col-form-label col-120">Tên văn bản</label>
+                    <div class="col">
+                        <input type="text" class="form-control" id="tenvanban" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col">
+                        <label class="col-form-label col-120" for="mavanban">Mã văn bản</label>
+                        <div class="col mr-5">
+                            <input type="text" class="form-control" id="mavanban" />
+                        </div>
+                    </div>
+                    <div class="form-group row col"></div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col">
+                        <label class="col-form-label col-120" for="loaivanban">Loại văn bản</label>
+                        <div class="col mr-5">
+                            <select class="form-control" id="loaivanban"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row col end">
+                        <label class="col-form-label col-auto" for="nhomhienthivanban">Nhóm hiển thị văn bản</label>
+                        <div class="col">
+                            <select class="form-control" id="nhomhienthivanban"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col">
+                        <label class="col-form-label col-120">Ngày ban hành</label>
+                        <div class="col-90">
+                            <input type="text" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#ngaybanhanh" id="ngaybanhanh" name="ngaybanhanh" autocomplete="off" datetimepicker />
+                        </div>
+                    </div>
+                    <div class="form-group row col end">
+                        <label for="ngayhieuluc" class="col-form-label col-auto">Ngày hiệu lực</label>
+                        <div class="col-90">
+                            <input type="text" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#ngayhieuluc" id="ngayhieuluc" name="ngayhieuluc" autocomplete="off" datetimepicker />
+                        </div>
+                    </div>
+                    <div class="form-group row col end">
+                        <label for="phienban" class="col-form-label col-auto">Phiên bản</label>
+                        <div class="col-90">
+                            <input type="text" class="form-control" id="phienban" name="phienban" autocomplete="off" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col">
+                        <label for="donvisoanthao" class="col-form-label col-120">Đơn vị soạn thảo</label>
+                        <div class="col mr-5">
+                            <select class="form-control" id="donvisoanthao"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row col end">
+                        <label for="nguoisoanthao" class="col-form-label col-auto">Người soạn thảo</label>
+                        <div class="col">
+                            <select class="form-control" id="nguoisoanthao"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col">
+                        <label class="col-form-label col-120">Khoa phòng sử dụng</label>
+                        <div class="col mr-5">
+                            <select class="form-control" id="khoaphongsudung"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row col"></div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col">
+                        <label class="col-form-label col-120">Đối tượng áp dụng</label>
+                        <div class="col mr-5">
+                            <select class="form-control" id="doituongapdung"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row col"></div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col">
+                        <label class="col-form-label col-120">File</label>
+                        <div class="col">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="fileUpload" name="fileUpload">
+                                <label class="custom-file-label" for="fileUpload">Chọn file</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row col-4 end">
+                        <label class="col-form-label col-auto">Ngày upload</label>
+                        <div class="col-90">
+                            <input type="text" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#ngayupload" id="ngayupload" name="ngayupload" autocomplete="off" datetimepicker />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-form-label col-120">Watermark</label>
+                    <div class="col pl-0">
+                        <label class="label-checkbox"><input type="checkbox" id="watermarkbanquyen" />Gắn watermark bản quyền</label>
+                        <label class="label-checkbox"><input type="checkbox" id="watermarkthongtinnguoidung" />Gắn watermark thông tin người dùng</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-form-label col-120">Phân quyền</label>
+                    <div class="col">
+                        <div class="row">
+                            <label class="label-checkbox"><input type="checkbox" id="quyenxem" />Không giới hạn quyền xem</label>
+                        </div>
+                        <div class="row d-flex justify-content-around">
+                            <button type="button" class="btn btn-success"><i class="fas fa-users"></i> Quyền nhóm</button>
+                            <button type="button" class="btn btn-success"><i class="fas fa-user"></i> Quyền cá nhân</button>
+                            <button type="button" class="btn btn-success"><i class="fas fa-people-arrows"></i> Cập nhật phân quyền</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Lưu</button>
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        bsCustomFileInput.init();
+
+        $('input[datetimepicker]').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi' });
+    });
+</script>

@@ -1,20 +1,103 @@
-﻿<!-- Modal -->
+﻿<style>
+    .col-80 {
+        padding-right: 7.5px;
+        padding-left: 7.5px;
+        width: 100px;
+    }
+</style>
+@await Html.PartialAsync("_StyleUI_ComboBox")
+<!-- Modal -->
 <div class="modal fade" id="modalThemThuMuc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-folder-plus"></i> Thêm thư mục</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                ...
+                <form id="frmThemThuMuc">
+                    <div class="form-group row">
+                        <label class="col-80 col-form-label">Mã thư mục:</label>
+                        <div class="col-5 mr-5">
+                            <input type="text" id="manhom" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-80 col-form-label">Tên thư mục:</label>
+                        <div class="col-8 mr-5">
+                            <input type="text" id="tennhom" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-80 col-form-label">Thư mục cha:</label>
+                        <div class="col-8 mr-5">
+                            <input type="text" id="tt" class="form-control" combotree />
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Lưu</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('input[combotree]').combotree({
+            url: '/VanBan/Get_ThuMucCha',
+            editable: true,
+            loadFilter: function (data) {
+                return convert(data.rows);
+            }
+
+        });
+        function convert(rows) {
+            function exists(rows, parentId) {
+                for (var i = 0; i < rows.length; i++) {
+                    if (rows[i].id == parentId) return true;
+                }
+                return false;
+            }
+
+            var nodes = [];
+            // get the top level nodes
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                if (!exists(rows, row.parentId)) {
+                    nodes.push({
+                        id: row.id,
+                        text: row.name
+                    });
+                }
+            }
+
+            var toDo = [];
+            for (var i = 0; i < nodes.length; i++) {
+                toDo.push(nodes[i]);
+            }
+            while (toDo.length) {
+                var node = toDo.shift();    // the parent node
+                // get the children nodes
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows[i];
+                    if (row.parentId == node.id) {
+                        var child = { id: row.id, text: row.name };
+                        if (node.children) {
+                            node.children.push(child);
+                        } else {
+                            node.children = [child];
+                        }
+                        toDo.push(child);
+                    }
+                }
+            }
+            return nodes;
+        }
+
+    });
+</script>

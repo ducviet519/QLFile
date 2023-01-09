@@ -49,15 +49,6 @@
         display: none;
     }
 
-    .dataTable thead {
-        background-color: #3882b6;
-        color: #ffffff;
-    }
-
-        .dataTable thead:first-child {
-            background-color: #3882b6;
-        }
-
     .col-200 {
         width: 200px;
     }
@@ -113,6 +104,12 @@
 
     .bootstrap-datetimepicker-widget.dropdown-menu {
         width: auto !important;
+    }
+
+    .combo-panel {
+        min-height: 30px !important;
+        max-height: 215px !important;
+        height: fit-content !important;
     }
 </style>
 <div class="container-fluid">
@@ -217,7 +214,7 @@
                 </div>
                 <h2 class="text-center pt-3 pb-3">Bảng tin các văn bản phát hành gần đây</h2>
                 <table id="tbVanBan" class="table table-bordered text-wrap table-responsive" style="width: 100%">
-                    <thead>
+                    <thead class="thead">
                         <tr>
                             <th>Cập nhật review Văn bản</th>
                             <th>STT</th>

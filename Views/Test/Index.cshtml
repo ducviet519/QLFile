@@ -9,29 +9,7 @@
     
     <script type="text/javascript">
         $(document).ready(function () {
-            //$('#dg').treegrid({
-            //    url: '/Test/GetData',
-            //    method: 'post',
-            //    loadFilter: function (data) {
-            //        return {
-            //            total: data.total,
-            //            rows: data.rows
-            //        };
-            //    },
-            //    rownumbers: true,
-            //    singleSelect: true,
-            //    autoRowHeight: false,
-            //    pagination: true,
-            //    pageSize: 10,
-            //    columns: [[
-            //        { field: 'stt', title: 'STT', resizable: false, width: "5%" },
-            //        { field: 'tenBM', title: 'Tên Biểu mẫu', resizable: false, width: "65%"},
-            //        { field: 'maBM', title: 'Mã Biểu mẫu', resizable: false, width: "15%", align: 'center'},
-            //        { field: 'ngayBanHanh', title: 'Ngày ban hành', resizable: false, width: "15%", align: 'center'}
-            //    ]],
-            //    sortName: 'stt',
-            //    sortOrder: 'asc'
-            //});   
+           
             $('#tt').treegrid({
                 url: '/Test/GetTreeData',
                 rownumbers: true,
@@ -51,16 +29,7 @@
                     return s;
                 },
                 columns: [[
-                    //{
-                    //    field: 'ck', title: 'Check', width: 50,
-                    //    checkbox: function (value, row) {
-                    //        console.log(value);
-                    //        if (value == 1) {
-                    //            return true;
-                    //        }
-                    //        else { return false;}
-                    //    }
-                    //},
+                    
                     { title: 'Region', field: 'region', width: 300, sortable: true},
                     { field: 'f1', title: 'F1', width: 50, align:'right', sortable: true},
                     { field: 'f2', title: 'F2', width: 50, align:'right', sortable: true},

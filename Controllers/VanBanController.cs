@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using WebTools.Models;
+using WebTools.Models.Entities;
 using WebTools.Services;
 
 namespace WebTools.Controllers
@@ -59,6 +64,14 @@ namespace WebTools.Controllers
             return PartialView("_ThuMuc_ThemMoi");
         }
 
+        [HttpPost]
+        public JsonResult Get_ThuMucCha(int page = 1, int rows = 10)
+        {
+            string json = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Data\\combotree_data.json"));
+            List<ThuMucCha> data = JsonConvert.DeserializeObject<List<ThuMucCha>>(json);
+            return Json(new { rows = data});
+        }
+
         [HttpGet]
         public IActionResult SuaThuMuc()
         {
@@ -72,6 +85,43 @@ namespace WebTools.Controllers
         {
             return PartialView("_VanBan_ThemExcel");
         }
+
+        [HttpPost]
+        public async Task<JsonResult> UploadExcelFile(IFormFile fileUpload)
+        {
+            string message = String.Empty;
+            string title = String.Empty;
+            string result = String.Empty;
+            FileImport data = new FileImport();
+            try
+            {            
+                if(fileUpload != null) 
+                {
+                    data = await _services.UploadFile.ReadExcelFile(fileUpload);
+                    if (data.status == "OK")
+                    {
+                        
+                        message = $"Lấy thành công {data.dataExcels.Count} văn bản";
+                        title = "Thành công!";
+                        result = "success";
+                    }
+                    else
+                    {
+                        message = data.status;
+                        title = "Lỗi!";
+                        result = "error";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                title = "Lỗi!";
+                result = "error";
+            }
+            return Json(new { Result = result, Title = title, Message = message, data = data.dataExcels });
+        }
+
 
         [HttpGet]
         public IActionResult ThemVanBan()

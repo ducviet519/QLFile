@@ -230,3 +230,7 @@ body {
 .table td, .table th {
     vertical-align: middle;
 }
+
+.bg-ta {
+    background-color: #3882b6;
+}

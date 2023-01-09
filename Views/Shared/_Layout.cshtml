@@ -11,6 +11,7 @@
     <!-- EasyUI -->
     @await Html.PartialAsync("_EasyUI_Styles")
     <!-- Theme style -->
+    <link rel="stylesheet" href="~/css/loading.css">
     <link rel="stylesheet" href="~/lib/admin-lte/css/adminlte.min.css">
     <link rel="stylesheet" href="~/css/site_default.css">
 
@@ -21,7 +22,6 @@
     </style>
 </head>
 <body class="control-sidebar-slide-open layout-navbar-fixed sidebar-collapse">
-      
     <div class="wrapper">
         @if (User.Identity.IsAuthenticated)
         {
@@ -60,7 +60,7 @@
                                     <li><a asp-area="" asp-controller="Permission" asp-action="Users" class="dropdown-item">Tài khoản người dùng </a></li>
                                     <li><a asp-area="" asp-controller="Permission" asp-action="Roles" class="dropdown-item">Vai trò hệ thống</a></li>
                                     @*<li><a asp-area="" asp-controller="Permission" asp-action="ModuleController" class="dropdown-item">ModuleControllers</a></li>
-                    <li><a asp-area="" asp-controller="Permission" asp-action="ModuleAction" class="dropdown-item">ModuleActions</a></li>*@
+                                    <li><a asp-area="" asp-controller="Permission" asp-action="ModuleAction" class="dropdown-item">ModuleActions</a></li>*@
                                 </ul>
                             </li>
                         }
@@ -76,6 +76,7 @@
             <div class="content-wrapper">
                 @RenderBody()
             </div>
+            <div class="modal"><!-- Place at bottom of page --></div>
             <div id="GopYPopup"></div>
         }
         <!-- Plugins -->
