@@ -15,4 +15,11 @@ namespace WebTools.Models
         public string Extension { get; set; }
         public string IDPhienBan { get; set; }
     }
+
+    public class DocumentVM
+    {
+        public string filePath { get; set; }
+        public string fileID { get; set; }
+        public string Iframe { get; set; }
+    }
 }

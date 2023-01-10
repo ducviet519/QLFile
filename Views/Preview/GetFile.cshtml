@@ -1,0 +1,24 @@
+﻿@using GleamTech.AspNet.Core
+@using GleamTech.DocumentUltimate.AspNet.UI
+@model WebTools.Models.DocumentViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.FileName</title>
+    @this.RenderHead(Model.DocumentViewer)
+    <style>
+        .dv-control {
+            width: 100% !important;
+            /*height: 1500px !important;*/
+        }
+    </style>
+</head>
+@*<body style="margin: 20px;">*@
+<body>
+    @this.RenderBody(Model.DocumentViewer)
+</body>
+</html>
