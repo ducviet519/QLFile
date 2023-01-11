@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\keys\vbnb-367607-9cec436a0f37.p12" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Catel.Core" Version="5.12.22" />
     <PackageReference Include="ClosedXML" Version="0.97.0" />
     <PackageReference Include="Dapper" Version="2.0.123" />
@@ -47,10 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\GoogleDriveFiles\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Include="wwwroot\keys\vbnb-367607-9cec436a0f37.p12" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
     <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />

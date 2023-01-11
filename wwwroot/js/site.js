@@ -4,10 +4,9 @@
 // Write your JavaScript code.
 
 //Add Ajax Loading Screen
-$body = $("body");
 $(document).on({
-    ajaxStart: function () { $body.addClass("loading"); },
-    ajaxStop: function () { $body.removeClass("loading"); }
+    ajaxStart: function () { $(document.body).addClass("loading"); },
+    ajaxStop: function () { $(document.body).removeClass("loading"); }
 });
 
 //Multiple Modal Open

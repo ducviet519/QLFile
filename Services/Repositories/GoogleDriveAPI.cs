@@ -115,7 +115,7 @@ namespace WebTools.Services
         private DriveService GetDriveServiceAccount()
         {
             string[] scopes = new string[] { DriveService.Scope.Drive}; // Full access
-            p12Path = Path.Combine(_webHostEnvironment.ContentRootPath, "vbnb-367607-9cec436a0f37.p12");
+            p12Path = Path.Combine(_webHostEnvironment.WebRootPath, "keys\\vbnb-367607-9cec436a0f37.p12");
             var serviceAccountEmail = "vbnb-ta-232@vbnb-367607.iam.gserviceaccount.com";
             var certificate = new X509Certificate2(p12Path, "notasecret", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.Exportable);
             ServiceAccountCredential credential = new ServiceAccountCredential(

@@ -1,0 +1,218 @@
+﻿
+@{
+    ViewData["Title"] = "DanhSach_VanBanChiTiet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    .left-panel {
+        display: block;
+    }
+
+    .btn-tool {
+        vertical-align: middle;
+    }
+
+    .scrollspy {
+        position: relative;
+        height: 520px;
+        overflow: auto;
+    }
+    .tree-file {
+        background: url(../images/tree_icons.png) no-repeat -208px 0;
+    }
+    .icon-expand:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f31e";
+        display: inline-block;
+        padding-right: 3px;
+        vertical-align: middle;
+        font-weight: 900;
+    }
+    .icon-collapse:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f78c";
+        display: inline-block;
+        padding-right: 3px;
+        vertical-align: middle;
+        font-weight: 900;
+    }
+    .icon-chitietnhom:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f5fd";
+        display: inline-block;
+        padding-right: 3px;
+        vertical-align: middle;
+        font-weight: 900;
+    }
+    .icon-themthumuc:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f65e";
+        display: inline-block;
+        padding-right: 3px;
+        vertical-align: middle;
+        font-weight: 900;
+    }
+    .icon-xoathumuc:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f65d";
+        display: inline-block;
+        padding-right: 3px;
+        vertical-align: middle;
+        font-weight: 900;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="card col-3 left-panel">
+            <div class="card-header">
+                <div class="row m-0 p-0 d-flex justify-content-between">
+                    <label class="card-title">Danh mục</label>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool">
+                            <i class="fas fa-angle-double-left" style="font-size:20px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pl-0 pr-0">
+                <div id="danhmuc" class="treeview scrollspy" data-spy="scroll" data-target="#spy" data-offset="0">
+                    <ul id="tree" class="easyui-tree" tree></ul>
+                </div>
+                <div id="menudanhmuc" class="easyui-menu" style="width:120px;">
+                    <div class="" data-options="iconCls:'icon-chitietnhom'" data-menu="chitietnhom">Xem chi tiết nhóm</div>
+                    <div class="" data-options="iconCls:'icon-themthumuc'" data-menu="themthumuc">Thêm thư mục con</div>
+                    <div class="" data-options="iconCls:'icon-xoathumuc'" data-menu="xoathumuc">Xóa thư mục</div>
+                    <div class="menu-sep"></div>
+                    <div class="" data-options="iconCls:'icon-expand'" data-menu="expand">Mở rộng</div>
+                    <div class="" data-options="iconCls:'icon-collapse'" data-menu="collapse">Thu gọn</div>
+                </div>
+            </div>
+        </div>
+        <div class="card col">
+            <div class="card-header">
+                <div class="row m-0 p-0 d-flex justify-content-between">
+                    <label class="card-title">Danh sách văn bản chi tiết</label>
+                    <div class="card-tools"></div>
+                </div>
+            </div>
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('ul[tree]').tree({
+                url: '/VanBan/Get_ThuMucCha',
+                editable: true,
+                animate: true,
+                loadFilter: function (data) {
+                    return convert(data.rows);
+                },
+                formatter: function (node) {
+                    var s = node.text;
+                    if (node.children) {
+                        s += '&nbsp;<span style=\'color:blue\'>(' + node.children.length + ')</span>';
+                    }
+                    return s;
+                },
+                onContextMenu: function (e, node) {
+                    e.preventDefault();
+                    $('ul[tree]').tree('select', node.target);
+                    $('#menudanhmuc').menu('show', {
+                        left: e.pageX,
+                        top: e.pageY
+                    });
+                },
+                dnd: true,
+                onDrop: function () {
+                    var $this = $(this), methods = $this.tree.methods;
+                    if (!methods.dataTreeHasChanged($this)) {
+                        methods.deActivatePanelControls($this);
+                    } else {
+                        methods.activatePanelControls($this);
+                    }
+                },
+                onLoadSuccess: function (node, data) {
+                    $('ul[tree]').tree('collapseAll');
+                }
+            });
+            function convert(rows) {
+                function exists(rows, parentId) {
+                    for (var i = 0; i < rows.length; i++) {
+                        if (rows[i].id == parentId) return true;
+                    }
+                    return false;
+                }
+
+                var nodes = [];
+                // get the top level nodes
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows[i];
+                    if (!exists(rows, row.parentId)) {
+                        nodes.push({
+                            id: row.id,
+                            text: row.name
+                        });
+                    }
+                }
+
+                var toDo = [];
+                for (var i = 0; i < nodes.length; i++) {
+                    toDo.push(nodes[i]);
+                }
+                while (toDo.length) {
+                    var node = toDo.shift();    // the parent node
+                    // get the children nodes
+                    for (var i = 0; i < rows.length; i++) {
+                        var row = rows[i];
+                        if (row.parentId == node.id) {
+                            var child = { id: row.id, text: row.name};
+                            if (node.children) {
+                                node.children.push(child);
+                            } else {
+                                node.children = [child];
+                            }
+                            toDo.push(child);
+                        }
+                    }
+                }
+                
+                return nodes;
+            }
+            $('#menudanhmuc').on('click', 'div[data-menu="expand"]', function () {
+                var node = $('ul[tree]').tree('getSelected');
+                $('ul[tree]').tree('expand', node.target);
+            });
+
+            $('#menudanhmuc').on('click', 'div[data-menu="collapse"]', function () {
+                var node = $('ul[tree]').tree('getSelected');
+                $('ul[tree]').tree('collapse', node.target);
+            });
+
+            $('#menudanhmuc').on('click', 'div[data-menu="chitietnhom"]', function () {
+                alert("Chức năng hiển thị chi tiết nhóm");
+            });
+
+            $('#menudanhmuc').on('click', 'div[data-menu="themthumuc"]', function () {
+                alert("Chức năng thêm thư mục con");
+            });
+
+            $('#menudanhmuc').on('click', 'div[data-menu="xoathumuc"]', function () {
+                var result = confirm("Xóa thư mục sẽ xóa cả thư mục con và văn bản bên trong. Bạn vẫn muốn tiếp tục xóa?");
+                if (result) { alert("Đã xóa"); }
+            });
+
+            $('ul[tree]').tree({
+                onClick: function (node) {
+                    alert("Bạn đang chọn:" + node.text);  // alert node text property when clicked
+                }
+            });
+        });
+    </script>
+}
