@@ -4,23 +4,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
-
-    .left-panel {
-        display: block;
-    }
-
-    .btn-tool {
-        vertical-align: middle;
-    }
-
-    .scrollspy {
-        position: relative;
-        height: 520px;
-        overflow: auto;
-    }
-    .tree-file {
+    #leftpanel tree-file {
         background: url(../images/tree_icons.png) no-repeat -208px 0;
     }
+
+    .fieldset {
+        position: relative;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+
+        .fieldset h1 {
+            position: absolute;
+            top: 0;
+            font-size: 14px;
+            line-height: 1;
+            margin: -9px 0 0; /* half of font-size */
+            background: #fff;
+            padding: 0 3px;
+        }
+
     .icon-expand:before {
         font-family: "Font Awesome 5 Free";
         content: "\f31e";
@@ -29,6 +32,7 @@
         vertical-align: middle;
         font-weight: 900;
     }
+
     .icon-collapse:before {
         font-family: "Font Awesome 5 Free";
         content: "\f78c";
@@ -37,6 +41,7 @@
         vertical-align: middle;
         font-weight: 900;
     }
+
     .icon-chitietnhom:before {
         font-family: "Font Awesome 5 Free";
         content: "\f5fd";
@@ -45,6 +50,7 @@
         vertical-align: middle;
         font-weight: 900;
     }
+
     .icon-themthumuc:before {
         font-family: "Font Awesome 5 Free";
         content: "\f65e";
@@ -53,6 +59,7 @@
         vertical-align: middle;
         font-weight: 900;
     }
+
     .icon-xoathumuc:before {
         font-family: "Font Awesome 5 Free";
         content: "\f65d";
@@ -61,52 +68,220 @@
         vertical-align: middle;
         font-weight: 900;
     }
+    .col-200 {
+        width: 200px;
+    }
+
+    .col-120 {
+        width: 120px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
+    .col-130 {
+        width: 130px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
+    .col-190 {
+        width: 190px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
+    .col-300 {
+        width: 340px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
+    .col-flex-2 {
+        flex: 0 0 15%;
+        max-width: 15%;
+    }
+
+    .search-panel {
+        cursor: pointer;
+    }
+
+    .panel-vanban{
+        width:100%;
+        height: contain;
+        min-height:550px;
+        max-height:850px;
+    }
 </style>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="card col-3 left-panel">
-            <div class="card-header">
-                <div class="row m-0 p-0 d-flex justify-content-between">
-                    <label class="card-title">Danh mục</label>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool">
-                            <i class="fas fa-angle-double-left" style="font-size:20px;"></i>
-                        </button>
+<div class="easyui-layout panel-vanban">
+    <div id="leftpanel" data-options="region:'west',split:true" title="Danh mục" style="width:200px">
+        <ul id="tree" class="easyui-tree" tree></ul>
+        <div id="menudanhmuc" class="easyui-menu" style="width:120px;">
+            <div class="" data-options="iconCls:'icon-chitietnhom'" data-menu="chitietnhom">Xem chi tiết nhóm</div>
+            <div class="" data-options="iconCls:'icon-themthumuc'" data-menu="themthumuc">Thêm thư mục con</div>
+            <div class="" data-options="iconCls:'icon-xoathumuc'" data-menu="xoathumuc">Xóa thư mục</div>
+            <div class="menu-sep"></div>
+            <div class="" data-options="iconCls:'icon-expand'" data-menu="expand">Mở rộng</div>
+            <div class="" data-options="iconCls:'icon-collapse'" data-menu="collapse">Thu gọn</div>
+        </div>
+    </div>
+    <div id="mainpanel" data-options="region:'center'" title="Danh sách văn bản chi tiết">
+        <div class="fieldset ml-1 mr-1 mt-3 mb-3">
+            <h1 class="search-panel">Chức năng tìm kiếm</h1>
+            <div class="search-advance">
+                <div class="row">
+                    <div class="form-group row col-7">
+                        <label for="txtSearch" class="col-form-label col-130">Tên / Mã văn bản:</label>
+                        <input type="text" id="txtSearch" name="txtSearch" class="form-control form-control-sm col-300">
+                        <select class="custom-select custom-select-sm col-120 ml-1" id="loaitimkiem">
+                            <option value="1">Theo tên</option>
+                            <option value="2">Theo nội dung</option>
+                        </select>
+                    </div>
+                    <div class="form-group row col-5">
+                        <label class="col-120 col-form-label ml-3">Ngày ban hành:</label>
+                        <div class="col-sm">
+                            <div class="form-group row mb-0">
+                                <input type="text" id="ngaybanhanh_tungay" name="ngayKham" class="form-control form-control-sm datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngaybanhanh_tungay" autocomplete="off" data-timepicker="date">
+                                <label class="col-auto col-form-label"> - </label>
+                                <input type="text" id="ngaybanhanh_denngay" name="ngayKham" class="form-control form-control-sm datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngaybanhanh_denngay" autocomplete="off" data-timepicker="date">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col-7">
+                        <label for="txtSearch" class="col-form-label col-130">Loại văn bản:</label>
+                        <select class="custom-select custom-select-sm col-300" id="loaivanban"></select>
+                    </div>
+                    <div class="form-group row col-5">
+                        <label class="col-120 col-form-label ml-3">Ngày hiệu lực:</label>
+                        <div class="col-sm">
+                            <div class="form-group row mb-0">
+                                <input type="text" id="ngayhieuluc_tungay" name="ngayKham" class="form-control form-control-sm datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngayhieuluc_tungay" autocomplete="off" data-timepicker="date">
+                                <label class="col-auto col-form-label"> - </label>
+                                <input type="text" id="ngayhieuluc_denngay" name="ngayKham" class="form-control form-control-sm datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngayhieuluc_denngay" autocomplete="off" data-timepicker="date">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col-7">
+                        <label for="txtSearch" class="col-form-label col-130">Bộ phận soạn thảo:</label>
+                        <select class="custom-select custom-select-sm col-300" id="bophansoanthao"></select>
+                    </div>
+                    <div class="form-group row col-5">
+                        <label for="txtSearch" class="col-form-label col-120 ml-3">Người soạn thảo:</label>
+                        <select class="custom-select custom-select-sm col" id="nguoisoanthao"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group row col-7 mb-0">
+                        <label for="txtSearch" class="col-form-label col-130">Đơn vị áp dụng:</label>
+                        <select class="custom-select custom-select-sm col-190" id="bophansoanthao"></select>
+                        <label for="txtSearch" class="col-form-label col-130 ml-3">Đối tượng áp dụng:</label>
+                        <select class="custom-select custom-select-sm col-130" id="nguoisoanthao"></select>
+                    </div>
+                    <div class="form-group row col-5 mb-0">
+                        <button type="button" class="btn btn-primary ml-3"><i class="fas fa-search"></i> Tìm kiếm</button>
+                        <button type="button" class="btn btn-secondary ml-3"><i class="fas fa-file-download"></i> Xuất Excel</button>
                     </div>
                 </div>
             </div>
-            <div class="card-body pl-0 pr-0">
-                <div id="danhmuc" class="treeview scrollspy" data-spy="scroll" data-target="#spy" data-offset="0">
-                    <ul id="tree" class="easyui-tree" tree></ul>
-                </div>
-                <div id="menudanhmuc" class="easyui-menu" style="width:120px;">
-                    <div class="" data-options="iconCls:'icon-chitietnhom'" data-menu="chitietnhom">Xem chi tiết nhóm</div>
-                    <div class="" data-options="iconCls:'icon-themthumuc'" data-menu="themthumuc">Thêm thư mục con</div>
-                    <div class="" data-options="iconCls:'icon-xoathumuc'" data-menu="xoathumuc">Xóa thư mục</div>
-                    <div class="menu-sep"></div>
-                    <div class="" data-options="iconCls:'icon-expand'" data-menu="expand">Mở rộng</div>
-                    <div class="" data-options="iconCls:'icon-collapse'" data-menu="collapse">Thu gọn</div>
-                </div>
-            </div>
         </div>
-        <div class="card col">
-            <div class="card-header">
-                <div class="row m-0 p-0 d-flex justify-content-between">
-                    <label class="card-title">Danh sách văn bản chi tiết</label>
-                    <div class="card-tools"></div>
-                </div>
-            </div>
-            <div class="card-body">
-
-            </div>
+        <div id="menutable" class="easyui-menu" style="width:120px;">
+            <div class="menu-sep"></div>
+            <div class="" data-options="iconCls:'icon-expand'" data-menu="expand">Mở rộng</div>
+            <div class="" data-options="iconCls:'icon-collapse'" data-menu="collapse">Thu gọn</div>
         </div>
+        <div class="m-1">
+            <table class="easyui-treegrid" id="tbVanBanChiTiet" style="height:462px;"></table>
+        </div>    
     </div>
 </div>
+
 
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
+            $('.search-panel').click(function (e) {
+                $('.search-advance').toggle(500);
+            });
+
+            $('#tbVanBanChiTiet').treegrid({
+                url: '/Test/GetTreeData',
+                idField: "id",
+                treeField: "region",
+                animate: true,
+                nowrap: true,
+                lines: true,
+                loadMsg: 'Đang tải...',
+                emptyMsg: 'Không có dữ liệu để hiển thị',
+                columns: [[
+                    {
+                        field: 'id', title: 'Đã hiểu', align: 'center',
+                        formatter: function (value) {
+                            if (value == 1) {
+                                return '<i class="fas fa-check-circle"></i>';
+                            }
+                            else if (value == 0) {
+                                return '';
+                            }
+                            else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'status', title: 'Đã đọc', align: 'center',
+                        formatter: function (value) {
+                            if (value >= 1) {
+                                return '<i class="fas fa-check-circle"></i>';
+                            }
+                            else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        title: 'Tên văn bản', field: 'region', width: 300,
+                        formatter: function (node, val, row) {
+                            var s = node;
+                            if (val.children) {
+                                s += '&nbsp;<span style=\'color:blue\'>(' + val.children.length + ')</span>';
+                            }
+                            return s;
+                        }
+                    },
+                    { field: 'f1', title: 'Mã văn bản', align: 'left' },
+                    { field: 'f2', title: 'Phiên bản', align: 'left' },
+                    { field: 'f3', title: 'Xem File', align: 'left' },
+                    { field: 'f4', title: 'Ngày phát hành', align: 'left' },
+                    { field: 'f5', title: 'Ngày hiệu lực', align: 'left' },
+                    { field: 'f6', title: 'Ngày kiểm soát lại', align: 'left' },
+                    { field: 'f7', title: 'Bộ phận soạn thảo', align: 'left' },
+                    { field: 'f8', title: 'Người soạn thảo', align: 'left' },
+                    { field: 'f9', title: 'Trạng thái', align: 'left' },
+                    { field: 'f10', title: 'Đối tượng áp dụng', align: 'left' },
+                    { field: 'f11', title: 'Đơn vị áp dụng', align: 'left' },
+
+                ]],
+                onContextMenu: function (e, node) {
+                    e.preventDefault();
+                    $('#tbVanBanChiTiet').treegrid('select', node.target);
+                    $('#menutable').menu('show', {
+                        left: e.pageX,
+                        top: e.pageY
+                    });
+                },
+            });
+
+            $('#menutable').on('click', 'div[data-menu="expand"]', function () {
+            });
+            $('#menutable').on('click', 'div[data-menu="collapse"]', function () {
+                
+            });
+
             $('ul[tree]').tree({
                 url: '/VanBan/Get_ThuMucCha',
                 editable: true,
@@ -172,7 +347,7 @@
                     for (var i = 0; i < rows.length; i++) {
                         var row = rows[i];
                         if (row.parentId == node.id) {
-                            var child = { id: row.id, text: row.name};
+                            var child = { id: row.id, text: row.name };
                             if (node.children) {
                                 node.children.push(child);
                             } else {
@@ -182,32 +357,27 @@
                         }
                     }
                 }
-                
+
                 return nodes;
             }
             $('#menudanhmuc').on('click', 'div[data-menu="expand"]', function () {
                 var node = $('ul[tree]').tree('getSelected');
                 $('ul[tree]').tree('expand', node.target);
             });
-
             $('#menudanhmuc').on('click', 'div[data-menu="collapse"]', function () {
                 var node = $('ul[tree]').tree('getSelected');
                 $('ul[tree]').tree('collapse', node.target);
             });
-
             $('#menudanhmuc').on('click', 'div[data-menu="chitietnhom"]', function () {
                 alert("Chức năng hiển thị chi tiết nhóm");
             });
-
             $('#menudanhmuc').on('click', 'div[data-menu="themthumuc"]', function () {
                 alert("Chức năng thêm thư mục con");
             });
-
             $('#menudanhmuc').on('click', 'div[data-menu="xoathumuc"]', function () {
                 var result = confirm("Xóa thư mục sẽ xóa cả thư mục con và văn bản bên trong. Bạn vẫn muốn tiếp tục xóa?");
                 if (result) { alert("Đã xóa"); }
             });
-
             $('ul[tree]').tree({
                 onClick: function (node) {
                     alert("Bạn đang chọn:" + node.text);  // alert node text property when clicked

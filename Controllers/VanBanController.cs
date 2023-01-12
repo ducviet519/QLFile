@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using WebTools.Extensions;
 using WebTools.Models;
 using WebTools.Models.Entities;
 using WebTools.Services;
@@ -63,13 +64,34 @@ namespace WebTools.Controllers
         {
             return PartialView("_ThuMuc_ThemMoi");
         }
-
+      
         [HttpPost]
         public JsonResult Get_ThuMucCha(int page = 1, int rows = 10)
         {
             string json = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Data\\combotree_data.json"));
             List<ThuMucCha> data = JsonConvert.DeserializeObject<List<ThuMucCha>>(json);
-            return Json(new { rows = data});
+            return Json(new { rows = data });
+        }
+
+        public List<TreeData> FlatToHierarchy(List<TreeData> list)
+        {
+            var lookup = new Dictionary<int, TreeData>();
+            var nested = new List<TreeData>();
+            foreach (TreeData item in list)
+            {
+                if (lookup.ContainsKey(item.parentId))
+                {
+                    // add to the parent's child list 
+                    lookup[item.parentId].children.Add(item);
+                }
+                else
+                {
+                    // no parent added yet (or this is the first time)
+                    nested.Add(item);
+                }
+                lookup.Add(item.id, item);
+            }
+            return nested;
         }
 
         [HttpGet]
