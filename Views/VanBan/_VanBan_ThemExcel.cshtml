@@ -1,0 +1,156 @@
+﻿<!-- Modal -->
+<div class="modal fade bd-example-modal-xl" id="modalThemExcel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-file-excel"></i> Import Exel file văn bản</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-auto">Tệp tin Excel:</label>
+                    <div class="col-5 mr-3">
+                        <form id="frmFileUpload">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="fileUpload" name="fileUpload">
+                                <label class="custom-file-label" for="fileUpload">Chọn file</label>
+                            </div>
+                        </form>
+                    </div>
+                    <button type="button" class="btn btn-success mr-3" data-toggle="upload" uploadExcel><i class="fas fa-upload mr-1"></i>Tải lên</button>
+                    <a class="btn btn-success mr-3" href="/files/File Mau.xlsx" download><i class="fas fa-file-download mr-1"></i>Tải file mẫu</a>
+                </div>
+                <div class="mt-5">
+                    <h3 class="text-center">Dữ liệu file upload</h3>
+                    <table class="table table-bordered table-striped" id="tbImportExcel">
+                        <thead class="thead">
+                            <tr>
+                                <th>STT</th>
+                                <th>Tên văn bản</th>
+                                <th>Mã văn bản</th>
+                                <th>Phiên bản</th>
+                                <th>Ngày phát hành</th>
+                                <th>Ngày hiệu lực</th>
+                                <th>Ngày upload</th>
+                                <th>Khoa phòng soạn thảo</th>
+                                <th>Người soạn thảo</th>
+                                <th>Đối tượng áp dụng</th>
+                                <th>Đơn vị áp dụng</th>
+                                <th>Loại văn bản</th>
+                                <th>Tên thư mục</th>
+                                <th>Mã thư mục</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Đóng</button>
+                <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        bsCustomFileInput.init()
+
+        $('#tbImportExcel').DataTable();
+
+        function callDataTableScroll_Json(id, data) {
+            var table = $(id).DataTable();
+            if ($.fn.dataTable.isDataTable(id)) {
+                table.destroy();
+                $(id).find('tbody').empty();
+            }
+
+            var table = $(id).DataTable({
+                "processing": true,
+                "autoWidth": true,
+                "responsive": true,
+                "lengthChange": false,
+                "searching": false,
+                "info": true,
+                "ordering": false,
+                "paging": false,
+                "fixedHeader": true,
+                "pageLength": 260,
+                "scrollY": 300,
+                "scrollX": true,
+                "scrollCollapse": true,
+                "deferRender": true,
+                "data": data,
+                "columns": [
+                    { data: 'stt' },
+                    { data: 'tenvanban' },
+                    { data: 'mavanban' },
+                    { data: 'phienban' },
+                    { data: 'ngayphathanh' },
+                    { data: 'ngayhieuluc' },
+                    { data: 'ngayupload' },
+                    { data: 'khoaphongsoanthao' },
+                    { data: 'nguoisoanthao' },
+                    { data: 'doituongapdung' },
+                    { data: 'donviapdung' },
+                    { data: 'loaivanban' },
+                    { data: 'tenthumuc' },
+                    { data: 'mathumuc' }
+                ],
+                "columnDefs": [
+                    { className: "text-wrap", targets: "_all" },
+                    { defaultContent: '', targets: "_all" },
+                ],
+                "language": {
+                    "sProcessing": "Đang tải dữ liệu...",
+                    "sLengthMenu": "Xem _MENU_ mục",
+                    "sZeroRecords": "Không tìm thấy dòng nào phù hợp",
+                    "sInfo": "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                    "sInfoEmpty": "Đang xem 0 đến 0 trong tổng số 0 mục",
+                    "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Tìm:",
+                    "sUrl": "",
+                    "oPaginate": {
+                        "sFirst": "Đầu",
+                        "sPrevious": "Trước",
+                        "sNext": "Tiếp",
+                        "sLast": "Cuối"
+                    }
+                },
+            });
+            return table;
+        }
+
+        $('body .modal').on('click', 'button[uploadExcel]', function (event) {
+            var formData = new FormData();
+            formData.append("fileUpload", $("#fileUpload")[0].files[0]);
+
+            $.ajax({
+                type: 'POST',
+                url: '/VanBan/UploadExcelFile',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('button[uploadExcel]').attr("disabled", true);
+                },
+                success: function (data) {
+                    console.log(data.data);
+                    callDataTableScroll_Json("#tbImportExcel", data.data);
+                    $(this).callToast(data.result, data.title, data.message);
+                },
+                error: function (data) {
+                    $(this).callToast(data.result, data.title, data.message);
+                },
+                complete: function () {
+                    $('button[uploadExcel]').attr("disabled", false);
+                },
+            })
+        });
+
+
+    });
+</script>

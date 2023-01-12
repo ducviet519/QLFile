@@ -1,38 +1,28 @@
 ﻿@using GleamTech.AspNet.Core
 @using GleamTech.DocumentUltimate.AspNet.UI
 @model WebTools.Models.DocumentViewModel
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="@Model.FileName" aria-hidden="true" id="documentview">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-file-alt"></i> Đang xem file: @Model.FileName</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color:white">&times;&nbsp;</span>
+                </button>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Document View</title>
-    @this.RenderHead(Model.DocumentViewer)
-    <style>
-        .dv-control {
-            width: 100% !important;
-            /*height: 1500px !important;*/
-        }
-    </style>
-</head>
-<body style="margin: 20px;">
-    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="fas fa-file-alt"></i> Đang xem file: @Model.FileName</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" style="color:white">&times;&nbsp;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @this.RenderBody(Model.DocumentViewer)
-                </div>
-                <div class="modal-footer">
-                    @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="submit" class="btn btn-primary" data-save="modalFile">Lưu</button>*@
-                </div>
+            </div>
+            <div class="modal-body">
+                @this.RenderHead(Model.DocumentViewer)
+                <style>
+                    .dv-control {
+                        width: 100% !important;
+                        /*height: 1500px !important;*/
+                    }
+                </style>
+                @this.RenderBody(Model.DocumentViewer)
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>

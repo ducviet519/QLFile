@@ -127,7 +127,7 @@ body {
 }
 
 #background-page {
-    background: url(../WPP.jpg) no-repeat center center fixed;
+    background: url(../images/WPP.jpg) no-repeat center center fixed;
     background-size: cover;
     position: fixed;
     z-index: 100;
@@ -229,4 +229,8 @@ body {
 }
 .table td, .table th {
     vertical-align: middle;
+}
+
+.bg-ta {
+    background-color: #3882b6;
 }

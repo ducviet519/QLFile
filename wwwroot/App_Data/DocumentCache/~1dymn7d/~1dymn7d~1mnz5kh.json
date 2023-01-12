@@ -1,0 +1,33 @@
+{
+  "CacheSourceKey": "1dymn7d",
+  "CachePdfKey": "1dymn7d/1dymn7d-12l328f.pdf",
+  "CacheXpzKey": "1dymn7d/1dymn7d-1mnz5kh.xpz",
+  "CacheInfoKey": "1dymn7d/1dymn7d-1mnz5kh.json",
+  "CacheCopyKey": null,
+  "Document": "20122022103432_1.rtf",
+  "DocumentHandlerType": null,
+  "DocumentHandlerParameters": null,
+  "DocumentLocation": "D:\\VanBan\\My Drive\\VBNB FileUpload",
+  "DocumentFileName": "20122022103432_1.rtf",
+  "InputOptions": {
+    "$type": "GleamTech.DocumentUltimate.WordProcessingInputOptions, GleamTech.DocumentUltimate",
+    "FieldFileName": null,
+    "UpdateFields": true,
+    "Encoding": null,
+    "Format": "Rtf",
+    "Password": null
+  },
+  "PdfOutputOptions": {
+    "Watermarks": [],
+    "FastWebViewEnabled": false,
+    "Password": null,
+    "Attachments": [],
+    "Format": "Pdf"
+  },
+  "XpzOutputOptions": {
+    "Password": "1dymn7d",
+    "HighQualityEnabled": false,
+    "Format": "Xpz"
+  },
+  "Attachments": []
+}

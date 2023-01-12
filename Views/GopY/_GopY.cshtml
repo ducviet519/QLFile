@@ -1,0 +1,72 @@
+﻿@model WebTools.Models.Entity.Users
+@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalGopY" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Gửi góp ý</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-center">Thông tin góp ý</h3>
+                <form id="formGopY">
+                    <div class="row justify-content-between mr-0 ml-0">
+                        <div class="col-5">
+                            <div class="form-group row">
+                                <label for="name" class="col-form-label">Người góp ý:</label>
+                                <input type="text" name="name" class="form-control" id="name" value="@Model.UserName" disabled>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <div class="form-group row">
+                                <label for="name" class="col-form-label">Email:</label>
+                                <input type="text" name="email" class="form-control" id="email" value="@Model.Email" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="noidung">Nội dung góp ý:</label>
+                        <div id="summernote" hidden></div>
+                        <input type="hidden" id="IDBieuMau" name="IDBieuMau" value="@Model.DisplayName" />
+                        <textarea id="noidung" name="noidung" class="form-control" rows="5"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-save="gopy">Gửi góp ý</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('body .modal').on('click', 'button[data-save="gopy"]', function () {
+                var data = $('#formGopY').serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: '/GopY/Them_GopY',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                    data: data,
+                    beforeSend: function () {
+                        $('button[data-save="gopy"]').attr("disabled", true);
+                    },
+                    success: function (data) {
+                        $(this).callToast(data.result, data.title, data.message);
+                    },
+                    error: function (data) {
+                        $(this).callToast(data.result, data.title, data.message);
+                    },
+                    complete: function () {
+                        $('button[data-save="gopy"]').attr("disabled", false);
+                    },
+                });
+            });
+        });
+</script>

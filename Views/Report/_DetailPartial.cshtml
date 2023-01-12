@@ -1,4 +1,6 @@
-﻿@model WebTools.Models.ReportDetailViewModel
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model WebTools.Models.ReportDetailViewModel
 @{
     Layout = null;
 }
@@ -99,9 +101,9 @@
                     <input type="hidden" name="count" value="@count" />
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                        @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+                        @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Details.Add")).Result.Succeeded)
                         {
-                        <button type="submit" class="btn btn-primary" data-save="modal">Lưu</button>
+                            <button type="submit" class="btn btn-primary" data-save="modal">Lưu</button>
                         }
                     </div>
                 </form>
@@ -114,11 +116,13 @@
 <script>
 
     $(function () {
-        var string = $('#txtKhoaPhong').val();
-        var array = string.split(",").map(Number);
         //Dropdown
         $('.selectDepts2').select2()
-        $('#KhoaPhong').val(array);
-        $('#KhoaPhong').trigger('change');
+        var string = $('#txtKhoaPhong').val();
+        if (string.length > 0) {
+            var array = string.split(",").map(Number);
+            $('#KhoaPhong').val(array);
+            $('#KhoaPhong').trigger('change');
+        }       
     });
 </script>

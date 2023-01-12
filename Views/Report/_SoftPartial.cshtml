@@ -1,4 +1,6 @@
-﻿@model WebTools.Models.ReportSoftViewModel
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model WebTools.Models.ReportSoftViewModel
 @{
     Layout = null;
 }
@@ -7,7 +9,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-grip-vertical"></i> Phần mềm</h5>               
+                <h5 class="modal-title"><i class="fas fa-grip-vertical"></i> Phần mềm</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" style="color:white">&times;&nbsp;</span>
                 </button>
@@ -27,7 +29,7 @@
                         <div class="col-4">
                             @*@Html.GetEnumSelectList<PhanMem>()*@
                             <select class="selectPhanMem" multiple="multiple" data-placeholder="Chọn" style="width: 100%;" asp-items="@Model.PhanMems" id="PhanMem" name="PhanMem"></select>
-                                <input type="hidden" id="txtPhanMem" name="txtPhanMem" value="@Model.ReportSoft.PhanMem" />
+                            <input type="hidden" id="txtPhanMem" name="txtPhanMem" value="@Model.ReportSoft.PhanMem" />
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -78,6 +80,7 @@
                                             @if (item.FileLink != null)
                                             {
                                                 <td><a href="/Report/DocumentView?link=@item.IDPhienBan" target="_blank">File</a></td>
+                                                @*<td><a href="/Report/DocumentView?link=@item.IDPhienBan" target="_blank">File</a></td>*@
                                             }
                                             else
                                             {
@@ -96,17 +99,73 @@
                             }
                         </tbody>
                     </table>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="form-group row">
+                                <label class="col-form-label col-auto">Ký số:</label>
+                                <input type="hidden" id="txtKySo" name="txtKySo" value="@Model.ReportSoft.KySo" />
+                                <div class="col">
+                                    <select class="custom-select mr-sm-2" id="KySo" name="KySo">
+                                        <option selected="selected" value="">Chọn...</option>
+                                        <option value="1">Đã có</option>
+                                        <option value="2">Chưa có</option>
+                                        <option value="3">Không dùng</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group row">
+                                <label class="col-form-label col-auto">Ký điện tử:</label>
+                                <input type="hidden" id="txtKyDienTu" name="txtKyDienTu" value="@Model.ReportSoft.KyDienTu" />
+                                <div class="col">
+                                    <select class="custom-select mr-sm-2" id="KyDienTu" name="KyDienTu">
+                                        <option selected="selected" value="">Chọn...</option>
+                                        <option value="1">Đã có</option>
+                                        <option value="2">Chưa có</option>
+                                        <option value="3">Không dùng</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group row">
+                                <label class="col-form-label col-auto">Ký tay:</label>
+                                <input type="hidden" id="txtKyTay" name="txtKyTay" value="@Model.ReportSoft.KyTay" />
+                                <div class="col">
+                                    <select class="custom-select mr-sm-2" id="KyTay" name="KyTay">
+                                        <option selected="selected" value="">Chọn...</option>
+                                        <option value="1">Có</option>
+                                        <option value="0">Không</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group row">
+                                <label class="col-form-label col-auto">HSBA Điện tử:</label>
+                                <input type="hidden" id="txtHSBADienTu" name="txtHSBADienTu" value="@Model.ReportSoft.HSBADienTu" />
+                                <div class="col">
+                                    <select class="custom-select mr-sm-2" id="HSBADienTu" name="HSBADienTu">
+                                        <option selected="selected" value="">Chọn...</option>
+                                        <option value="1">Có</option>
+                                        <option value="0">Không</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <input type="hidden" name="count" value="@count" />
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                        @if (User.IsInRole("Manager") || User.IsInRole("Admin"))
+                        @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Softs.Add")).Result.Succeeded)
                         {
-                        <button type="submit" class="btn btn-primary" data-save="modal">Lưu</button>
+                            <button type="submit" class="btn btn-primary" data-save="modal">Lưu</button>
                         }
                     </div>
                 </form>
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -120,6 +179,22 @@
         $('.selectURD').select2()
         $('#URD').val(array);
         $('#URD').trigger('change');
+
+        $('#KySo').select2()
+        $('#KySo').val(((document.getElementById('txtKySo') || {}).value));
+        $('#KySo').trigger('change');
+
+        $('#KyDienTu').select2()
+        $('#KyDienTu').val(((document.getElementById('txtKyDienTu') || {}).value));
+        $('#KyDienTu').trigger('change');
+
+        $('#KyTay').select2()
+        $('#KyTay').val(((document.getElementById('txtKyTay') || {}).value));
+        $('#KyTay').trigger('change');
+
+        $('#HSBADienTu').select2()
+        $('#HSBADienTu').val(((document.getElementById('txtHSBADienTu') || {}).value));
+        $('#HSBADienTu').trigger('change');
     });
     $(function () {
         var string = $('#txtPhanMem').val();

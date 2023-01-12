@@ -1,0 +1,60 @@
+﻿<style>
+    .tab-custom-content {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+</style>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-xl" id="modelQuyenNhom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-users"></i> Quyền nhóm</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="tab-custom-content"><label class="col-form-label col-12 text-center">Phân quyền theo Bộ phận</label></div>
+                        <table class="table table-bordered table-striped" id="tbQuyenBoPhan" data-table>
+                            <thead class="thead">
+                                <tr>
+                                    <th>Tên bộ phận</th>
+                                    <th>Xem</th>
+                                    <th>Xem và in</th>
+                                    <th>Xem in download</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <div class="tab-custom-content"><label class="col-form-label col-12 text-center">Phân quyền theo Chức danh</label></div>
+                        <table class="table table-bordered table-striped" id="tbQuyenChucDanh" data-table>
+                            <thead class="thead">
+                                <tr>
+                                    <th>Tên bộ phận</th>
+                                    <th>Xem</th>
+                                    <th>Xem và in</th>
+                                    <th>Xem in download</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Đóng</button>
+                <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('table[data-table]').DataTable();
+    });
+</script>

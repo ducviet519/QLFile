@@ -1,0 +1,237 @@
+﻿@{
+    ViewData["Title"] = "Test EasyUI";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<table id="tt"></table>
+@*<table id="dg"></table>*@
+
+@section Scripts{
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+           
+            $('#tt').treegrid({
+                url: '/Test/GetTreeData',
+                rownumbers: true,
+                lines: false,
+                idField: "id",
+                treeField: "region",
+                pagination: true,
+                pageSize: 2,
+                pageList: [2, 10, 20],
+                //singleSelect: false,
+                checkbox: true,
+                formatter: function (node) {
+                    var s = node.text;
+                    if (node.children) {
+                        s += '&nbsp;<span style=\'color:blue\'>(' + node.children.length + ')</span>';
+                    }
+                    return s;
+                },
+                columns: [[
+                    
+                    { title: 'Region', field: 'region', width: 300, sortable: true},
+                    { field: 'f1', title: 'F1', width: 50, align:'right', sortable: true},
+                    { field: 'f2', title: 'F2', width: 50, align:'right', sortable: true},
+                    { field: 'f3', title: 'F3', width: 50, align:'right', sortable: true},
+                    { field: 'f4', title: 'F4', width: 50, align:'right', sortable: true},
+                    { field: 'f5', title: 'F5', width: 50, align:'right', sortable: true},
+                    { field: 'f6', title: 'F6', width: 50, align:'right', sortable: true},
+                    { field: 'f7', title: 'F7', width: 50, align:'right', sortable: true},
+                    { field: 'f8', title: 'F8', width: 50, align:'right', sortable: true},                    
+                    {
+                        field: 'status', title: 'Status', width: 50, align: 'center',
+                        formatter: function (value) {
+                            if (value == 1) {
+                                //return '<input type="checkbox" checked />';
+                                return '<i class="fas fa-check-circle"></i>';
+                            }
+                            else if (value == 0) {
+                                //return '<input type="checkbox" />';
+                                return '';
+                            }
+                            else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        field: 'action', title: 'Action', width: 100, align: 'center',
+                        formatter: function (value, row, index) {
+                            if (value == 1) {
+                                var e = '<button type="button" class="btn btn-link btn-sm" data-button="OK">Duyệt</button>';
+                                var d = '<button type="button" class="btn btn-link btn-sm" data-button="Delete">Xóa</button>';
+                                return e + d;
+                            }
+                            else { return '';}
+                        }                       
+                    },
+                ]],
+                onBeforeLoad: function (row, param) {
+                    if (!row) {    // load top level rows
+                        param.id = 0;    // set id=0, indicate to load new page rows
+                    }                   
+                }
+            });
+            $('#tt').treegrid('collapseAll');
+            (function ($) {
+                function pagerFilter(data) {
+                    if ($.isArray(data)) {    // is array  
+                        data = {
+                            total: data.length,
+                            rows: data
+                        }
+                    }
+                    var target = this;
+                    var tg = $(target);
+                    var state = tg.data('treegrid');
+                    var opts = tg.treegrid('options');
+                    if (!state.allRows) {
+                        state.allRows = data.rows;
+                    }
+                    if (!opts.remoteSort && opts.sortName) {
+                        var names = opts.sortName.split(',');
+                        var orders = opts.sortOrder.split(',');
+                        state.allRows.sort(function (r1, r2) {
+                            var r = 0;
+                            for (var i = 0; i < names.length; i++) {
+                                var sn = names[i];
+                                var so = orders[i];
+                                var col = $(target).treegrid('getColumnOption', sn);
+                                var sortFunc = col.sorter || function (a, b) {
+                                    return a == b ? 0 : (a > b ? 1 : -1);
+                                };
+                                r = sortFunc(r1[sn], r2[sn]) * (so == 'asc' ? 1 : -1);
+                                if (r != 0) {
+                                    return r;
+                                }
+                            }
+                            return r;
+                        });
+                    }
+                    var topRows = [];
+                    var childRows = [];
+                    $.map(state.allRows, function (row) {
+                        row._parentId ? childRows.push(row) : topRows.push(row);
+                        row.children = null;
+                    });
+                    data.total = topRows.length;
+                    var pager = tg.treegrid('getPager');
+                    pager.pagination('refresh', {
+                        total: data.total,
+                        pageNumber: opts.pageNumber
+                    });
+                    opts.pageNumber = pager.pagination('options').pageNumber || 1;
+                    var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
+                    var end = start + parseInt(opts.pageSize);
+                    data.rows = topRows.slice(start, end).concat(childRows);
+                    return data;
+                }
+
+                var appendMethod = $.fn.treegrid.methods.append;
+                var removeMethod = $.fn.treegrid.methods.remove;
+                var loadDataMethod = $.fn.treegrid.methods.loadData;
+                $.extend($.fn.treegrid.methods, {
+                    clientPaging: function (jq) {
+                        return jq.each(function () {
+                            var tg = $(this);
+                            var state = tg.data('treegrid');
+                            var opts = state.options;
+                            opts.loadFilter = pagerFilter;
+                            var onBeforeLoad = opts.onBeforeLoad;
+                            opts.onBeforeLoad = function (row, param) {
+                                state.allRows = null;
+                                return onBeforeLoad.call(this, row, param);
+                            }
+                            var pager = tg.treegrid('getPager');
+                            pager.pagination({
+                                onSelectPage: function (pageNum, pageSize) {
+                                    opts.pageNumber = pageNum;
+                                    opts.pageSize = pageSize;
+                                    pager.pagination('refresh', {
+                                        pageNumber: pageNum,
+                                        pageSize: pageSize
+                                    });
+                                    tg.treegrid('loadData', state.allRows);
+                                }
+                            });
+                            tg.treegrid('loadData', state.data);
+                            if (opts.url) {
+                                tg.treegrid('reload');
+                            }
+                        });
+                    },
+                    loadData: function (jq, data) {
+                        jq.each(function () {
+                            $(this).data('treegrid').allRows = null;
+                        });
+                        return loadDataMethod.call($.fn.treegrid.methods, jq, data);
+                    },
+                    append: function (jq, param) {
+                        return jq.each(function () {
+                            var state = $(this).data('treegrid');
+                            if (state.options.loadFilter == pagerFilter) {
+                                $.map(param.data, function (row) {
+                                    row._parentId = row._parentId || param.parent;
+                                    state.allRows.push(row);
+                                });
+                                $(this).treegrid('loadData', state.allRows);
+                            } else {
+                                appendMethod.call($.fn.treegrid.methods, $(this), param);
+                            }
+                        })
+                    },
+                    remove: function (jq, id) {
+                        return jq.each(function () {
+                            if ($(this).treegrid('find', id)) {
+                                removeMethod.call($.fn.treegrid.methods, $(this), id);
+                            }
+                            var state = $(this).data('treegrid');
+                            if (state.options.loadFilter == pagerFilter) {
+                                for (var i = 0; i < state.allRows.length; i++) {
+                                    if (state.allRows[i][state.options.idField] == id) {
+                                        state.allRows.splice(i, 1);
+                                        break;
+                                    }
+                                }
+                                $(this).treegrid('loadData', state.allRows);
+                            }
+                        })
+                    },
+                    getAllRows: function (jq) {
+                        return jq.data('treegrid').allRows;
+                    }
+                });
+
+            })(jQuery);
+
+            $(function () {
+                $('#tt').treegrid().treegrid('clientPaging');
+            })
+
+            $('body').on('click', 'button[data-button="OK"]', function () {
+                $.messager.alert({
+                    title: 'OK',
+                    msg: 'OK!',
+                    fn: function () {
+                        //...
+                    }
+                });
+            });
+            $('body').on('click', 'button[data-button="Delete"]', function () {
+                $.messager.confirm('Xác nhận xóa', 'Xóa là mất?', function (r) {
+                    if (r) {
+                        $.messager.alert({
+                            title: 'OK',
+                            msg: 'OK!',
+                            fn: function () {
+                                //...
+                            }
+                        });
+                    }
+                });
+            });
+        });
+        
+    </script>
+}

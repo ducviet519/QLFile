@@ -1,20 +1,17 @@
 using GleamTech.AspNet.Core;
-using Google.Apis.Auth.AspNetCore3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
-using System.Security.Claims;
+using System;
 using System.Threading.Tasks;
 using WebTools.Authorization;
 using WebTools.Context;
-using WebTools.Models.Entities;
 using WebTools.Services;
 using WebTools.Services.Interface;
 
@@ -34,15 +31,16 @@ namespace WebTools
         {
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-
             services.AddControllersWithViews();
-            services.AddAuthentication(
-            
+            services.AddAuthentication(           
                 CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/User/Login";
                     options.AccessDeniedPath = "/User/Denied";
+                    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.IsEssential = true;
                     options.Events = new CookieAuthenticationEvents()
                     {
                         OnSigningIn = async context =>
@@ -59,24 +57,33 @@ namespace WebTools
                         }
                     };
                 });
-            
+            services.AddSession(options =>
+            {
+		        options.IdleTimeout = TimeSpan.FromDays(1);
+                //options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                //options.Cookie.IsEssential = true;
+            });
+            services.AddGleamTech();
+
             services.AddScoped<IReportListServices, ReportListServices>();
             services.AddScoped<IReportVersionServices, ReportVersionServices>();
             services.AddScoped<IReportSoftServices, ReportSoftServices>();
             services.AddScoped<IReportDetailServices, ReportDetailServices>();
             services.AddScoped<IReportURDServices, ReportURDServices>();
             services.AddScoped<IDepts, DeptsServices>();
+            services.AddScoped<ISoftwareServices, SoftwareServices>();
             services.AddScoped<IRolesServices, RolesServices>();
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IModuleControllerServices, ModuleControllerServices>();
             services.AddScoped<IModuleActionServices, ModuleActionServices>();
             services.AddScoped<IGoogleDriveAPI, GoogleDriveAPI>();
             services.AddScoped<IBaoHiemTuNguyenServices, BaoHiemTuNguyenServices>();
-            services.AddScoped<IMailService, MailService>();
             services.AddScoped<IUploadFileServices, UploadFileServices>();
+            services.AddScoped<IGopYServices, GopYServices>();           
             services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ToolsDB")));
-            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
-            services.AddGleamTech();
+
+            services.AddInfrastructure();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,19 +112,13 @@ namespace WebTools
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            var options = new RewriteOptions()
-            .AddRedirectToHttps();
-            app.UseRewriter(options);
-
+          
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
-
-
+            });           
         }
     }
 }

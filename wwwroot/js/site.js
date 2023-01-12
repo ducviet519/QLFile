@@ -2,6 +2,33 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+//Add Ajax Loading Screen
+$(document).on({
+    ajaxStart: function () { $(document.body).addClass("loading"); },
+    ajaxStop: function () { $(document.body).removeClass("loading"); }
+});
+
+//Multiple Modal Open
+$(document).on({
+    'show.bs.modal': function () {
+        var zIndex = 1040 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(function () {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+    },
+    'hidden.bs.modal': function () {
+        if ($('.modal:visible').length > 0) {
+            // restore the modal-open class to the body element, so that scrolling works
+            // properly after de-stacking a modal.
+            setTimeout(function () {
+                $(document.body).addClass('modal-open');
+            }, 0);
+        }
+    }
+}, '.modal');
+
 function searchDataTable(id, columnData, url, disableColumn) {
     var array = [];
     $.each(disableColumn.split(','), function (idx, val) {
@@ -83,8 +110,9 @@ function searchDataTableWithInput(id, columnData, url, pageLength, disableColumn
         "processing": true,
         "ordering": true,
         "info": true,
-        "autoWidth": true,
-        "responsive": false,
+        "autoWidth": false,
+        "responsive": true,
+        "orderCellsTop": true,
         "order": [[0, 'asc']],
         "columnDefs": [
             { orderable: false, targets: array },
@@ -106,12 +134,21 @@ function searchDataTableWithInput(id, columnData, url, pageLength, disableColumn
                 .eq(0)
                 .each(function (colIdx) {
                     // Set the header cell to contain the input element
-                    if (colIdx != disableInput) {
+                    if (colIdx > 0 && colIdx < 8) {
                         var cell = $('.filters th').eq(
                             $(api.column(colIdx).header()).index()
                         );
                         var title = $(cell).text();
-                        $(cell).html('<input type="text" class="form-control col p-0 m-0" placeholder="' + title + '" />');
+                        $(cell).html('<input type="text" class="form-control col p-0 m-0" />');
+                        //$(cell).html('<input type="text" class="form-control col p-0 m-0" placeholder="' + title + '" />');
+                    }
+                    else {
+                        var cell = $('.filters th').eq(
+                            $(api.column(colIdx).header()).index()
+                        );
+                        var title = $(cell).text();
+                        $(cell).empty();
+                        
                     }
                     // On every keypress in this input
                     $(
@@ -193,9 +230,37 @@ $.fn.clearData = function ($form) {
         .removeAttr('checked').removeAttr('selected');
 }
 
+$.fn.callMultipleModal = function (url, element) {
+
+    var ReportPopupElement = $(element);
+    $.ajax({
+        url: url,
+        dataType: 'html',
+        success: function (data) {
+            $("body").find(".modal-backdrop").remove();
+            ReportPopupElement.html(data);
+            ReportPopupElement.find('.modal').modal('show');
+        }, error: function (xhr, status) {
+            switch (status) {
+                case 404:
+                    $(this).callToast("error", 'Lỗi!', 'Đường dẫn không đúng hoặc tính năng không tồn tại!');
+                    break;
+                case 500:
+                    $(this).callToast("error", 'Lỗi!', 'Không kết nối được tới Server!');
+                    break;
+                case 0:
+                    $(this).callToast("error", 'Lỗi!', 'Hệ thống không phản hồi!');
+                    break;
+                default:
+                    $(this).callToast("error", 'Lỗi!', 'Sự cố không xác định! Lỗi: ' + status);
+            }
+        }
+    });
+}
+
 $.fn.callModal = function (url) {
 
-    var ReportPopupElement = $('#ReportPopup');
+    var ReportPopupElement = $('#ReportPopup'); 
     $.ajax({
         url: url,
         dataType: 'html',

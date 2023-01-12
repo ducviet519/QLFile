@@ -25,11 +25,28 @@ namespace WebTools.Models
         public string TrangThaiPM { get; set; }
         public string User { get; set; }
 
+        public int KySo { get; set; }
+        public int KyDienTu { get; set; }
+        public int KyTay { get; set; }
+        public int HSBADienTu { get; set; }
+
         [EnumDataType(typeof(PhanMem))]
         public PhanMem PhanMemDropList { get; set; }
 
-        [EnumDataType(typeof(TrangPhaiPM))]
-        public PhanMem TrangThaiPMDropList { get; set; }
+        //[EnumDataType(typeof(TrangPhaiPM))]
+        //public PhanMem TrangThaiPMDropList { get; set; }
+
+        //[EnumDataType(typeof(KySo))]
+        //public KySo KySoDropList { get; set; }
+
+        //[EnumDataType(typeof(KyDienTu))]
+        //public KyDienTu KyDienTuDropList { get; set; }
+
+        //[EnumDataType(typeof(KyTay))]
+        //public KyTay KyTayDropList { get; set; }
+
+        //[EnumDataType(typeof(HSBADienTu))]
+        //public HSBADienTu HSBADienTuDropList { get; set; }
     }
 
     public class PhanMems
@@ -51,5 +68,29 @@ namespace WebTools.Models
         [Display(Name = "Đã hoàn thành")] DaHoanThanh = 1,
         [Display(Name = "Chưa hoàn thành")] ChuaHoanThanh = 2,
         [Display(Name = "Chưa có")] ChuaCo = 3
+    }
+
+    public enum KySo
+    {
+        [Display(Name = "Đã có")] DaCo = 1,
+        [Display(Name = "Chưa có")] ChuaCo = 2,
+        [Display(Name = "Không dùng")] KhongDung = 3
+    }
+    public enum KyDienTu
+    {
+        [Display(Name = "Đã có")] DaCo = 1,
+        [Display(Name = "Chưa có")] ChuaCo = 2,
+        [Display(Name = "Không dùng")] KhongDung = 3
+    }
+
+    public enum KyTay
+    {
+        [Display(Name = "Có")] Co = 1,
+        [Display(Name = "Không")] Khong = 2
+    }
+    public enum HSBADienTu
+    {
+        [Display(Name = "Có")] Co = 1,
+        [Display(Name = "Không")] Khong = 2
     }
 }

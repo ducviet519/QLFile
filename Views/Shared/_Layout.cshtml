@@ -4,74 +4,69 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebTools</title>
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="~/lib/fontawesome-free/css/all.min.css">
-    <!-- daterange picker -->
-    <link rel="stylesheet" href="~/lib/daterangepicker/daterangepicker.css">
-    <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="/lib/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="~/lib/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-    <!-- Select2 -->
-    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css">
-    <link rel="stylesheet" href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Plugins -->
+    @await Html.PartialAsync("_Plugins_Styles")
     <!-- DataTables -->
-    <link rel="stylesheet" href="~/lib/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/lib/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/lib/datatables-buttons/css/buttons.bootstrap4.min.css">
-    <link rel="stylesheet" href="~/lib/datatables-fixedheader/css/fixedHeader.bootstrap4.min.css">
-    <!-- Toastr -->
-    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css">
-    <!-- Bootstrap Toggle -->
-    <link rel="stylesheet" href="~/lib/bootstrap-toggle/css/bootstrap-toggle.min.css">
+    @await Html.PartialAsync("_Datatable_Styles")
+    <!-- EasyUI -->
+    @await Html.PartialAsync("_EasyUI_Styles")
     <!-- Theme style -->
+    <link rel="stylesheet" href="~/css/loading.css">
     <link rel="stylesheet" href="~/lib/admin-lte/css/adminlte.min.css">
     <link rel="stylesheet" href="~/css/site_default.css">
+    <style>
+        .narh-50 {
+            height: 50px;
+        }
+    </style>
 </head>
 <body class="control-sidebar-slide-open layout-navbar-fixed sidebar-collapse">
     <div class="wrapper">
         @if (User.Identity.IsAuthenticated)
         {
             <header>
-                <nav class="main-header navbar navbar-expand navbar-dark border-bottom-0">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
+                <nav class="main-header navbar navbar-expand navbar-dark border-bottom-0 narh-50">
+                    <ul class="navbar-nav narh-50">
+                        <li class="nav-item narh-50">
                             <a class="navbar-brand" role="button" asp-area="" asp-controller="Home" asp-action="Index">
-                                <img src="/logo_compact_white_200x200.png" width="38" height="38" style="vertical-align: middle;" alt="">
+                                <img src="~/images/logo_compact_white_200x200.png" width="38" height="38" style="vertical-align: middle;" alt="">
                             </a>
                         </li>
-                        <li class="nav-item d-none d-sm-inline-block">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        <li class="nav-item d-none d-sm-inline-block narh-50">
+                            <a class="nav-link narh-50" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
                         </li>
-                        <li class="nav-item d-none d-sm-inline-block">
-                            <a class="nav-link" asp-area="" asp-controller="Report" asp-action="Index">Quản lý biểu mẫu</a>
+                        <li class="nav-item d-none d-sm-inline-block narh-50">
+                            <a class="nav-link narh-50" asp-area="" asp-controller="Report" asp-action="Index">Quản lý biểu mẫu</a>
                         </li>
-                        
+                        <li class="nav-item d-none d-sm-inline-block narh-50">
+                            <a class="nav-link narh-50" data-toggle="ajax-modal" data-target="#GopY-0" data-url="GopY/Index">Góp ý</a>
+
+                        </li>
+
                         @if (User.IsInRole("Admin"))
                         {
+                            <li class="nav-item dropdown dropdown-hover narh-50">
+                                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Văn bản (Test)</a>
+                                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                                    <li><a asp-area="" asp-controller="VanBan" asp-action="DanhMuc_VanBan" class="dropdown-item">Bảng tin văn bản</a></li>
+                                    <li><a asp-area="" asp-controller="Preview" asp-action="VanBan" class="dropdown-item">Preview Văn bản</a></li>
+                                </ul>
+                            </li>
                             @*dropdown-hover*@
-                            <li class="nav-item dropdown dropdown-hover">
+                            <li class="nav-item dropdown dropdown-hover narh-50">
                                 <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Phân quyền</a>
                                 <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
                                     <li><a asp-area="" asp-controller="Permission" asp-action="Users" class="dropdown-item">Tài khoản người dùng </a></li>
                                     <li><a asp-area="" asp-controller="Permission" asp-action="Roles" class="dropdown-item">Vai trò hệ thống</a></li>
-                                    <li><a asp-area="" asp-controller="Permission" asp-action="ModuleController" class="dropdown-item">ModuleControllers</a></li>
-                                    <li><a asp-area="" asp-controller="Permission" asp-action="ModuleAction" class="dropdown-item">ModuleActions</a></li>
+                                    @*<li><a asp-area="" asp-controller="Permission" asp-action="ModuleController" class="dropdown-item">ModuleControllers</a></li>
+                                    <li><a asp-area="" asp-controller="Permission" asp-action="ModuleAction" class="dropdown-item">ModuleActions</a></li>*@
                                 </ul>
                             </li>
-                            @*<li class="nav-item dropdown dropdown-hover">
-                                <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Google API</a>
-                                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-                                    <li><a asp-area="" asp-controller="GoogleAPI" asp-action="SearchGoogleFiles" class="dropdown-item">Tìm File Google Drive</a></li>
-                                </ul>
-                            </li>*@
                         }
 
                     </ul>
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
+                    <ul class="navbar-nav ml-auto narh-50">
+                        <li class="nav-item narh-50">
                             <partial name="_LoginStatusPartial" />
                         </li>
                     </ul>
@@ -80,51 +75,47 @@
             <div class="content-wrapper">
                 @RenderBody()
             </div>
+            <div class="modal-loading"><!-- Place at bottom of page --></div>
+            <div id="GopYPopup"></div>
         }
-
-        <!-- jQuery -->
-        <script src="~/lib/jquery/jquery.min.js"></script>
-        <!-- Bootstrap 4 -->
-        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- Select2 -->
-        <script src="~/lib/select2/js/select2.full.min.js"></script>
-        <!-- Bootstrap4 Duallistbox -->
-        <script src="~/lib/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-        <!-- InputMask -->
-        <script src="~/lib/moment/moment.min.js"></script>
-        <script src="~/lib/inputmask/jquery.inputmask.min.js"></script>
-        <!-- date-range-picker -->
-        <script src="~/lib/daterangepicker/daterangepicker.js"></script>
-        <!-- Tempusdominus Bootstrap 4 -->
-        <script src="~/lib/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-        <!-- bs-custom-file-input -->
-        <script src="~/lib/bs-custom-file-input/bs-custom-file-input.min.js"></script>
-        <!-- jquery-validation -->
-        <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation/additional-methods.min.js"></script>
-        <!-- DataTables  & Plugins -->
-        <script src="~/lib/datatables/jquery.dataTables.min.js"></script>
-        <script src="~/lib/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-        <script src="~/lib/datatables-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-        <script src="~/lib/datatables-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="~/lib/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-        <script src="~/lib/datatables-buttons/js/dataTables.buttons.min.js"></script>
-        <script src="~/lib/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-        <script src="~/lib/jszip/jszip.min.js"></script>
-        <script src="~/lib/pdfmake/pdfmake.min.js"></script>
-        <script src="~/lib/pdfmake/vfs_fonts.js"></script>
-        <script src="~/lib/datatables-buttons/js/buttons.html5.min.js"></script>
-        <script src="~/lib/datatables-buttons/js/buttons.print.min.js"></script>
-        <script src="~/lib/datatables-buttons/js/buttons.colVis.min.js"></script>
-        <!-- Toastr -->
-        <script src="~/lib/toastr/toastr.min.js"></script>
-        <!-- Bootstrap Toggle -->
-        <script src="~/lib/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
-        <!-- ChartJS -->
-        <script src="/lib/chart.js/Chart.min.js"></script>
+        <!-- Plugins -->
+        @await Html.PartialAsync("_Plugins_Scripts")
+        <!-- DataTables -->
+        @await Html.PartialAsync("_Datatable_Scripts")
+        <!-- EasyUI -->
+        @await Html.PartialAsync("_EasyUI_Scripts")
         <!-- AdminLTE App -->
         <script src="~/lib/admin-lte/js/adminlte.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
+        <script type="text/javascript">
+            $('body').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
+                var url = $(this).data('url');
+                var ReportPopupElement = $('#GopYPopup');
+                $.ajax({
+                    url: url,
+                    dataType: 'html',
+                    success: function (data) {
+                        $("body").find(".modal-backdrop").remove();
+                        ReportPopupElement.html(data);
+                        ReportPopupElement.find('.modal').modal('show');
+                    }, error: function (xhr, status) {
+                        switch (status) {
+                            case 404:
+                                $(this).callToast("error", 'Lỗi!', 'Đường dẫn không đúng hoặc tính năng không tồn tại!');
+                                break;
+                            case 500:
+                                $(this).callToast("error", 'Lỗi!', 'Không kết nối được tới Server!');
+                                break;
+                            case 0:
+                                $(this).callToast("error", 'Lỗi!', 'Hệ thống không phản hồi!');
+                                break;
+                            default:
+                                $(this).callToast("error", 'Lỗi!', 'Sự cố không xác định! Lỗi: ' + status);
+                        }
+                    }
+                });
+            });
+        </script>
         @await RenderSectionAsync("Scripts", required: false)
     </div>
 </body>

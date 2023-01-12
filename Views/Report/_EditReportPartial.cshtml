@@ -1,4 +1,6 @@
-﻿@model WebTools.Models.ReportListViewModel
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model WebTools.Models.ReportListViewModel
 @{
     Layout = null;
 }
@@ -23,7 +25,14 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-3"><label for="MaBM">Mã biểu mẫu:</label></div>
-                        <div class="col-3"><input type="text" class="form-control" name="MaBM" id="MaBM" placeholder="Nhập mã biểu mẫu" value="@Model.ReportList.MaBM" readonly /></div>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="col-3"><input type="text" class="form-control" name="MaBM" id="MaBM" placeholder="Nhập mã biểu mẫu" value="@Model.ReportList.MaBM" required /></div>
+                        }
+                        else
+                        {
+                            <div class="col-3"><input type="text" class="form-control" name="MaBM" id="MaBM" placeholder="Nhập mã biểu mẫu" value="@Model.ReportList.MaBM" readonly /></div>
+                        }
                         <div class="col-3 text-right"><label for="NgayBanHanh">Ngày ban hành:</label></div>
                         <div class="col-3">
                             <div class="input-group date" id="reportdate" data-target-input="nearest">
@@ -47,7 +56,11 @@
                             <input type="hidden" id="FileLink" name="FileLink" value="@Model.ReportList.FileLink" />
                         </div>
                         <div class="col-2 text-right"><label for="PhienBan">Phiên bản</label></div>
-                        <div class="col-2"><input type="text" class="form-control" id="PhienBan" name="PhienBan" value="@Model.ReportList.PhienBan" readonly /></div>
+                        @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Versions.Edit")).Result.Succeeded)
+                        {<div class="col-2"><input type="text" class="form-control" id="PhienBan" name="PhienBan" value="@Model.ReportList.PhienBan" /></div> }
+                        else
+                        { <div class="col-2"><input type="text" class="form-control" id="PhienBan" name="PhienBan" value="@Model.ReportList.PhienBan" readonly/></div>}
+                        
                     </div>
                     <div class="row mb-3">
                         <div class="col-3"><label for="GhiChu">Ghi chú:</label></div>
@@ -74,9 +87,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                        @if (User.IsInRole("Editer") || User.IsInRole("Manager") || User.IsInRole("Admin"))
+                        @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Edit")).Result.Succeeded)
                         {
-                            <button type="submit" class="btn btn-primary" data-save="modalFile">Lưu</button>
+                            <button type="button" class="btn btn-primary" data-save="modalEditReport">Lưu</button>
                         }
                     </div>
                 </form>
@@ -86,87 +99,53 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        var tenBM = this.getElementById("TenBM");
-        $.validator.setDefaults({
-            submitHandler: function (form) {
-                form.submit();
+        $(this).on('click', 'button[data-save="modalEditReport"]', function (event) {
+            var form = $("#reportForm")
+            if (form[0].checkValidity() === true) {
+
+                var actionUrl = form.attr('action');
+                var methodType = form.attr('method');
+
+                var formData = new FormData();
+                formData.append("IDBieuMau", $("#IDBieuMau").val());
+                formData.append("IDPhienBan", $("#IDPhienBan").val());
+                formData.append("TenBM", $("#TenBM").val());
+                formData.append("MaBM", $("#MaBM").val());
+                formData.append("NgayBanHanh", $("#NgayBanHanh").val());
+                formData.append("fileUpload", $("#fileUpload")[0].files[0]);
+                formData.append("FileLink", $("#FileLink").val());
+                formData.append("PhienBan", $("#PhienBan").val());
+                formData.append("GhiChu", $("#GhiChu").val());
+                formData.append("KhoaPhong", $("#KhoaPhong").val());
+                formData.append("postTheLoai", $("#postTheLoai").val());
+                $.ajax({
+                    type: 'POST',
+                    url: '/Report/EditReport_Json',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $('button[data-save="modalFile"]').attr("disabled", true);
+                    },
+                    success: function (data) {
+                        $(this).callToast(data.result, data.title, data.message);
+                    },
+                    error: function (data) {
+                        $(this).callToast(data.result, data.title, data.message);
+                    },
+                    complete: function () {
+                        $('button[data-save="modalFile"]').attr("disabled", false);
+
+                    },
+                })
             }
-        });
-        $('#reportForm').validate({
-            rules: {
-                TenBM: {
-                    required: true
-                },
-                MaBM: {
-                    required: true
-                },
-                NgayBanHanh: {
-                    required: true
-                },
-            },
-            messages: {
-                TenBM: {
-                    required: "Tên biểu mẫu không được trống"
-                },
-                MaBM: {
-                    required: "Mã biểu mẫu không được trống"
-                },
-                NgayBanHanh: "Ngày ban hành không được trống"
-            },
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
+            else {
+                event.preventDefault()
+                event.stopPropagation()
+                form.addClass('was-validated');
             }
         });
     });
-
-    //$(function () {
-
-    //    $(this).on('click', '[data-save="modalFile"]', function (event) {
-    //        event.preventDefault();
-
-    //        var actionUrl = $("#myForm").attr('action');
-    //        var methodType = $("#myForm").attr('method');
-
-    //        var formData = new FormData();
-    //        formData.append("IDBieuMau", $("#IDBieuMau").val());
-    //        formData.append("TenBM", $("#TenBM").val());
-    //        formData.append("MaBM", $("#MaBM").val());
-    //        formData.append("NgayBanHanh", $("#NgayBanHanh").val());
-    //        formData.append("fileUpload", $("#fileUpload")[0].files[0]);
-    //        formData.append("PhienBan", $("#PhienBan").val());
-    //        formData.append("GhiChu", $("#GhiChu").val());
-    //        formData.append("KhoaPhong", $("#KhoaPhong").val());
-    //        formData.append("postTheLoai", $("#postTheLoai").val());
-    //        $.ajax({
-    //            type: methodType,
-    //            url: actionUrl,
-    //            data: formData,
-    //            processData: false,
-    //            contentType: false,
-
-    //            success: function (data) {
-    //                console.log(data);
-    //                alert("Thành công!");
-    //            },
-    //            error: function (data) {
-    //                console.log(data);
-    //                alert("Lỗi!");
-    //            }
-    //        }).done(function (data) {
-    //            $(this).find('.modal').modal('hide');
-    //            location.reload();
-    //        })
-    //    });
-
-    //});
 
     $(function () {
 
@@ -176,12 +155,19 @@
         bsCustomFileInput.init()
     });
     $(function () {
-        var string = $('#txtKhoaPhong').val();
-        var array = string.split(",").map(Number);
         //Dropdown
         $('.selectDepts3').select2()
-        $('#KhoaPhong').val(array);
-        $('#KhoaPhong').trigger('change');
+        var string = $('#txtKhoaPhong').val();
+        if (string.length > 0) {
+            var array = string.split(",").map(Number);
+            $('#KhoaPhong').val(array);
+            $('#KhoaPhong').trigger('change');
+        }
+
+        $('body .modal').on('click', 'button[data-dismiss="modal"]', function (event) {
+            window.location.reload();
+        });
     });
+    
 </script>
 

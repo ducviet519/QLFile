@@ -1,0 +1,452 @@
+﻿
+@{
+    ViewData["Title"] = "DanhMuc_VanBan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .treeview .list-group {
+        border-radius: unset;
+    }
+
+    .sidebar {
+        height: 100%;
+    }
+
+    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+        background-color: #3882b6;
+    }
+
+    .nav-sidebar .nav-item > .nav-link {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+        .nav-sidebar .nav-item > .nav-link:hover {
+            background-color: aliceblue;
+        }
+
+    .fieldset {
+        position: relative;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+
+        .fieldset h1 {
+            position: absolute;
+            top: 0;
+            font-size: 14px;
+            line-height: 1;
+            margin: -9px 0 0; /* half of font-size */
+            background: #fff;
+            padding: 0 3px;
+        }
+
+    .dataTables_length {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+
+    .col-200 {
+        width: 200px;
+    }
+
+    .col-120 {
+        width: 120px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
+    .col-130 {
+        width: 130px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+
+    .itemvb {
+        height: 50px;
+        text-transform: uppercase;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        background-color: #3882b6;
+        color: white;
+        border-radius: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        cursor: pointer;
+    }
+
+    .dropdown-item {
+        width: 200px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+    }
+
+        .dropdown-item:hover {
+            background-color: aliceblue;
+            color: Highlight;
+        }
+
+    .dropdown-menu {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .search-advance {
+        display: none;
+        width: 860px;
+        border-radius: 3px;
+        background: #ececec;
+    }
+
+    .bootstrap-datetimepicker-widget.dropdown-menu {
+        width: auto !important;
+    }
+
+    .combo-panel {
+        min-height: 30px !important;
+        max-height: 215px !important;
+        height: fit-content !important;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row p-0 m-0">
+        <div class="card col-12 mt-2 mb-2">
+            <div class="card-body">
+                <div class="fieldset">
+                    <h1>Chức năng tìm kiếm</h1>
+                    <div class="row d-flex justify-content-center">
+                        <div class="form-group row col-6">
+                            <label for="txtSearch" class="col-form-label col-auto">Tên / Mã văn bản/ Nội dung văn bản:</label>
+                            <input type="text" id="txtSearch" name="txtSearch" class="form-control col" />
+                        </div>
+                        <div class="pl-2 pr-2" width="100px">
+                            <button class="btn btn btn-primary" id="btnTimKiem"><i class="fas fa-search"></i> Tìm kiếm</button>
+                        </div>
+                        <div width="155px">
+                            <button class="btn btn btn-primary" id="btnTimKiemNangCao"><i class="fas fa-search-plus"></i> Tìm kiếm nâng cao</button>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="fieldset search-advance">
+                            <form>
+                                <div class="form-group row">
+                                    <label class="col-120 col-form-label">Tên/Mã văn bản:</label>
+                                    <div class="col-5 mr-5">
+                                        <input type="text" id="txtTen" class="form-control" />
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-120 col-form-label">Ngày ban hành:</label>
+                                    <div class="col-sm-2">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-auto col-form-label">Từ:</label>
+                                            <input type="text" id="ngaybanhanh_tungay" name="ngayKham" class="form-control datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngaybanhanh_tungay" autocomplete="off" data-timepicker="date" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 mr-5">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-auto col-form-label">Đến:</label>
+                                            <input type="text" id="ngaybanhanh_denngay" name="ngayKham" class="form-control datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngaybanhanh_denngay" autocomplete="off" data-timepicker="date" />
+                                        </div>
+                                    </div>
+                                    <div class="col-1"></div>
+                                    <label class="col-130 col-form-label">Nhóm tra cứu:</label>
+                                    <div class="col-2">
+                                        <select class="form-control">
+                                            <option>Tên mã nhóm</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-120 col-form-label">Ngày hiệu lực:</label>
+                                    <div class="col-sm-2">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-auto col-form-label">Từ:</label>
+                                            <input type="text" id="ngayhieuluc_tungay" name="ngayKham" class="form-control datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngayhieuluc_tungay" autocomplete="off" data-timepicker="date" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 mr-5">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-auto col-form-label">Đến:</label>
+                                            <input type="text" id="ngayhieuluc_denngay" name="ngayKham" class="form-control datetimepicker-input col" data-toggle="datetimepicker" data-target="#ngayhieuluc_denngay" autocomplete="off" data-timepicker="date" />
+                                        </div>
+                                    </div>
+                                    <div class="col-1"></div>
+                                    <label class="col-130 col-form-label">Đơn vị áp dụng:</label>
+                                    <div class="col-2">
+                                        <select class="form-control">
+                                            <option>Nhập tên</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-120 col-form-label">Người soạn thảo:</label>
+                                    <div class="col-4 mr-5">
+                                        <select class="form-control col-10">
+                                            <option>Nhập tên</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-1"></div>
+                                    <label class="col-130 col-form-label">Đối tượng áp dụng:</label>
+                                    <div class="col-2">
+                                        <select class="form-control">
+                                            <option>Nhập tên</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="pl-2 pr-2" width="100px">
+                                        <button class="btn btn btn-primary" id="btnTimKiem"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="text-center pt-3 pb-3">Bảng tin các văn bản phát hành gần đây</h2>
+                <table id="tbVanBan" class="table table-bordered text-wrap table-responsive" style="width: 100%">
+                    <thead class="thead">
+                        <tr>
+                            <th>Cập nhật review Văn bản</th>
+                            <th>STT</th>
+                            <th>Tên văn bản</th>
+                            <th>Mã văn bản</th>
+                            <th>Xem File</th>
+                            <th>Ngày cập nhật review</th>
+                            <th>Phiên bản</th>
+                            <th>Ngày phát hành</th>
+                            <th>Ngày hiệu lực</th>
+                            <th>Ngày kiểm soát lại</th>
+                            <th>Bộ phận soạn thảo</th>
+                            <th>Đơn vị áp dụng</th>
+                            <th>Đối tượng áp dụng</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-between p-0 m-0">
+        <div class="card col-3" minwidth="350px">
+            <div class="card-body pl-0 pr-0">
+                <!-- Sidebar -->
+                <div class="sidebar sidebar-no-expand">
+                    <!-- Sidebar Menu -->
+                    <nav class="nav-flat nav-child-indent mt-1">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                            <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                            <li class="nav-item">
+                                <a href="" class="nav-link">
+                                    <i class="nav-icon fas fa-folder"></i>
+                                    <p>
+                                        Văn bản yêu thích
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="" class="nav-link">
+                                    <i class="nav-icon fas fa-folder"></i>
+                                    <p>
+                                        Văn bản phát hành gần đây nhất
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="" class="nav-link">
+                                    <i class="nav-icon fas fa-folder"></i>
+                                    <p>
+                                        Văn bản truy cập nhiều nhất
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="" class="nav-link">
+                                    <i class="nav-icon fas fa-folder"></i>
+                                    <p>
+                                        Văn bản tra cứu gần dây nhất
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="" class="nav-link">
+                                    <i class="nav-icon fas fa-folder"></i>
+                                    <p>
+                                        Văn bản được nâng cấp phiên bản
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="" class="nav-link">
+                                    <i class="nav-icon fas fa-folder"></i>
+                                    <p>
+                                        Văn bản được upload lại
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- /.sidebar-menu -->
+                </div>
+            </div>
+        </div>
+        <div class="card col-9">
+            <div class="card-body">
+                <div class="row justify-content-between">
+                    <div class="card col-200">
+                        <div class="card-body p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="itemvb">
+                                <i class="fas fa-folder pr-1" style="font-size:30px;"></i>QUY TRÌNH QUY ĐỊNH
+                            </div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemThuMuc-1" data-url="@Url.Action("ThemThuMuc","VanBan")"><i class="fas fa-folder-plus"></i> Thêm thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalSuaThuMuc-1" data-url="@Url.Action("SuaThuMuc","VanBan")"><i class="fas fa-folder-minus"></i> Sửa thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemVanBan-1" data-url="@Url.Action("ThemVanBan","VanBan")"><i class="fas fa-file-medical"></i> Thêm mới văn bản</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemExcel-1" data-url="@Url.Action("ImportExcel","VanBan")"><i class="fas fa-file-excel"></i> Import Exel file văn bản</a>
+                                <a class="dropdown-item" href="/VanBan/DanhSach_VanBanChiTiet" data-toggle="link"><i class="fas fa-swatchbook"></i> Danh sách văn bản</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card col-200">
+                        <div class="card-body p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="itemvb"><i class="fas fa-folder pr-1" style="font-size:30px;"></i>THÔNG BÁO NỘI BỘ</div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemThuMuc-2" data-url="@Url.Action("ThemThuMuc","VanBan")"><i class="fas fa-folder-plus"></i> Thêm thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalSuaThuMuc-2" data-url="@Url.Action("SuaThuMuc","VanBan")"><i class="fas fa-folder-minus"></i> Sửa thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemVanBan-2" data-url="@Url.Action("ThemVanBan","VanBan")"><i class="fas fa-file-medical"></i> Thêm mới văn bản</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemExcel-2" data-url="@Url.Action("ImportExcel","VanBan")"><i class="fas fa-file-excel"></i> Import Exel file văn bản</a>
+                                <a class="dropdown-item" href="/VanBan/DanhSach_VanBanChiTiet" data-toggle="link"><i class="fas fa-swatchbook"></i> Danh sách văn bản</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card col-200">
+                        <div class="card-body p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="itemvb"><i class="fas fa-folder pr-1" style="font-size:30px;"></i>BIỂU MẪU - HỒ SƠ BỆNH ÁN</div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemThuMuc-3" data-url="@Url.Action("ThemThuMuc","VanBan")"><i class="fas fa-folder-plus"></i> Thêm thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalSuaThuMuc-3" data-url="@Url.Action("SuaThuMuc","VanBan")"><i class="fas fa-folder-minus"></i> Sửa thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemVanBan-3" data-url="@Url.Action("ThemVanBan","VanBan")"><i class="fas fa-file-medical"></i> Thêm mới văn bản</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemExcel-3" data-url="@Url.Action("ImportExcel","VanBan")"><i class="fas fa-file-excel"></i> Import Exel file văn bản</a>
+                                <a class="dropdown-item" href="/VanBan/DanhSach_VanBanChiTiet" data-toggle="link"><i class="fas fa-swatchbook"></i> Danh sách văn bản</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card col-200">
+                        <div class="card-body p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="itemvb"><i class="fas fa-folder pr-1" style="font-size:30px;"></i>THÔNG TIN THUỐC</div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemThuMuc-4" data-url="@Url.Action("ThemThuMuc","VanBan")"><i class="fas fa-folder-plus"></i> Thêm thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalSuaThuMuc-4" data-url="@Url.Action("SuaThuMuc","VanBan")"><i class="fas fa-folder-minus"></i> Sửa thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemVanBan-4" data-url="@Url.Action("ThemVanBan","VanBan")"><i class="fas fa-file-medical"></i> Thêm mới văn bản</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemExcel-4" data-url="@Url.Action("ImportExcel","VanBan")"><i class="fas fa-file-excel"></i> Import Exel file văn bản</a>
+                                <a class="dropdown-item" href="/VanBan/DanhSach_VanBanChiTiet" data-toggle="link"><i class="fas fa-swatchbook"></i> Danh sách văn bản</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-between">
+                    <div class="card col-200">
+                        <div class="card-body p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="itemvb"><i class="fas fa-folder pr-1" style="font-size:30px;"></i>HƯỚNG DẪN SỬ DỤNG THIẾT BỊ Y TẾ</div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemThuMuc-5" data-url="@Url.Action("ThemThuMuc","VanBan")"><i class="fas fa-folder-plus"></i> Thêm thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalSuaThuMuc-5" data-url="@Url.Action("SuaThuMuc","VanBan")"><i class="fas fa-folder-minus"></i> Sửa thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemVanBan-5" data-url="@Url.Action("ThemVanBan","VanBan")"><i class="fas fa-file-medical"></i> Thêm mới văn bản</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemExcel-5" data-url="@Url.Action("ImportExcel","VanBan")"><i class="fas fa-file-excel"></i> Import Exel file văn bản</a>
+                                <a class="dropdown-item" href="/VanBan/DanhSach_VanBanChiTiet" data-toggle="link"><i class="fas fa-swatchbook"></i> Danh sách văn bản</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card col-200">
+                        <div class="card-body p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="itemvb"><i class="fas fa-folder pr-1" style="font-size:30px;"></i>TÀI LIỆU ĐÀO TẠO</div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemThuMuc-6" data-url="@Url.Action("ThemThuMuc","VanBan")"><i class="fas fa-folder-plus"></i> Thêm thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalSuaThuMuc-6" data-url="@Url.Action("SuaThuMuc","VanBan")"><i class="fas fa-folder-minus"></i> Sửa thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemVanBan-6" data-url="@Url.Action("ThemVanBan","VanBan")"><i class="fas fa-file-medical"></i> Thêm mới văn bản</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemExcel-6" data-url="@Url.Action("ImportExcel","VanBan")"><i class="fas fa-file-excel"></i> Import Exel file văn bản</a>
+                                <a class="dropdown-item" href="/VanBan/DanhSach_VanBanChiTiet" data-toggle="link"><i class="fas fa-swatchbook"></i> Danh sách văn bản</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card col-200">
+                        <div class="card-body p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="itemvb"><i class="fas fa-folder pr-1" style="font-size:30px;"></i>QUẢN LÝ CHẤT LƯỢNG</div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemThuMuc-7" data-url="@Url.Action("ThemThuMuc","VanBan")"><i class="fas fa-folder-plus"></i> Thêm thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalSuaThuMuc-7" data-url="@Url.Action("SuaThuMuc","VanBan")"><i class="fas fa-folder-minus"></i> Sửa thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemVanBan-7" data-url="@Url.Action("ThemVanBan","VanBan")"><i class="fas fa-file-medical"></i> Thêm mới văn bản</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemExcel-7" data-url="@Url.Action("ImportExcel","VanBan")"><i class="fas fa-file-excel"></i> Import Exel file văn bản</a>
+                                <a class="dropdown-item" href="/VanBan/DanhSach_VanBanChiTiet" data-toggle="link"><i class="fas fa-swatchbook"></i> Danh sách văn bản</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card col-200">
+                        @*<div class="card-body p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">*@
+                        <div class="card-body p-0" data-toggle="dropdown">
+                            <div class="itemvb"><i class="fas fa-folder pr-1" style="font-size:30px;"></i>KHÁC</div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemThuMuc-8" data-url="@Url.Action("ThemThuMuc","VanBan")"><i class="fas fa-folder-plus"></i> Thêm thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalSuaThuMuc-8" data-url="@Url.Action("SuaThuMuc","VanBan")"><i class="fas fa-folder-minus"></i> Sửa thư mục</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemVanBan-8" data-url="@Url.Action("ThemVanBan","VanBan")"><i class="fas fa-file-medical"></i> Thêm mới văn bản</a>
+                                <a class="dropdown-item" data-toggle="ajax-modal" data-target="#modalThemExcel-8" data-url="@Url.Action("ImportExcel","VanBan")"><i class="fas fa-file-excel"></i> Import Exel file văn bản</a>
+                                <a class="dropdown-item" href="/VanBan/DanhSach_VanBanChiTiet" data-toggle="link"><i class="fas fa-swatchbook"></i> Danh sách văn bản</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ReportPopup"></div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('input[data-timepicker="date"]').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi', });
+
+            $("#ngaybanhanh_tungay").on("change.datetimepicker", function (e) {
+                $('#ngaybanhanh_denngay').datetimepicker('minDate', e.date);
+            });
+            $("#ngaybanhanh_denngay").on("change.datetimepicker", function (e) {
+                $('#ngaybanhanh_tungay').datetimepicker('maxDate', e.date);
+            });
+
+            $("#ngayhieuluc_tungay").on("change.datetimepicker", function (e) {
+                $('#ngayhieuluc_denngay').datetimepicker('minDate', e.date);
+            });
+            $("#ngayhieuluc_denngay").on("change.datetimepicker", function (e) {
+                $('#ngayhieuluc_tungay').datetimepicker('maxDate', e.date);
+            });
+
+            $('#tbVanBan').DataTable();
+
+            $('body .dropdown-menu').on('click', 'a[data-toggle="ajax-modal"]', function (e) {
+
+                var url = $(this).data('url');
+                $(this).callModal(url);
+            });
+            $('#btnTimKiemNangCao').click(function (e) {
+
+                $('.search-advance').toggle(500);
+            });
+
+            $('body .dropdown-menu').on('click', 'a[data-toggle="link"]', function (e) {
+                e.preventDefault();
+                var href = $(this).attr("href");
+                window.open(href, "_self");
+                return false;
+            });
+        });
+    </script>
+}
+

@@ -62,9 +62,24 @@ namespace WebTools.Controllers
         public IActionResult Users()
         {
             UsersViewModel model = new UsersViewModel();
-            model.UsersList = _userServices.GetAllUsers();
-            //model.Roles = new SelectList(_roleServices.GetAllRoles(), "RoleID", "RoleName");
-            model.RolesList = _roleServices.GetAllRoles();
+            var users = _userServices.GetAllUsers();
+            List<Users> usersData = new List<Users>();
+            foreach ( var user in users)
+            {
+                Users u = new Users() 
+                {
+                    DisplayName = user.DisplayName,
+                    UserName = user.UserName,
+                    UserID = user.UserID,
+                    Email = user.Email,
+                    Source = user.Source,
+                    Status = user.Status,
+                    RoleName = String.Join(",", (_userServices.GetRoleInUser(user.UserName)).Select(i => i.RoleName).ToArray())
+                };
+                usersData.Add(u);
+
+            }
+            model.UsersList = usersData;
             return View(model);
         }
 
@@ -108,7 +123,6 @@ namespace WebTools.Controllers
             if (count > 0) 
             {
                 _userServices.DeleteRoleInUser(userRoles.UserID);
-                _userServices.DeleteUserPermissions(userRoles.UserName);
             }
             for (int i = 0; i < count; i++)
             {
@@ -120,20 +134,7 @@ namespace WebTools.Controllers
                 if (userRoles.UserID > 0 && userRoles.RoleID > 0 && userRoles.Status == true)
                 {
                     var result = _userServices.AddUserRolesByID(userRoles);
-                    UserPermissions userPermissions = new UserPermissions();
                     
-                    foreach (var permission in _roleServices.GetRolePermissions(userRoles.RoleID))
-                    {
-                        userPermissions = new UserPermissions()
-                        {
-                            UserName = userRoles.UserName,
-                            Permission = permission.Permission,
-                            ControllerID = permission.ControllerID,
-                            ActionID = permission.ActionID,
-                        };
-                        _userServices.AddUserPermissions(userPermissions);
-                    }    
-
                     if (result == "OK")
                     {
                         TempData["SuccessMsg"] = $"Người dùng đã được cập nhật lại Role thành công!";

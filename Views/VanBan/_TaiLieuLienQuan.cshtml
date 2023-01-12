@@ -1,0 +1,88 @@
+﻿<style>
+    .tab-custom-content {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .col-70 {
+        width: 86px;
+        padding-left: 7.5px;
+        padding-right: 7.5px;
+    }
+</style>
+<!-- Modal -->
+<div class="modal fade bd-example-modal-xl" id="modalTaiLieuLienQuan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-project-diagram"></i> Đính kèm tài liệu liên quan</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-4">
+                        <form id="frmTaoQuyenCaNhan">
+                            <div class="card-body m-0 p-0">
+                                <div class="tab-custom-content"><label class="col-form-label col-12 text-center">Thêm tài liệu liên quan</label></div>
+                                <div class="row">
+                                    <div class="form-group row col">
+                                        <label class="col-form-label col-70">Tên văn bản</label>
+                                        <div class="col">
+                                            <input type="text" class="form-control" id="tenvanban" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group row col">
+                                        <label class="col-form-label col-70">Mã văn bản</label>
+                                        <div class="col">
+                                            <input type="text" class="form-control" id="mavanban" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group row col">
+                                        <label class="col-form-label col-70">Link liên kết</label>
+                                        <div class="col">
+                                            <input type="text" class="form-control" id="linklienket" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-around">
+                                    <button type="button" class="btn btn-success"><i class="fas fa-file-medical"></i> Thêm tài liệu</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-8">
+                        <div class="tab-custom-content"><label class="col-form-label col-12 text-center">Danh sách tài liệu liên quan</label></div>
+                        <table class="table table-bordered table-striped" id="tbTaiLieuLienQuan">
+                            <thead class="thead">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên văn bản</th>
+                                    <th>Mã văn bản</th>
+                                    <th>Link liên kết</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Đóng</button>
+                <button type="button" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tbQuyenCaNhan').DataTable();
+    });
+</script>

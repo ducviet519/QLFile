@@ -6,6 +6,7 @@
     ViewData["Title"] = "Quản lý biểu mẫu";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -46,7 +47,7 @@
                                 <div class="col">
                                     <div class="form-group row m-0">
                                         <label class="col-12">Tên/Mã biểu mẫu:</label>
-                                        <input type="text" class="form-control col" name="SearchString" id="SearchString" />
+                                        <input type="text" class="form-control col" name="SearchString" id="SearchString" data-press="search"/>
                                         <select id="search" class="form-control col-4 ml-1 p-0">
                                             <option value="1" selected>Theo tên</option>
                                             <option value="2">Theo nội dung</option>
@@ -56,30 +57,31 @@
                                 <div class="col-auto pl-2">
                                     <label>Ngày ban hành:</label>
                                     <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                        <input type="text" id="SearchDate" name="SearchDate" class="form-control datetimepicker-input SearchDate" data-toggle="datetimepicker" data-target="#SearchDate" autocomplete="off" />
+                                        <input type="text" id="SearchDate" name="SearchDate" class="form-control datetimepicker-input SearchDate" data-toggle="datetimepicker" data-target="#SearchDate" autocomplete="off" data-press="search" />
                                     </div>
                                 </div>
                                 <div class="col-auto pl-2">
                                     <label>Trạng thái:</label>
-                                    <select id="SearchTrangThaiSD" class="form-control col-auto">
-                                        <option value="" selected>Tất cả</option>
-                                        <option value="Đang sử dụng">Đang sử dụng</option>
-                                        <option value="Chưa ban hành">Chưa ban hành</option>
-                                        <option value="Đã hủy">Đã hủy</option>
+                                    <select id="SearchTrangThaiSD" class="form-control col-auto" data-press="search">
+                                        <option value="0" selected>Tất cả</option>
+                                        <option value="1">Đang sử dụng</option>
+                                        <option value="2">Chưa ban hành</option>
+                                        <option value="3">Đã hủy</option>
                                     </select>
                                 </div>
                                 <div class="col-auto pl-2">
-                                    <select id="SearchTrangThaiPM" class="form-control col-auto">
-                                        <option value="" selected>Tất cả</option>
-                                        <option value="Đã hoàn thành">Đã hoàn thành</option>
-                                        <option value="Chưa hoàn thành">Chưa hoàn thành</option>
-                                        <option value="Chưa có">Chưa có</option>
+                                    <label>Trạng thái phần mềm:</label>
+                                    <select id="SearchTrangThaiPM" class="form-control col-auto" data-press="search">
+                                        <option value="0" selected>Tất cả</option>
+                                        <option value="1">Đã hoàn thành</option>
+                                        <option value="2">Chưa hoàn thành</option>
+                                        <option value="3">Chưa có</option>
                                     </select>
                                 </div>
                                 <div class="col-2 pl-2">
                                     <label>URD (Quy trình vận hành):</label>
                                     <div class="col">
-                                        <select class="form-control selectURD2" multiple="multiple" data-placeholder="Chọn" style="width: 100%;" asp-items="@Model.URDs" name="SearchURD" id="SearchURD"></select>
+                                        <select class="form-control selectURD2" multiple="multiple" data-placeholder="Chọn" style="width: 100%;" asp-items="@Model.URDs" name="SearchURD" id="SearchURD" data-press="search"></select>
                                         <input type="hidden" id="txtURD" name="txtURD" />
                                     </div>
                                 </div>
@@ -102,31 +104,48 @@
                                 {<input type="hidden" id="showDetails" value="View" /> }
                                 else
                                 { <input type="hidden" id="showDetails" value="Hide" />}
+                                
                                 @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Edit")).Result.Succeeded)
                                 {<input type="hidden" id="showReport" value="Edit" /> }
                                 else
                                 { <input type="hidden" id="showReport" value="Hide" />}
+                                
+                                @if ((AuthorizationService.AuthorizeAsync(User, "Permission.Reports.Delete")).Result.Succeeded)
+                                {<input type="hidden" id="deleteReport" value="View" /> }
+                                else
+                                { <input type="hidden" id="deleteReport" value="Hide" />}
                             </div>
                         </form>
                     </div>
                     <div class="card-body">
-                        <div id="ReportPopup"></div>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="row justify-content-end">
+                                <div class="col">
+                                    <a class="btn btn-primary" href="/ExportExcel/DanhSachBieuMauExcel">Xuất Excel Danh sách Biểu mẫu</a>
+                                </div>
+                            </div>
+                        }
                         <!--Bảng biểu mẫu -->
                         <div class="dataTables_wrapper dt-bootstrap4">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table class="table table-bordered table-striped dataTable dtr-inline" width="100%" role="grid" id="tableReport">
+                                    <table class="table table-striped table-bordered table-responsive nowrap" width="100%" role="grid" id="tableReport">
                                         <thead class="thead">
                                             <tr>
-                                                <th class="text-nowrap w-auto">STT</th>
-                                                <th class="text-nowrap w-auto">Tên biểu mẫu</th>
-                                                <th class="text-nowrap w-auto">Mã biểu mẫu</th>
-                                                <th class="text-nowrap w-auto">Phiên bản</th>
-                                                <th class="text-nowrap w-auto">Ngày phát hành</th>
-                                                <th class="text-nowrap w-auto">Trạng thái</th>
-                                                <th class="text-nowrap w-auto">Phần mềm</th>
-                                                <th class="text-nowrap w-auto">Trạng thái phần mềm</th>
-                                                <th class="text-nowrap w-auto"></th>
+                                                <th>STT</th>
+                                                <th>Tên biểu mẫu</th>
+                                                <th>Mã biểu mẫu</th>
+                                                <th>Phiên bản</th>
+                                                <th>Ngày phát hành</th>
+                                                <th>Trạng thái</th>
+                                                <th>Phần mềm</th>
+                                                <th>Trạng thái phần mềm</th>
+                                                <th>Ký số</th>
+                                                <th>Ký điện tử</th>
+                                                <th>Ký tay</th>
+                                                <th>HSBA Điện tử</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -162,23 +181,29 @@
             var showSofts = ((document.getElementById("showSofts") || {}).value) || "";
             var showDetails = ((document.getElementById("showDetails") || {}).value) || "";
             var showReport = ((document.getElementById("showReport") || {}).value) || "";
+            var deleteReport = ((document.getElementById("deleteReport") || {}).value) || "";
                 var columnData = [
                 { "data": "stt", "orderable": "false", "class": "text-center"},
-                { "data": "tenBM" },
+                { "data": "tenBM", "width": "100%"},
                 { "data": "maBM" },
                 { "data": "phienBan", "class": "text-center" },
                 { "data": "ngayBanHanh", "class": "text-center" },
                 { "data": "trangThai", "class": "text-center" },
                 { "data": "phanMem", "class": "text-center" },
                 { "data": "trangThaiPM", "class": "text-center" },
+                { "data": "kySo", "class": "text-center" },
+                { "data": "kyDienTu", "class": "text-center" },
+                { "data": "kyTay", "class": "text-center" },
+                { "data": "hsbaDienTu", "class": "text-center" },
+
                 {
                     "data": { idBieuMau: "idBieuMau", idPhienBan: "idPhienBan", fileLink: "fileLink" },
                     "render": function (data, row) {
                         if (data.fileLink == "") {
-                            var file = "<a href='#' target='_blank' class='btn btn-link'>&nbsp; &nbsp; &nbsp; &nbsp;</a>";
+                            var file = "<a href='#' target='_blank' class='btn btn-link pl-0 pr-0'>&nbsp; &nbsp; &nbsp; &nbsp;</a>";
                         }
                         else {
-                            var file = "<a class='btn btn-link' data-toggle='ajax-modal' data-target='#documentView-" + data.idPhienBan + "' data-url='/Report/PopUpDocumentView?link=" + data.idPhienBan + "'>File</a>";
+                            var file = "<a class='btn btn-link pl-0 pr-0' data-toggle='ajax-modal' data-target='#documentView-" + data.idPhienBan + "' data-url='/Report/PopUpDocumentView?link=" + data.idPhienBan + "'>Xem</a>";
                         }
                         if (showVersion == "View") {
                             var version = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportVersion-" + data.idBieuMau + "' data-url='/Report/Version?id=" + data.idBieuMau + "'>Phiên bản</a>";
@@ -187,26 +212,38 @@
                         if (showSofts == "View") {
                             var software = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportSoft-" + data.idBieuMau + "' data-url='/Report/Soft?id=" + data.idBieuMau + "'>Phần mềm</a>";
                         } else { var software = ""; }
-                        if (showDetails = "View") {
+                        if (showDetails == "View") {
                             var detail = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportDetail-" + data.idBieuMau + "' data-url='/Report/Detail?id=" + data.idBieuMau + "'>Chi tiết</a>";
                         } else { var detail = ""; }
                         if (showReport == "Edit") {
                             var edit = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#reportEdit-" + data.idBieuMau + "' data-url='/Report/EditReport?id=" + data.idBieuMau + "'>Sửa biểu mẫu</a>";
                         } else { var edit = ""; }
-
-                        var dropmenu = "<button type='button' class='btn btn-link dropdown-toggle' data-toggle='dropdown'>Chi tiết</button ><div class='dropdown-menu' role='menu'>" + version + " " + software + " " + detail + " " + edit + "</div>";
-                        if ('@User.IsInRole("Editer")' == 'True' || '@User.IsInRole("Manager")' == 'True' || '@User.IsInRole("Admin")' == 'True') {
+                        if (deleteReport == "View") {
+                            var del = "<a class='dropdown-item' data-toggle='delete' data-target='#reportDelete-" + data.idBieuMau + "' data-url='/Report/DeleteReport?IDBieuMau=" + data.idBieuMau + "&&IDPhienBan=" + data.idPhienBan+"'>Xóa biểu mẫu</a>";
+                        } else { var del = ""; }
+                        var gopy = "<a class='dropdown-item' data-toggle='ajax-modal' data-target='#gopy-" + data.idBieuMau + "' data-url='/GopY/Index?IDBieuMau=" + data.idBieuMau + "'>Góp ý</a>";
+                        var dropmenu = "<button type='button' class='btn btn-link dropdown-toggle' data-toggle='dropdown'>Chi tiết</button ><div class='dropdown-menu' role='menu'>" + version + " " + software + " " + detail + " " + edit + " " + del + " " + gopy + "</div>";
+                        @*if ('@User.IsInRole("Editer")' == 'True' || '@User.IsInRole("Manager")' == 'True' || '@User.IsInRole("Admin")' == 'True') {
                             var result = "<div class='btn-group'>" + file + " " + dropmenu + "</div>";
                         }
-                        else { var result = "<div class='btn-group'>" + file + "</div>"; }
-
+                        else { var result = "<div class='btn-group'>" + file + "</div>"; }*@
+                        var result = "<div class='btn-group'>" + file + " " + dropmenu + "</div>";
                         return result;
                     }
                 },
             ]
-            searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList/", 10, "0,8", 8);
+            searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList/", 10, "0,8,9,10,11,12", 8);
 
+            $('[data-press="search"]').on('keypress', function (event) {               
+                if (event.key === 'Enter' || event.keyCode === 13) {
+                    searchTable();
+                }
+            });
+            
             $('#btnSearch').on('click', function () {
+                searchTable();
+            });
+            function searchTable() {
                 var loai = $("#search").val() || "";
                 var searchString = ((document.getElementById("SearchString") || {}).value) || "";
                 var searchDate = ((document.getElementById("SearchDate") || {}).value) || "";
@@ -228,12 +265,29 @@
                     searchTerm += "&searchURD=" + searchURD;
 
                 searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList?" + searchTerm, 10, "0,8", 8);
+            }
+            $('body').on('click', 'a[data-toggle="delete"]', function (event) {
+                var url = $(this).data('url');
+                var result = confirm("Bạn có chắc chắn muốn xóa biểu mẫu này?");
+                if (result) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        success: function (data) {
+                            $(this).callToast(data.result, data.title, data.message);
+                            searchDataTableWithInput("#tableReport", columnData, "/Report/SearchReportList/", 10, "0,8,9,10,11,12", 8);
+                        },
+                        error: function (data) {
+                            $(this).callToast(data.result, data.title, data.message);
+                        }
+                    });
+                }
 
             });
         });
 
         $(document).ready(function () {
-            $('body').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
+            $('body .dropdown-menu').on('click', 'a[data-toggle="ajax-modal"]', function (event) {
                 var url = $(this).data('url');
                 $(this).callModal(url);
             });
@@ -241,6 +295,8 @@
                 var url = $(this).data('url');
                 $(this).callModal(url);
             });
+            
+
         });
     </script>
 }

@@ -131,22 +131,18 @@ namespace WebTools.Controllers
                 if (ad_authenticate.IsAuthenticated(domain, login.UserName, login.Password))
                 {
                     var UserLoginInfo = _userServices.FindByName(login.UserName);
-                    var RoleInUser = _userServices.GetRoleInUser(UserLoginInfo.UserID);
-                    var PermissionsInUser = _userServices.GetAllUserPermissions(UserLoginInfo.UserName);
-
-                    var IP = HttpContext.Connection.RemoteIpAddress.ToString();
+                    var RoleInUser = _userServices.GetRoleInUser(login.UserName);
+                    var PermissionsInUser = await _userServices.GetAllUserPermissions(login.UserName);
+                 
                     var claims = new List<Claim>()
                     {
                         new Claim(ClaimTypes.Name, UserLoginInfo.DisplayName),
-                        new Claim(ClaimTypes.NameIdentifier, Convert.ToString(UserLoginInfo.UserID)),
+                        new Claim(ClaimTypes.NameIdentifier, Convert.ToString(UserLoginInfo.UserName)),
+                        new Claim(ClaimTypes.GivenName, Convert.ToString(UserLoginInfo.UserName)),
                         new Claim(ClaimTypes.GroupSid, string.IsNullOrEmpty(domain) ? "local" : domain),
                         new Claim(ClaimTypes.Email, $@"{login.UserName.Trim().ToLower()}@{domain}" ?? ""),
                     };
-                    if(RoleInUser.Count == 0)
-                    {
-                        claims.Add(new Claim(ClaimTypes.Role, "User"));
-                    }
-                    else
+                    if(RoleInUser.Count > 0)
                     {
                         foreach (var role in RoleInUser)
                         {
@@ -154,6 +150,15 @@ namespace WebTools.Controllers
 
                         }
                         foreach (var permission in PermissionsInUser)
+                        {
+                            claims.Add(new Claim("Permission", $"{permission.Permission}"));
+                        }                        
+                    }
+                    else
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, "UserKhoaPhong"));
+                        var DefaultPermission = await _userServices.GetDefaultPermissions("UserKhoaPhong");
+                        foreach (var permission in DefaultPermission)
                         {
                             claims.Add(new Claim("Permission", $"{permission.Permission}"));
                         }

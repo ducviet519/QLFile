@@ -5,6 +5,10 @@
     {
       "library": "admin-lte@3.2.0",
       "destination": "wwwroot/lib/admin-lte/"
+    },
+    {
+      "library": "tempusdominus-bootstrap-4@5.39.0",
+      "destination": "wwwroot/lib/tempusdominus-bootstrap-4/"
     }
   ]
 }
