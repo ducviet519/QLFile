@@ -25,7 +25,14 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-3"><label for="MaBM">Mã biểu mẫu:</label></div>
-                        <div class="col-3"><input type="text" class="form-control" name="MaBM" id="MaBM" placeholder="Nhập mã biểu mẫu" value="@Model.ReportList.MaBM" readonly /></div>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="col-3"><input type="text" class="form-control" name="MaBM" id="MaBM" placeholder="Nhập mã biểu mẫu" value="@Model.ReportList.MaBM" required /></div>
+                        }
+                        else
+                        {
+                            <div class="col-3"><input type="text" class="form-control" name="MaBM" id="MaBM" placeholder="Nhập mã biểu mẫu" value="@Model.ReportList.MaBM" readonly /></div>
+                        }
                         <div class="col-3 text-right"><label for="NgayBanHanh">Ngày ban hành:</label></div>
                         <div class="col-3">
                             <div class="input-group date" id="reportdate" data-target-input="nearest">

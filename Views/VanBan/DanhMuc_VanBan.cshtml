@@ -414,6 +414,20 @@
         $(document).ready(function (e) {
             $('input[data-timepicker="date"]').datetimepicker({ format: 'DD/MM/YYYY', locale: 'vi', });
 
+            $("#ngaybanhanh_tungay").on("change.datetimepicker", function (e) {
+                $('#ngaybanhanh_denngay').datetimepicker('minDate', e.date);
+            });
+            $("#ngaybanhanh_denngay").on("change.datetimepicker", function (e) {
+                $('#ngaybanhanh_tungay').datetimepicker('maxDate', e.date);
+            });
+
+            $("#ngayhieuluc_tungay").on("change.datetimepicker", function (e) {
+                $('#ngayhieuluc_denngay').datetimepicker('minDate', e.date);
+            });
+            $("#ngayhieuluc_denngay").on("change.datetimepicker", function (e) {
+                $('#ngayhieuluc_tungay').datetimepicker('maxDate', e.date);
+            });
+
             $('#tbVanBan').DataTable();
 
             $('body .dropdown-menu').on('click', 'a[data-toggle="ajax-modal"]', function (e) {
